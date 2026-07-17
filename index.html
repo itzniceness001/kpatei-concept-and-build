@@ -358,8 +358,13 @@
 
                 <!-- Contact Form Right Side -->
                 <div class="lg:w-3/5 p-10 md:p-16 bg-white">
-                   <form action="https://api.web3forms.com/submit" method="POST" class="space-y-6">
-                       <input type="hidden" name="access_key" value="43e176b0-e24b-4f41-a0d2-b3f97ffbee87">
+                  <form action="https://api.web3forms.com/submit" method="POST">
+  <input type="hidden" name="access_key" value="43e176b0-e24b-4f41-a0d2-b3f97ffbee87">
+  <input type="text" name="name" required>
+  <input type="email" name="email" required>
+  <textarea name="message" required></textarea>
+  <button type="submit">Submit</button>
+</form>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
