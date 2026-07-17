@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPATEI Concept & Build | Premier Architecture in Sierra Leone</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        kpatei: {
+                            cyan: '#00d2ff',      // Vibrant accent from the logo
+                            cyanDark: '#009bbf',  // Hover state for cyan
+                            slate: '#2d3748',     // Structural gray
+                            dark: '#1a202c',      // Deep structural tone
+                            earth: '#8C6239',     // Earth tone for local landscape feel
+                            light: '#f7fafc',     // Off-white background
+                        }
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "linear-gradient(to right bottom, rgba(26, 32, 44, 0.85), rgba(45, 55, 72, 0.7)), url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop')",
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles for elements that need specific non-Tailwind touches */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .service-card:hover .service-icon {
+            transform: scale(1.1);
+            color: #00d2ff;
+        }
+    </style>
+</head>
+<body class="font-sans text-gray-700 bg-kpatei-light antialiased">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-sm shadow-sm transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-24">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <img src="REAL LOGO 1.jpg" alt="KPATEI Concept & Build Logo" class="h-20 w-auto object-contain drop-shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/200x80/ffffff/1a202c?text=KPATEI+CONCEPT';">
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#about" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors">About Us</a>
+                    <a href="#services" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors">Services</a>
+                    <a href="#portfolio" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors">Portfolio</a>
+                    <a href="#contact" class="bg-kpatei-cyan hover:bg-kpatei-cyanDark text-white px-6 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-cyan-500/30 transform hover:-translate-y-0.5">
+                        Consult With Us
+                    </a>
+                </div>
+
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-kpatei-slate hover:text-kpatei-cyan focus:outline-none p-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#about" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">About Us</a>
+                <a href="#services" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Services</a>
+                <a href="#portfolio" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Portfolio</a>
+                <a href="#contact" class="block px-3 py-3 mt-4 text-center text-base font-medium bg-kpatei-cyan text-white rounded-md">Consult With Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative bg-hero-pattern bg-cover bg-center bg-no-repeat min-h-screen flex items-center pt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center md:text-left">
+            <div class="md:w-2/3">
+                <span class="inline-block py-1 px-3 rounded-full bg-kpatei-cyan/20 text-kpatei-cyan border border-kpatei-cyan/30 font-semibold tracking-wider text-sm mb-6 uppercase">
+                    "You imagine, we draft it."
+                </span>
+                <h1 class="text-5xl md:text-6xl lg:text-[5rem] font-heading font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-50 to-kpatei-cyan mb-4 drop-shadow-2xl tracking-tight uppercase leading-none">
+                    KPATEI CONCEPT & BUILD
+                </h1>
+                <h2 class="text-2xl md:text-4xl font-heading font-extrabold text-white leading-tight mb-6">
+                    Building Sierra Leone's <span class="text-kpatei-cyan">Future</span>
+                </h2>
+                <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl leading-relaxed font-light">
+                    <strong>Do you need a house plan?</strong> We transform your imagination into precision blueprints and enduring masterpieces. From modern bungalows to luxury villas, we draft all types of house plans.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                    <a href="#contact" class="bg-kpatei-cyan hover:bg-kpatei-cyanDark text-white px-8 py-4 rounded-full font-semibold text-lg transition-all shadow-lg shadow-cyan-500/40 flex items-center justify-center gap-2">
+                        Get a Consultation <i class="fas fa-arrow-right"></i>
+                    </a>
+                    <a href="#portfolio" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all flex items-center justify-center">
+                        View Our Work
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom decorative wave/shape -->
+        <div class="absolute bottom-0 w-full overflow-hidden leading-none">
+            <svg class="relative block w-full h-12 md:h-24" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C-17.14,96.15,31.2,85.2,84.1,76.5,164.24,63.3,243.6,67.6,321.39,56.44Z" fill="#f7fafc"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-20 md:py-32 bg-kpatei-light">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-16">
+                <!-- Image Side -->
+                <div class="lg:w-1/2 relative">
+                    <div class="absolute inset-0 bg-kpatei-cyan rounded-2xl transform translate-x-4 translate-y-4 opacity-50"></div>
+                    <img src="IMG2221_2.jpg" alt="Architect drafting plans" class="relative rounded-2xl shadow-2xl object-cover w-full h-[600px] z-10 border-4 border-white" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1541888086925-0c1bb6789c1e?q=80&w=2070&auto=format&fit=crop';">
+                    
+                    <!-- Floating badge -->
+                    <div class="absolute -bottom-8 -left-8 bg-white p-6 rounded-xl shadow-xl z-20 border-l-4 border-kpatei-cyan hidden md:block">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-kpatei-slate text-white w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500 font-medium uppercase">Commitment to</p>
+                                <p class="text-xl font-heading font-bold text-kpatei-dark">Structural Integrity</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Side -->
+                <div class="lg:w-1/2">
+                    <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">About KPATEI</h4>
+                    <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-kpatei-dark mb-6">
+                        Rooted in Local Knowledge. <br>Driven by Modern Design.
+                    </h2>
+                    <p class="text-gray-600 mb-6 text-lg leading-relaxed">
+                        At <strong>KPATEI CONCEPT & BUILD</strong>, we blend innovative architectural aesthetics with robust structural engineering. Based in the heart of Sierra Leone, we possess a deep, technical understanding of our local landscape.
+                    </p>
+                    <p class="text-gray-600 mb-8 text-lg leading-relaxed">
+                        Whether dealing with coastal environments, complex split-level topography, or challenging inselberg soils, our team engineers solutions that stand the test of time. Our mission is to elevate the standard of living and commercial infrastructure in Freetown and beyond through unparalleled craftsmanship.
+                    </p>
+                    
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-center text-gray-700 font-medium">
+                            <i class="fas fa-shield-alt text-kpatei-cyan w-6 text-center mr-3"></i> Premium Structural Safety Standards
+                        </li>
+                        <li class="flex items-center text-gray-700 font-medium">
+                            <i class="fas fa-leaf text-kpatei-earth w-6 text-center mr-3"></i> Eco-conscious & Climate Adaptive Designs
+                        </li>
+                        <li class="flex items-center text-gray-700 font-medium">
+                            <i class="fas fa-hard-hat text-kpatei-slate w-6 text-center mr-3"></i> End-to-End Project Management
+                        </li>
+                    </ul>
+                    
+                    <a href="#services" class="inline-flex items-center text-kpatei-slate font-bold hover:text-kpatei-cyan transition-colors">
+                        Explore Our Expertise <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-20 md:py-32 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">What We Design</h4>
+                <h2 class="text-3xl md:text-5xl font-heading font-extrabold text-kpatei-dark mb-6">
+                    All Types of House Plans
+                </h2>
+                <p class="text-gray-600 text-lg">
+                    Whether you are envisioning a cozy home or a sprawling commercial space, our expert architects deliver precise, modern blueprints tailored to your needs.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <!-- Service Card 1 -->
+                <div class="service-card bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                    <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-3xl text-kpatei-slate service-icon transition-all duration-300">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3 class="text-xl font-bold font-heading text-kpatei-dark mb-4 group-hover:text-kpatei-cyan transition-colors">Modern Bungalows & Duplexes</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        Expert drafting for modern bungalows and duplexes. We design functional, stylish homes tailored to your lifestyle and land space.
+                    </p>
+                </div>
+
+                <!-- Service Card 2 -->
+                <div class="service-card bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                    <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-3xl text-kpatei-slate service-icon transition-all duration-300">
+                        <i class="fas fa-gem"></i>
+                    </div>
+                    <h3 class="text-xl font-bold font-heading text-kpatei-dark mb-4 group-hover:text-kpatei-cyan transition-colors">Luxury Villas & Mansions</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        Elevate your living experience with bespoke architectural plans for luxury villas and mansions, focusing on expansive, premium aesthetics.
+                    </p>
+                </div>
+
+                <!-- Service Card 3 -->
+                <div class="service-card bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                    <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-3xl text-kpatei-slate service-icon transition-all duration-300">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="text-xl font-bold font-heading text-kpatei-dark mb-4 group-hover:text-kpatei-cyan transition-colors">Commercial Plazas & Offices</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        Professional blueprints for commercial plazas and modern office spaces designed to maximize flow, utility, and structural integrity.
+                    </p>
+                </div>
+
+                <!-- Service Card 4 -->
+                <div class="service-card bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                    <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-3xl text-kpatei-slate service-icon transition-all duration-300">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    <h3 class="text-xl font-bold font-heading text-kpatei-dark mb-4 group-hover:text-kpatei-cyan transition-colors">Apartments & Extensions</h3>
+                    <p class="text-gray-600 text-sm leading-relaxed">
+                        Comprehensive drafting for multi-family units, apartment complexes, minimalist homes, and custom structural extensions.
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section id="portfolio" class="py-20 md:py-32 bg-kpatei-slate text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div class="max-w-2xl">
+                    <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Our Gallery</h4>
+                    <h2 class="text-3xl md:text-5xl font-heading font-extrabold mb-6">
+                        Featured Projects
+                    </h2>
+                    <p class="text-gray-400 text-lg">
+                        A glimpse into our capability to deliver both aesthetic brilliance and structural perfection across Sierra Leone.
+                    </p>
+                </div>
+                <div class="mt-6 md:mt-0">
+                    <button class="bg-transparent border border-kpatei-cyan text-kpatei-cyan hover:bg-kpatei-cyan hover:text-white px-6 py-2.5 rounded-full font-medium transition-all">
+                        View All Projects
+                    </button>
+                </div>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Project 1 -->
+                <div class="relative group overflow-hidden rounded-2xl aspect-[4/3] md:aspect-[16/9]">
+                    <img src="https://images.unsplash.com/photo-1613490908571-9ce224946bc3?q=80&w=2070&auto=format&fit=crop" alt="Freetown Multi-Story Residence" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+                        <span class="text-kpatei-cyan font-semibold text-sm uppercase tracking-wider mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Completed Build</span>
+                        <h3 class="text-2xl font-bold font-heading transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">Freetown Multi-Story Residence</h3>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="relative group overflow-hidden rounded-2xl aspect-[4/3] md:aspect-[16/9]">
+                    <img src="https://images.unsplash.com/photo-1541888086925-0c1bb6789c1e?q=80&w=2070&auto=format&fit=crop" alt="Custom Split-Level Foundation" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+                        <span class="text-kpatei-cyan font-semibold text-sm uppercase tracking-wider mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Engineering Phase</span>
+                        <h3 class="text-2xl font-bold font-heading transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">Custom Split-Level Foundation</h3>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="relative group overflow-hidden rounded-2xl aspect-[4/3] md:aspect-[16/9]">
+                    <img src="https://images.unsplash.com/photo-1581094722400-ee4ba24bd2b3?q=80&w=2070&auto=format&fit=crop" alt="Hillside Topography Blueprint" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+                        <span class="text-kpatei-cyan font-semibold text-sm uppercase tracking-wider mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Design & Planning</span>
+                        <h3 class="text-2xl font-bold font-heading transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">Hillside Topography Blueprint</h3>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="relative group overflow-hidden rounded-2xl aspect-[4/3] md:aspect-[16/9]">
+                    <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop" alt="Modern Tropical Villa" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
+                        <span class="text-kpatei-cyan font-semibold text-sm uppercase tracking-wider mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Residential</span>
+                        <h3 class="text-2xl font-bold font-heading transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">Modern Peninsula Villa</h3>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 md:py-32 bg-white relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-kpatei-dark rounded-3xl overflow-hidden shadow-2xl flex flex-col lg:flex-row">
+                
+                <!-- Contact Info Left Side -->
+                <div class="lg:w-2/5 p-10 md:p-16 relative overflow-hidden text-white">
+                    <div class="absolute inset-0 bg-kpatei-cyan opacity-10"></div>
+                    <!-- Decorative circle -->
+                    <div class="absolute -top-24 -left-24 w-64 h-64 bg-kpatei-cyan rounded-full mix-blend-multiply filter blur-3xl opacity-50"></div>
+                    
+                    <div class="relative z-10">
+                        <h2 class="text-3xl md:text-4xl font-heading font-bold mb-4">Let's Build the Future Together!</h2>
+                        <p class="text-gray-300 mb-10 leading-relaxed">
+                            Do you need a house plan? Contact us today via call or WhatsApp to schedule a consultation with our lead architects.
+                        </p>
+                        
+                        <div class="space-y-8">
+                            <div class="flex items-start">
+                                <div class="bg-white/10 p-3 rounded-lg mr-4 text-kpatei-cyan">
+                                    <i class="fas fa-map-marker-alt text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg">Location</h4>
+                                    <p class="text-gray-400 mt-1">Furniture Junction<br>Freetown, Sierra Leone</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="bg-white/10 p-3 rounded-lg mr-4 text-kpatei-cyan">
+                                    <i class="fab fa-whatsapp text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg">Call / WhatsApp</h4>
+                                    <p class="text-gray-400 mt-1">+232 78 64 60 03</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="bg-white/10 p-3 rounded-lg mr-4 text-kpatei-cyan">
+                                    <i class="fas fa-envelope text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg">Email Us</h4>
+                                    <p class="text-gray-400 mt-1">chiefkpatei@gmail.com</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Form Right Side -->
+                <div class="lg:w-3/5 p-10 md:p-16 bg-white">
+                    <form onsubmit="event.preventDefault(); showSuccessMessage();" class="space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="firstName" class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                <input type="text" id="firstName" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-kpatei-cyan focus:border-kpatei-cyan transition-colors bg-gray-50 outline-none" placeholder="John" required>
+                            </div>
+                            <div>
+                                <label for="lastName" class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                <input type="text" id="lastName" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-kpatei-cyan focus:border-kpatei-cyan transition-colors bg-gray-50 outline-none" placeholder="Doe" required>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                                <input type="email" id="email" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-kpatei-cyan focus:border-kpatei-cyan transition-colors bg-gray-50 outline-none" placeholder="john@example.com" required>
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                                <input type="tel" id="phone" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-kpatei-cyan focus:border-kpatei-cyan transition-colors bg-gray-50 outline-none" placeholder="+232 00 000000">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label for="serviceType" class="block text-sm font-medium text-gray-700 mb-2">Project Interest</label>
+                            <select id="serviceType" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-kpatei-cyan focus:border-kpatei-cyan transition-colors bg-gray-50 outline-none text-gray-600">
+                                <option value="" disabled selected>Select a plan type...</option>
+                                <option value="bungalows">Modern Bungalows & Duplexes</option>
+                                <option value="villas">Luxury Villas & Mansions</option>
+                                <option value="commercial">Commercial Plazas & Offices</option>
+                                <option value="apartments">Apartments & Multi-Family Units</option>
+                                <option value="minimalist">Minimalist Homes & Custom Extensions</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Project Details</label>
+                            <textarea id="message" rows="4" class="w-full px-4 py-3 rounded-lg border border-gray-200 focus:ring-2 focus:ring-kpatei-cyan focus:border-kpatei-cyan transition-colors bg-gray-50 outline-none resize-none" placeholder="Tell us about your plot size, location, and vision..." required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-kpatei-dark hover:bg-kpatei-slate text-white font-bold py-4 rounded-lg transition-all shadow-lg flex items-center justify-center gap-2 group">
+                            Send Message
+                            <i class="fas fa-paper-plane transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                        </button>
+                        
+                        <!-- Success Message Area -->
+                        <div id="form-success" class="hidden mt-4 p-4 bg-green-50 text-green-700 rounded-lg text-center border border-green-200">
+                            Thank you! Your message has been sent to our team. We will contact you shortly.
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-kpatei-slate text-white pt-16 pb-8 border-t-4 border-kpatei-cyan">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+                <!-- Brand col -->
+                <div class="md:col-span-1">
+                    <img src="REAL LOGO 1.jpg" alt="KPATEI Logo" class="h-16 w-auto mb-6 bg-white p-2 rounded-lg object-contain" onerror="this.onerror=null; this.src='https://placehold.co/200x80/ffffff/1a202c?text=KPATEI+CONCEPT';">
+                    <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                        Premier architectural and construction firm dedicated to building Sierra Leone's future through innovative design and structural integrity.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-kpatei-cyan transition-colors"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-kpatei-cyan transition-colors"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-kpatei-cyan transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6 font-heading border-b-2 border-kpatei-cyan inline-block pb-1">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#about" class="text-gray-400 hover:text-kpatei-cyan transition-colors">About Us</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Our Services</a></li>
+                        <li><a href="#portfolio" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Project Portfolio</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Contact Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Services -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6 font-heading border-b-2 border-kpatei-cyan inline-block pb-1">House Plans</h4>
+                    <ul class="space-y-3">
+                        <li class="text-gray-400">Bungalows & Duplexes</li>
+                        <li class="text-gray-400">Luxury Villas & Mansions</li>
+                        <li class="text-gray-400">Commercial Plazas</li>
+                        <li class="text-gray-400">Multi-Family Units</li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="text-lg font-bold mb-6 font-heading border-b-2 border-kpatei-cyan inline-block pb-1">Stay Updated</h4>
+                    <p class="text-gray-400 text-sm mb-4">Subscribe to our newsletter for construction tips and latest projects in Freetown.</p>
+                    <div class="flex">
+                        <input type="email" placeholder="Your email..." class="w-full px-4 py-2 rounded-l-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-kpatei-cyan">
+                        <button class="bg-kpatei-cyan hover:bg-kpatei-cyanDark px-4 py-2 rounded-r-lg transition-colors">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+                <p>&copy; 2026 KPATEI Concept & Build. All rights reserved.</p>
+                <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Toggle
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking a link
+        const mobileLinks = menu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 20) {
+                nav.classList.add('shadow-md');
+                nav.classList.replace('bg-white/95', 'bg-white');
+            } else {
+                nav.classList.remove('shadow-md');
+                nav.classList.replace('bg-white', 'bg-white/95');
+            }
+        });
+
+        // Form Success Simulator
+        function showSuccessMessage() {
+            const successDiv = document.getElementById('form-success');
+            const formInputs = document.querySelectorAll('form input, form select, form textarea');
+            
+            successDiv.classList.remove('hidden');
+            
+            // Clear inputs
+            formInputs.forEach(input => input.value = '');
+
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                successDiv.classList.add('hidden');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
