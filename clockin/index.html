@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#14232B">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Clock-In">
+<title>Staff Clock-In</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: phone app shell. Header with company, one view at a time, bottom tab bar. Scan view is a dark kiosk screen: clock, live camera, full-screen result flash. */
+:root{
+  --bg:#F3F4F1; --surface:#FFFFFF; --ink:#14232B; --muted:#5B6970; --line:#D9DDD8;
+  --accent:#D99100; --accent-ink:#1A1300; --accent-soft:#FBEFD2;
+  --in:#1E7A4C; --in-soft:#DDF1E5; --out:#2D5D8A; --out-soft:#DCE8F4; --late:#B4352A; --late-soft:#F8E0DC;
+  --kiosk:#0E171C; --kiosk-ink:#E7ECEA;
+  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --safe-t:env(safe-area-inset-top,0px); --safe-b:env(safe-area-inset-bottom,0px);
+  --gut-l:max(16px,env(safe-area-inset-left,0px)); --gut-r:max(16px,env(safe-area-inset-right,0px));
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0F181D; --surface:#17232A; --ink:#E7ECEA; --muted:#93A2A8; --line:#2A3A42;
+  --accent:#F0AE2A; --accent-soft:#3A2D10;
+  --in:#5FCB92; --in-soft:#173828; --out:#7FB2E3; --out-soft:#172C40; --late:#F08A7E; --late-soft:#3D1D19;
+  color-scheme:dark}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;display:flex;flex-direction:column;overscroll-behavior:none}
+button{font:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+header.top{background:var(--ink);color:var(--bg);padding:calc(var(--safe-t) + 10px) var(--gut-r) 10px var(--gut-l);display:flex;align-items:center;gap:10px;flex:none}
+@media (prefers-color-scheme:dark){header.top{background:#081014;color:var(--ink)}}
+.tape{width:30px;height:30px;border-radius:6px;background:repeating-linear-gradient(-45deg,var(--accent) 0 6px,#14232B 6px 12px);flex:none;border:1px solid rgba(255,255,255,.15)}
+header h1{margin:0;font-family:var(--display);font-stretch:80%;font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:.01em;line-height:1.1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+header small{display:block;font-family:var(--body);font-size:12px;opacity:.7;text-transform:none;font-weight:500;letter-spacing:0}
+header .lock{margin-left:auto;background:none;border:1px solid rgba(255,255,255,.25);color:inherit;border-radius:8px;padding:6px 10px;font-size:13px;font-weight:600}
+
+main{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.view{padding:14px var(--gut-r) 24px var(--gut-l);max-width:760px;margin:0 auto}
+.view[hidden]{display:none}
+
+nav.tabs{flex:none;display:grid;grid-template-columns:repeat(4,1fr);background:var(--surface);border-top:1px solid var(--line);padding:6px var(--gut-r) calc(var(--safe-b) + 6px) var(--gut-l)}
+nav.tabs button{background:none;border:none;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;font-size:12px;font-weight:600;border-radius:10px}
+nav.tabs button svg{width:24px;height:24px}
+nav.tabs button[aria-current="page"]{color:var(--ink);background:var(--accent-soft)}
+
+h2{font-family:var(--display);font-stretch:85%;font-weight:700;font-size:20px;margin:16px 0 10px;text-wrap:balance}
+h2:first-child{margin-top:4px}
+.label{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.btn{font-weight:600;font-size:15px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:11px 16px;cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.danger{color:var(--late);border-color:var(--late)}
+.btn.small{padding:7px 11px;font-size:13px}
+input{font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:99px;white-space:nowrap}
+.pill.late{background:var(--late-soft);color:var(--late)}
+.pill.ontime,.pill.in{background:var(--in-soft);color:var(--in)}
+.pill.out{background:var(--out-soft);color:var(--out)}
+.pill.absent{background:var(--bg);color:var(--muted);border:1px solid var(--line)}
+.empty{border:2px dashed var(--line);border-radius:12px;padding:24px;text-align:center;color:var(--muted)}
+.msg{font-size:13px;min-height:1.2em;margin:0}
+
+/* Scan kiosk */
+#v-scan{max-width:none;background:var(--kiosk);color:var(--kiosk-ink);min-height:100%;display:flex;flex-direction:column;gap:14px}
+.clock{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.clock .time{font-family:var(--mono);font-weight:700;font-size:clamp(44px,14vw,72px);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.clock .time .sec{font-size:.4em;opacity:.55;margin-left:4px}
+.clock .date{font-family:var(--display);font-stretch:85%;font-weight:600;font-size:17px;opacity:.85}
+.cam{position:relative;border-radius:18px;overflow:hidden;background:#000;aspect-ratio:3/4;max-height:58vh;width:100%;max-width:520px;margin:0 auto}
+.cam video{width:100%;height:100%;object-fit:cover;display:block}
+.cam .frame{position:absolute;inset:16%;border-radius:14px;pointer-events:none;
+  background:linear-gradient(var(--accent),var(--accent)) top left/34px 5px no-repeat,linear-gradient(var(--accent),var(--accent)) top left/5px 34px no-repeat,
+  linear-gradient(var(--accent),var(--accent)) top right/34px 5px no-repeat,linear-gradient(var(--accent),var(--accent)) top right/5px 34px no-repeat,
+  linear-gradient(var(--accent),var(--accent)) bottom left/34px 5px no-repeat,linear-gradient(var(--accent),var(--accent)) bottom left/5px 34px no-repeat,
+  linear-gradient(var(--accent),var(--accent)) bottom right/34px 5px no-repeat,linear-gradient(var(--accent),var(--accent)) bottom right/5px 34px no-repeat}
+.cam .line{position:absolute;left:18%;right:18%;height:2px;background:var(--accent);box-shadow:0 0 12px var(--accent);top:50%;opacity:.8}
+@media (prefers-reduced-motion:no-preference){.cam .line{animation:sweep 2.2s ease-in-out infinite alternate}}
+@keyframes sweep{from{top:20%}to{top:80%}}
+.cam .start{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center;background:#0B1216}
+.cam .start p{margin:0;color:#B9C4C8;font-size:14px;max-width:30ch}
+.bigbtn{background:var(--accent);color:#1A1300;border:none;border-radius:14px;padding:16px 26px;font-family:var(--display);font-stretch:85%;font-weight:800;font-size:21px;text-transform:uppercase;letter-spacing:.02em;display:flex;align-items:center;gap:10px}
+.bigbtn svg{width:26px;height:26px}
+.camtools{position:absolute;right:10px;bottom:10px;display:flex;gap:8px}
+.camtools button{background:rgba(0,0,0,.55);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:8px 10px;font-size:13px;font-weight:600}
+.cam video.mirror{transform:scaleX(-1)}
+.flash.snap{background:rgba(14,23,28,.55)}
+.flash.snap .word{font-size:clamp(34px,11vw,60px)}
+.flash img.selfie{width:min(46vw,200px);height:min(46vw,200px);border-radius:50%;object-fit:cover;border:5px solid rgba(255,255,255,.9);margin-bottom:6px}
+.shots{grid-column:1/-1;display:flex;gap:8px;overflow-x:auto;padding-top:6px}
+.shot{flex:none;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;padding:0;color:var(--muted);font-size:11px;font-family:var(--mono)}
+.shot img,.shot .nophoto{width:64px;height:64px;border-radius:10px;object-fit:cover;border:1px solid var(--line);background:var(--bg)}
+.shot .nophoto{display:flex;align-items:center;justify-content:center;font-family:var(--body);font-size:10px;text-align:center}
+.viewer{position:fixed;inset:0;z-index:60;background:rgba(8,14,17,.94);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:calc(var(--safe-t) + 20px) var(--gut-r) calc(var(--safe-b) + 20px) var(--gut-l);text-align:center}
+.viewer img{width:min(86vw,420px);aspect-ratio:1;object-fit:cover;border-radius:16px}
+.viewer .vt{font-family:var(--display);font-stretch:90%;font-weight:700;font-size:24px}
+.viewer .vs{font-size:14px;opacity:.8}.viewer .vh2{font-size:12px;opacity:.5;margin-top:10px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;cursor:pointer}
+.check input{width:20px;height:20px;flex:none;margin-top:2px;accent-color:var(--accent)}
+select{font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+.photobtn{background:none;border:1px solid #3A4A52;color:#E7ECEA;border-radius:10px;padding:9px 14px;font-weight:600;font-size:14px}
+.scanstatus{text-align:center;font-size:14px;color:#B9C4C8;margin:0}
+.scanstatus.warn{color:#F3A79C}
+.recent{max-width:520px;width:100%;margin:0 auto}
+.recent h3{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#93A2A8;margin:4px 0 8px;font-weight:600}
+.recent ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.recent li{display:flex;gap:10px;align-items:center;background:#17232A;border-radius:10px;padding:9px 12px;color:#E7ECEA}
+.recent li .t{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:700;width:72px;flex:none;font-size:14px}
+.recent li .n{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.recent .pill.in{background:#173828;color:#5FCB92}.recent .pill.out{background:#172C40;color:#7FB2E3}.recent .pill.late{background:#3D1D19;color:#F08A7E}
+
+/* full-screen result flash */
+.flash{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:calc(var(--safe-t) + 24px) var(--gut-r) calc(var(--safe-b) + 24px) var(--gut-l);color:#fff}
+.flash.in{background:#1E7A4C}.flash.out{background:#2D5D8A}.flash.err{background:#9E2F25}.flash.done{background:#4A5A62}
+.flash .word{font-family:var(--display);font-stretch:75%;font-weight:800;font-size:clamp(56px,20vw,120px);line-height:.95;text-transform:uppercase}
+.flash .name{font-family:var(--display);font-stretch:90%;font-weight:700;font-size:clamp(26px,8vw,44px);line-height:1.1;text-wrap:balance}
+.flash .sub{font-size:16px;opacity:.85}
+.flash .stamp{font-family:var(--mono);font-weight:700;font-size:clamp(34px,11vw,60px);font-variant-numeric:tabular-nums;margin-top:8px}
+.flash .lateTag{background:#fff;color:#9E2F25;font-weight:800;letter-spacing:.08em;padding:4px 12px;border-radius:99px;font-size:14px}
+@media (prefers-reduced-motion:no-preference){.flash{animation:pop .18s ease-out}}
+@keyframes pop{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:none}}
+
+/* Staff */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.card .band{height:8px;background:repeating-linear-gradient(-45deg,var(--accent) 0 7px,#14232B 7px 14px)}
+.card .body{padding:12px;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center;flex:1}
+.card canvas{width:120px;height:120px;image-rendering:pixelated;border-radius:4px}
+.card .nm{font-family:var(--display);font-stretch:90%;font-weight:700;font-size:16px;line-height:1.2;word-break:break-word}
+.card .no{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.card .acts{display:flex;flex-direction:column;gap:6px;padding:0 12px 12px}
+.confirm{display:flex;flex-direction:column;gap:6px;font-size:13px;text-align:center}
+
+/* Attendance */
+.logbar{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:end}
+.tally{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0}
+.tally div{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:0}
+.tally b{display:block;font-family:var(--mono);font-size:20px;font-variant-numeric:tabular-nums}
+.tally span{font-size:11px;color:var(--muted)}
+.rows{display:flex;flex-direction:column;gap:8px}
+.rowc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center}
+.rowc .nm{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rowc .meta{grid-column:1/-1;font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;display:flex;gap:14px;flex-wrap:wrap}
+.rowc .st{display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap}
+
+/* PIN */
+.pinwrap{max-width:320px;margin:30px auto;text-align:center;display:flex;flex-direction:column;gap:14px}
+.dots{display:flex;justify-content:center;gap:12px;height:18px}
+.dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--muted)}
+.dots i.on{background:var(--ink);border-color:var(--ink)}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.pad button{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 0;font-family:var(--mono);font-size:22px;font-weight:700;color:var(--ink)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="tape" aria-hidden="true"></div>
+  <div style="min-width:0"><h1 id="coName">Staff Clock-In</h1><small id="coSub">Scan your ID card to sign in</small></div>
+  <button class="lock" id="lockBtn" type="button" hidden>Lock</button>
+</header>
+
+<main id="main">
+  <!-- SCAN -->
+  <section class="view" id="v-scan">
+    <div class="clock"><div class="time" id="clkTime">--:--</div><div class="date" id="clkDate"></div></div>
+    <div class="cam" id="cam">
+      <video id="video" playsinline muted autoplay></video>
+      <div class="frame" aria-hidden="true"></div>
+      <div class="line" aria-hidden="true"></div>
+      <div class="camtools"><button type="button" id="flipBtn">Switch camera</button></div>
+      <div class="start" id="camStart">
+        <button class="bigbtn" type="button" id="startBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3"/><rect x="7" y="7" width="4" height="4"/><rect x="13" y="13" width="4" height="4"/><path d="M13 7h4v4M7 13h4v4"/></svg>
+          Start scanner
+        </button>
+        <p id="camMsg">The camera stays on. Staff hold their ID card's QR code up to it to sign in or out.</p>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:center">
+      <button type="button" class="photobtn" id="photoBtn">Scan with photo instead</button>
+      <input type="file" id="photoIn" accept="image/*" capture="environment" hidden>
+    </div>
+    <p class="scanstatus" id="scanStatus">Hold the QR code on your ID card inside the frame.</p>
+    <div class="recent"><h3>Today</h3><ol id="recent"></ol></div>
+  </section>
+
+  <!-- PIN -->
+  <section class="view" id="v-pin" hidden>
+    <div class="pinwrap">
+      <h2 style="margin:0">Manager PIN</h2>
+      <p class="hint">Enter the PIN to open staff, attendance and settings.</p>
+      <div class="dots" id="dots"><i></i><i></i><i></i><i></i></div>
+      <p class="msg" id="pinMsg" style="color:var(--late)"></p>
+      <div class="pad" id="pad"></div>
+    </div>
+  </section>
+
+  <!-- STAFF -->
+  <section class="view" id="v-staff" hidden>
+    <h2>Add staff</h2>
+    <form class="panel" id="addForm">
+      <div class="field"><label class="label" for="aName">Full name</label><input id="aName" required autocomplete="off" placeholder="Fatmata Kamara"></div>
+      <div class="grid2">
+        <div class="field"><label class="label" for="aRole">Role</label><input id="aRole" autocomplete="off" placeholder="Site supervisor"></div>
+        <div class="field"><label class="label" for="aNo">Staff no.</label><input id="aNo" required autocomplete="off" autocapitalize="characters"></div>
+      </div>
+      <button class="btn primary" type="submit">Add &amp; make QR card</button>
+      <p class="msg" id="addMsg"></p>
+    </form>
+    <h2 id="staffCount">Staff cards</h2>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <!-- ATTENDANCE -->
+  <section class="view" id="v-log" hidden>
+    <div class="logbar">
+      <div class="field"><label class="label" for="logDate">Day</label><input type="date" id="logDate"></div>
+      <div class="field"><label class="label" for="expMonth">Month</label><input type="month" id="expMonth"></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+      <button class="btn small" type="button" id="expBtn">Export month (CSV)</button>
+    </div>
+    <p class="msg" id="expMsg" style="margin-top:6px;color:var(--muted)"></p>
+    <div class="tally" id="tally"></div>
+    <div class="rows" id="rows"></div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="view" id="v-set" hidden>
+    <h2>Company</h2>
+    <form class="panel" id="setForm">
+      <div class="field"><label class="label" for="sCo">Company name</label><input id="sCo" placeholder="Kpatei Concept &amp; Build"></div>
+      <div class="grid2">
+        <div class="field"><label class="label" for="sPre">Staff no. prefix</label><input id="sPre" placeholder="KCB" autocapitalize="characters"></div>
+        <div class="field"><label class="label" for="sLate">Late after</label><input id="sLate" type="time" value="08:30"></div>
+      </div>
+      <div class="field"><label class="label" for="sPin">Manager PIN (4 digits)</label><input id="sPin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="Leave empty for no PIN"></div>
+      <label class="check" for="sSelfie"><input type="checkbox" id="sSelfie"> <span><b>Take a photo at each scan</b><br><span class="hint">Uses the front camera so you can see who signed in. Tell your staff photos are taken.</span></span></label>
+      <div class="field"><label class="label" for="sKeep">Keep photos for</label>
+        <select id="sKeep"><option value="30">30 days</option><option value="60">60 days</option><option value="90">90 days</option><option value="180">6 months</option><option value="365">1 year</option></select></div>
+      <button class="btn primary" type="submit">Save settings</button>
+      <p class="msg" id="setMsg"></p>
+    </form>
+    <h2>Backup</h2>
+    <div class="panel">
+      <p class="hint">All staff and attendance are stored on this phone. Back up regularly and keep the file safe, for example on WhatsApp or Google Drive.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <label class="check" for="bakPhotos" style="flex-basis:100%"><input type="checkbox" id="bakPhotos"> <span>Include photos (makes a bigger file)</span></label>
+        <button class="btn" type="button" id="backupBtn">Back up data</button>
+        <button class="btn" type="button" id="restoreBtn">Restore from backup</button>
+        <input type="file" id="restoreFile" accept=".json,application/json" hidden>
+      </div>
+      <p class="msg" id="bakMsg"></p>
+    </div>
+  </section>
+</main>
+
+<nav class="tabs" aria-label="Sections">
+  <button type="button" data-v="scan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 7V4h3M21 7V4h-3M3 17v3h3M21 17v3h-3M7 12h10"/></svg>Scan</button>
+  <button type="button" data-v="staff"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2.5"/><path d="M5.5 16.5c.8-1.8 2-2.5 3.5-2.5s2.7.7 3.5 2.5M15 10h3M15 13h3"/></svg>Staff</button>
+  <button type="button" data-v="log"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="4" width="16" height="17" rx="2"/><path d="M8 2v4M16 2v4M4 10h16M8 14h3M8 17h6"/></svg>Attendance</button>
+  <button type="button" data-v="set"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Settings</button>
+</nav>
+
+<div id="flash" hidden></div>
+<div id="viewer" class="viewer" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script>
+(function(){
+"use strict";
+const $=s=>document.querySelector(s);
+const QR_PREFIX="STAFF:";
+const DEF={company:"",prefix:"KCB",lateAfter:"08:30",pin:"",selfie:true,keepDays:90};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* ---------- helpers ---------- */
+const pad=n=>String(n).padStart(2,"0");
+const localDate=d=>d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const hhmm=d=>pad(d.getHours())+":"+pad(d.getMinutes());
+function fmtTime(ts){const d=new Date(ts);let h=d.getHours();const ap=h<12?"AM":"PM";h=h%12||12;return h+":"+pad(d.getMinutes())+" "+ap}
+const fmtDate=d=>d.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
+const cleanNo=v=>String(v||"").trim().toUpperCase().replace(/[^A-Z0-9_\-.]/g,"");
+
+/* ---------- storage (IndexedDB on this phone) ---------- */
+let idb=null;
+function openDB(){return new Promise((ok,bad)=>{const r=indexedDB.open("staff-clockin",2);
+  r.onupgradeneeded=()=>{const d=r.result,has=n=>d.objectStoreNames.contains(n);
+    if(!has("staff"))d.createObjectStore("staff",{keyPath:"staffNo"});
+    if(!has("logs")){const l=d.createObjectStore("logs",{keyPath:"id",autoIncrement:true});l.createIndex("date","date")}
+    if(!has("kv"))d.createObjectStore("kv");
+    if(!has("photos")){const p=d.createObjectStore("photos",{keyPath:"id"});p.createIndex("date","date")}};
+  r.onsuccess=()=>ok(r.result);r.onerror=()=>bad(r.error)})}
+function run(store,mode,fn){return new Promise((ok,bad)=>{const t=idb.transaction(store,mode);const s=t.objectStore(store);let out;const r=fn(s);if(r)r.onsuccess=()=>{out=r.result};t.oncomplete=()=>ok(out);t.onerror=()=>bad(t.error);t.onabort=()=>bad(t.error)})}
+const getAll=s=>run(s,"readonly",st=>st.getAll());
+const logsFor=(from,to)=>run("logs","readonly",st=>st.index("date").getAll(IDBKeyRange.bound(from,to)));
+
+let staff=new Map(), settings={...DEF}, todayLogs=[], today=localDate(new Date());
+
+async function loadAll(){
+  staff=new Map((await getAll("staff")).map(s=>[s.staffNo,s]));
+  const s=await run("kv","readonly",st=>st.get("settings"));settings={...DEF,...(s||{})};
+  todayLogs=await logsFor(today,today);
+}
+
+/* ---------- navigation + PIN ---------- */
+let current="scan", unlocked=false, wanted=null;
+function show(v){
+  if(v!=="scan" && v!=="pin" && settings.pin && !unlocked){wanted=v;v="pin";pinBuf="";drawDots();$("#pinMsg").textContent=""}
+  current=v;
+  for(const id of ["scan","pin","staff","log","set"]) $("#v-"+id).hidden=id!==v;
+  document.querySelectorAll("nav.tabs button").forEach(b=>{if(b.dataset.v===v||(v==="pin"&&b.dataset.v===wanted))b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  $("#lockBtn").hidden=!(settings.pin&&unlocked);
+  $("#main").scrollTop=0;
+  if(v==="scan"){unlocked=false;$("#lockBtn").hidden=true;if(camWanted())startCam()}
+  else stopCam();
+  if(v==="staff")renderStaff();
+  if(v==="log")loadDay();
+  if(v==="set")fillSettings();
+}
+document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.v)));
+$("#lockBtn").addEventListener("click",()=>show("scan"));
+let pinBuf="";
+function drawDots(){[...$("#dots").children].forEach((d,i)=>d.classList.toggle("on",i<pinBuf.length))}
+["1","2","3","4","5","6","7","8","9","Clear","0","Del"].forEach(k=>{const b=el("button",null,k);b.type="button";if(k.length>1)b.style.fontSize="15px";
+  b.onclick=()=>{if(k==="Clear")pinBuf="";else if(k==="Del")pinBuf=pinBuf.slice(0,-1);else if(pinBuf.length<4)pinBuf+=k;drawDots();
+    if(pinBuf.length===4){if(pinBuf===settings.pin){unlocked=true;show(wanted||"staff")}else{$("#pinMsg").textContent="Wrong PIN. Try again.";pinBuf="";setTimeout(drawDots,250)}}};
+  $("#pad").append(b)});
+
+/* ---------- clock ---------- */
+function tick(){
+  const d=new Date();const t=$("#clkTime");t.textContent=hhmm(d);t.append(el("span","sec",pad(d.getSeconds())));
+  $("#clkDate").textContent=fmtDate(d);
+  const nd=localDate(d);if(nd!==today){today=nd;todayLogs=[];renderRecent()}
+}
+setInterval(tick,1000);tick();
+
+/* ---------- camera scanner ---------- */
+const video=$("#video");let stream=null,scanning=false,paused=false,detector=null,lastText="",lastAt=0;
+let facing=(()=>{try{return localStorage.getItem("facing")||"environment"}catch(e){return "environment"}})();
+async function openStream(face){
+  const tries=[
+    {video:{facingMode:{ideal:face},width:{ideal:1280},height:{ideal:960}},audio:false},
+    {video:{facingMode:face},audio:false},
+    {video:true,audio:false}];
+  let err=null;
+  for(const c of tries){try{return {stream:await navigator.mediaDevices.getUserMedia(c)}}catch(e){err=e;if(e&&(e.name==="NotAllowedError"||e.name==="SecurityError"))break}}
+  return {err};
+}
+function attach(s,face){stream=s;video.srcObject=s;video.setAttribute("playsinline","");video.muted=true;video.classList.toggle("mirror",face==="user");return video.play().catch(()=>{})}
+/* selfie: square JPEG from the front camera */
+function grabPhoto(){
+  const vw=video.videoWidth,vh=video.videoHeight;if(!vw)return Promise.resolve(null);
+  const s=Math.min(vw,vh),c=document.createElement("canvas");c.width=c.height=360;
+  c.getContext("2d").drawImage(video,(vw-s)/2,(vh-s)/2,s,s,0,0,360,360);
+  return new Promise(r=>c.toBlob(r,"image/jpeg",.72));
+}
+async function waitForFrames(){for(let i=0;i<40&&(video.readyState<2||!video.videoWidth);i++)await sleep(100)}
+/* phones send dark frames while the camera warms up: wait until the picture has real light in it */
+const probe=document.createElement("canvas");probe.width=probe.height=24;const pctx=probe.getContext("2d",{willReadFrequently:true});
+function brightness(){try{pctx.drawImage(video,0,0,24,24);const d=pctx.getImageData(0,0,24,24).data;let s=0;for(let i=0;i<d.length;i+=4)s+=d[i]*.3+d[i+1]*.59+d[i+2]*.11;return s/(d.length/4)}catch(e){return 255}}
+async function goodPhoto(){
+  await waitForFrames();if(!video.videoWidth)return null;
+  await sleep(600);
+  for(let i=0;i<12&&brightness()<18;i++)await sleep(150);
+  return await grabPhoto();
+}
+async function openFront(){
+  let r=null;
+  for(let i=0;i<3;i++){r=await openStream("user");if(r.stream)return r;if(r.err&&(r.err.name==="NotAllowedError"||r.err.name==="SecurityError"))break;await sleep(400)}
+  return r;
+}
+let selfieBusy=false,lastPhotoErr="";
+async function takeSelfie(){
+  selfieBusy=true;lastPhotoErr="";
+  try{
+    if(stream&&facing==="user"){const b=await goodPhoto();if(!b)lastPhotoErr="no picture from camera";return b}
+    const hadStream=!!stream;
+    if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;video.srcObject=null;await sleep(450)} // give the phone time to release the back camera
+    const r=await openFront();let b=null;
+    if(r&&r.stream){
+      $("#camStart").hidden=true;await attach(r.stream,"user");b=await goodPhoto();
+      if(!b)lastPhotoErr="no picture from front camera";
+      stream.getTracks().forEach(t=>t.stop());stream=null;video.srcObject=null;
+    }else lastPhotoErr=(r&&r.err&&r.err.name)||"front camera unavailable";
+    if(hadStream){await sleep(300);const back=await openStream(facing);if(back.stream)await attach(back.stream,facing);else{selfieBusy=false;stopCam()}}
+    else $("#camStart").hidden=false;
+    return b;
+  }catch(e){lastPhotoErr=(e&&e.name)||"error";return null}
+  finally{selfieBusy=false}
+}
+const work=document.createElement("canvas"),wctx=work.getContext("2d",{willReadFrequently:true});
+function camWanted(){try{return localStorage.getItem("camOn")==="1"}catch(e){return false}}
+function setCamWanted(v){try{localStorage.setItem("camOn",v?"1":"0")}catch(e){}}
+async function setupDetector(){
+  if("BarcodeDetector" in window){try{const f=await BarcodeDetector.getSupportedFormats();if(f.includes("qr_code"))detector=new BarcodeDetector({formats:["qr_code"]})}catch(e){}}
+}
+function libsMissing(){return !detector&&!window.jsQR}
+let starting=false;
+async function startCam(){
+  if(stream||starting||selfieBusy)return;
+  const msg=$("#camMsg");
+  if(libsMissing()){msg.textContent="The QR reader didn't load. Connect this phone to the internet, close the app fully and open it again once.";return}
+  if(location.protocol==="file:"||location.protocol==="content:"||!window.isSecureContext||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+    msg.textContent=(location.protocol==="file:"||location.protocol==="content:")
+      ?"The live scanner needs the app opened from its web address (https://…netlify.app), not from the phone's files. You can use Scan with photo for now."
+      :"This browser can't run the live camera. Open the app in Chrome (Android) or Safari (iPhone), or use Scan with photo.";
+    return}
+  starting=true;msg.textContent="Starting camera…";
+  const opened=await openStream(facing);const lastErr=opened.err;
+  starting=false;
+  if(!opened.stream){
+    $("#camStart").hidden=false;const n=lastErr&&lastErr.name||"Error";
+    msg.textContent=n==="NotAllowedError"||n==="SecurityError"
+      ?"Camera permission is blocked. In Chrome tap the lock or ⓘ icon (or Settings › Apps › Chrome › Permissions) and allow Camera, then tap Start scanner. ("+n+")"
+      :n==="NotReadableError"?"Another app is using the camera. Close it and tap Start scanner again. ("+n+")"
+      :n==="NotFoundError"?"No camera was found on this device. ("+n+")"
+      :"The camera couldn't start. Restart the phone and try again, or use Scan with photo. ("+n+")";
+    return}
+  await attach(opened.stream,facing);
+  $("#camStart").hidden=true;setCamWanted(true);scanning=true;
+  try{wakeLock=await navigator.wakeLock?.request("screen")}catch(e){}
+  setScanStatus();
+  loop();
+}
+/* backup: decode a photo of the card */
+$("#photoBtn").addEventListener("click",()=>$("#photoIn").click());
+$("#photoIn").addEventListener("change",async e=>{
+  const f=e.target.files&&e.target.files[0];e.target.value="";if(!f)return;
+  if(libsMissing()){flash("err","Not ready","QR reader didn't load","Connect to the internet and reopen the app once.");return}
+  $("#scanStatus").textContent="Reading the photo…";
+  try{
+    const url=URL.createObjectURL(f);const img=new Image();
+    await new Promise((ok,bad)=>{img.onload=ok;img.onerror=bad;img.src=url});
+    let txt=null;
+    if(detector){try{const r=await detector.detect(img);if(r.length)txt=r[0].rawValue}catch(err){}}
+    if(!txt&&window.jsQR){for(const max of [1000,1600,700]){
+      const k=Math.min(1,max/Math.max(img.width,img.height));work.width=Math.round(img.width*k);work.height=Math.round(img.height*k);
+      wctx.drawImage(img,0,0,work.width,work.height);const r=jsQR(wctx.getImageData(0,0,work.width,work.height).data,work.width,work.height,{inversionAttempts:"attemptBoth"});
+      if(r&&r.data){txt=r.data;break}}}
+    URL.revokeObjectURL(url);setScanStatus();
+    if(txt)handleScan(txt);else{beep(false);flash("err","Try again","No QR code found","Take a close, sharp photo of the QR code without glare.")}
+  }catch(err){flash("err","Try again","Couldn't open the photo","Take the photo again.")}
+});
+let wakeLock=null;
+function stopCam(){scanning=false;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}video.srcObject=null;$("#camStart").hidden=false;try{wakeLock&&wakeLock.release()}catch(e){}wakeLock=null}
+document.addEventListener("visibilitychange",()=>{if(selfieBusy)return;if(document.hidden)stopCam();else if(current==="scan"&&camWanted())setTimeout(()=>{if(!document.hidden&&current==="scan")startCam()},700)});
+$("#startBtn").addEventListener("click",startCam);
+$("#flipBtn").addEventListener("click",()=>{facing=facing==="environment"?"user":"environment";try{localStorage.setItem("facing",facing)}catch(e){}stopCam();startCam()});
+function setScanStatus(){const s=$("#scanStatus");s.className="scanstatus";
+  s.textContent=settings.selfie?"Hold your ID card's QR code in the frame. A photo of you is taken with each scan.":"Hold the QR code on your ID card inside the frame."}
+
+async function readFrame(){
+  if(video.readyState<2||!video.videoWidth)return null;
+  if(detector){try{const r=await detector.detect(video);return r.length?r[0].rawValue:null}catch(e){detector=null}}
+  if(!window.jsQR)return null;
+  const k=Math.min(1,640/Math.max(video.videoWidth,video.videoHeight));
+  work.width=Math.round(video.videoWidth*k);work.height=Math.round(video.videoHeight*k);
+  wctx.drawImage(video,0,0,work.width,work.height);
+  const d=wctx.getImageData(0,0,work.width,work.height);
+  const r=jsQR(d.data,work.width,work.height,{inversionAttempts:"dontInvert"});
+  return r&&r.data?r.data:null;
+}
+async function loop(){
+  if(!scanning)return;
+  if(!paused){
+    try{const txt=await readFrame();
+      if(txt){const now=Date.now();if(!(txt===lastText&&now-lastAt<6000)){lastText=txt;lastAt=now;await handleScan(txt)}}
+    }catch(e){}
+  }
+  setTimeout(loop,detector?120:180);
+}
+/* scanner guns (USB/Bluetooth) type the QR text fast and press Enter */
+let kb="",kbAt=0;
+document.addEventListener("keydown",e=>{
+  if(current!=="scan")return;const t=e.target;if(t&&/^(INPUT|TEXTAREA)$/.test(t.tagName))return;
+  const n=performance.now();if(n-kbAt>60)kb="";kbAt=n;
+  if(e.key==="Enter"){if(kb.length>4){const v=kb;kb="";e.preventDefault();handleScan(v)}return}
+  if(e.key.length===1)kb+=e.key;
+});
+
+/* ---------- sign in / out ---------- */
+let audioCtx=null;
+function beep(ok){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.value=ok?1046:220;o.type=ok?"sine":"square";g.gain.setValueAtTime(.18,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+(ok?.25:.45));o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.5)}catch(e){}
+  try{navigator.vibrate&&navigator.vibrate(ok?90:[60,60,60])}catch(e){}}
+let flashURL=null;
+function flash(kind,word,name,sub,stamp,late,photo){
+  paused=true;const f=$("#flash");f.className="flash "+kind;f.innerHTML="";
+  if(flashURL){URL.revokeObjectURL(flashURL);flashURL=null}
+  if(photo){flashURL=URL.createObjectURL(photo);const i=el("img","selfie");i.src=flashURL;i.alt="";f.append(i)}
+  f.append(el("div","word",word));if(name)f.append(el("div","name",name));if(sub)f.append(el("div","sub",sub));
+  if(late)f.append(el("div","lateTag","LATE"));if(stamp)f.append(el("div","stamp",stamp));
+  f.hidden=false;clearTimeout(flash.t);
+  const close=()=>{f.hidden=true;paused=false};
+  if(kind==="snap"){f.onclick=null;return}
+  f.onclick=close;flash.t=setTimeout(close,kind==="err"?3200:3000);
+}
+async function handleScan(raw){
+  raw=String(raw||"").trim();
+  if(!raw.toUpperCase().startsWith(QR_PREFIX)){beep(false);flash("err","Invalid","Not a staff ID card","Scan the QR code on a staff ID card.");return}
+  const no=cleanNo(raw.slice(QR_PREFIX.length));const s=staff.get(no);
+  if(!s){beep(false);flash("err","Unknown",no,"This card isn't on the staff list. Ask the manager to add it.");return}
+  const now=new Date(),ts=now.getTime();
+  const mine=todayLogs.filter(l=>l.staffNo===no).sort((a,b)=>a.ts-b.ts);const last=mine[mine.length-1];
+  if(last&&ts-last.ts<120000){beep(true);flash("done","Done",s.name,"Already signed "+last.type+" at "+fmtTime(last.ts)+".");return}
+  const type=(!last||last.type==="out")?"in":"out";
+  const late=type==="in"&&!mine.length&&hhmm(now)>settings.lateAfter;
+  const entry={staffNo:no,name:s.name,type,ts,date:localDate(now),time:hhmm(now),late};
+  let photo=null;
+  if(settings.selfie){beep(true);flash("snap","Look at the phone",s.name,"Taking your photo…");photo=await takeSelfie();entry.photo=!!photo}
+  try{const id=await run("logs","readwrite",st=>st.add(entry));entry.id=id;todayLogs.push(entry);renderRecent();
+    if(photo){try{await run("photos","readwrite",st=>st.put({id,date:entry.date,ts,staffNo:no,blob:photo}))}catch(e){entry.photo=false}}
+    if(!settings.selfie)beep(true);
+    flash(type,type==="in"?"Signed in":"Signed out",s.name,(s.role?s.role+" · ":"")+no+(settings.selfie&&!photo?" · Photo not taken ("+(lastPhotoErr||"unknown")+")":""),fmtTime(ts),late,photo);
+  }catch(e){beep(false);flash("err","Not saved",s.name,"The phone couldn't save this scan. Scan again.")}
+}
+function renderRecent(){
+  const ol=$("#recent");ol.innerHTML="";
+  const list=[...todayLogs].sort((a,b)=>b.ts-a.ts).slice(0,8);
+  if(!staff.size){ol.append(el("li",null,"No staff yet. Open the Staff tab to add staff and make their QR cards."));return}
+  if(!list.length){ol.append(el("li",null,"No one has signed in yet today."));return}
+  for(const l of list){const li=el("li");li.append(el("span","t",fmtTime(l.ts)),el("span","n",l.name),el("span","pill "+l.type,l.type==="in"?"In":"Out"));if(l.late)li.append(el("span","pill late","Late"));ol.append(li)}
+}
+
+/* ---------- QR + ID card images ---------- */
+function drawQR(canvas,text,scale){
+  const q=qrcode(0,"M");q.addData(text);q.make();const n=q.getModuleCount(),quiet=4,size=(n+quiet*2)*scale;
+  canvas.width=size;canvas.height=size;const c=canvas.getContext("2d");c.fillStyle="#fff";c.fillRect(0,0,size,size);c.fillStyle="#000";
+  for(let r=0;r<n;r++)for(let k=0;k<n;k++)if(q.isDark(r,k))c.fillRect((k+quiet)*scale,(r+quiet)*scale,scale,scale);
+  return canvas;
+}
+function cardImage(s){
+  const W=640,H=1010,cv=document.createElement("canvas");cv.width=W;cv.height=H;const c=cv.getContext("2d");
+  c.fillStyle="#fff";c.fillRect(0,0,W,H);
+  c.save();c.beginPath();c.rect(0,0,W,40);c.clip();
+  for(let x=-60;x<W+60;x+=36){c.fillStyle="#D99100";c.beginPath();c.moveTo(x,0);c.lineTo(x+18,0);c.lineTo(x-22,40);c.lineTo(x-40,40);c.fill();
+    c.fillStyle="#14232B";c.beginPath();c.moveTo(x+18,0);c.lineTo(x+36,0);c.lineTo(x-4,40);c.lineTo(x-22,40);c.fill()}
+  c.restore();c.textAlign="center";c.fillStyle="#14232B";
+  c.font="800 40px Archivo, 'Arial Narrow', sans-serif";c.fillText((settings.company||"Staff ID").toUpperCase(),W/2,110,W-60);
+  c.font="500 22px 'IBM Plex Sans', sans-serif";c.fillStyle="#5B6970";c.fillText("STAFF IDENTITY CARD",W/2,148);
+  const q=drawQR(document.createElement("canvas"),QR_PREFIX+s.staffNo,12);c.imageSmoothingEnabled=false;c.drawImage(q,(W-440)/2,190,440,440);
+  c.fillStyle="#14232B";c.font="700 44px Archivo, 'Arial Narrow', sans-serif";c.fillText(s.name,W/2,710,W-60);
+  c.font="500 28px 'IBM Plex Sans', sans-serif";c.fillStyle="#5B6970";c.fillText(s.role||"",W/2,756,W-60);
+  c.fillStyle="#14232B";c.fillRect(60,800,W-120,3);c.font="700 40px 'JetBrains Mono', monospace";c.fillText(s.staffNo,W/2,870);
+  c.font="500 20px 'IBM Plex Sans', sans-serif";c.fillStyle="#5B6970";c.fillText("Scan at the entrance to sign in and out",W/2,930);
+  return cv;
+}
+const toBlob=cv=>new Promise(r=>cv.toBlob(r,"image/png"));
+async function giveFile(blob,name,msgEl,preferShare){
+  const file=new File([blob],name,{type:blob.type});
+  if(preferShare&&navigator.canShare&&navigator.canShare({files:[file]})){
+    try{await navigator.share({files:[file],title:name});msgEl.textContent="Shared "+name+".";return}catch(e){if(e&&e.name==="AbortError"){msgEl.textContent="";return}}
+  }
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.append(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000);msgEl.textContent="Saved "+name+" to Downloads.";
+}
+
+/* ---------- staff ---------- */
+function suggestNo(){
+  const f=$("#aNo");if(f.dataset.touched)return;const pre=cleanNo(settings.prefix)||"STF";let max=0;
+  for(const k of staff.keys()){const m=k.match(new RegExp("^"+pre+"-(\\d+)$"));if(m)max=Math.max(max,+m[1])}
+  f.value=pre+"-"+String(max+1).padStart(3,"0");
+}
+$("#aNo").addEventListener("input",e=>{e.target.dataset.touched="1"});
+function renderStaff(){
+  const box=$("#cards");box.innerHTML="";const list=[...staff.values()].sort((a,b)=>a.staffNo.localeCompare(b.staffNo));
+  $("#staffCount").textContent=list.length?"Staff cards ("+list.length+")":"Staff cards";
+  if(!list.length){box.append(el("div","empty","No staff yet. Add your first staff member above and their QR card appears here."));box.firstChild.style.gridColumn="1/-1"}
+  for(const s of list){
+    const card=el("div","card");card.append(el("div","band"));const body=el("div","body");
+    const cv=document.createElement("canvas");drawQR(cv,QR_PREFIX+s.staffNo,5);body.append(cv,el("div","nm",s.name));
+    if(s.role)body.append(el("div","hint",s.role));body.append(el("div","no",s.staffNo));card.append(body);
+    const acts=el("div","acts"),msg=el("p","msg");msg.style.cssText="text-align:center;color:var(--muted)";
+    const b1=el("button","btn small","ID card image");b1.type="button";b1.onclick=async()=>giveFile(await toBlob(cardImage(s)),"ID-card-"+s.staffNo+".png",msg,true);
+    const b2=el("button","btn small","QR code only");b2.type="button";b2.onclick=async()=>giveFile(await toBlob(drawQR(document.createElement("canvas"),QR_PREFIX+s.staffNo,16)),"QR-"+s.staffNo+".png",msg,true);
+    const b3=el("button","btn small danger","Remove");b3.type="button";
+    b3.onclick=()=>{acts.innerHTML="";const c=el("div","confirm",null);c.append(el("span",null,"Remove "+s.name+"? Their past attendance stays."));
+      const y=el("button","btn small danger","Yes, remove");y.type="button";y.onclick=async()=>{await run("staff","readwrite",st=>st.delete(s.staffNo));staff.delete(s.staffNo);renderStaff();renderRecent()};
+      const n=el("button","btn small","Keep");n.type="button";n.onclick=renderStaff;c.append(y,n);acts.append(c)};
+    acts.append(b1,b2,b3,msg);card.append(acts);box.append(card);
+  }
+  suggestNo();
+}
+$("#addForm").addEventListener("submit",async e=>{
+  e.preventDefault();const msg=$("#addMsg");
+  const name=$("#aName").value.trim(),role=$("#aRole").value.trim(),no=cleanNo($("#aNo").value);
+  if(!name||!no){msg.textContent="Enter a name and a staff number.";return}
+  if(staff.has(no)){msg.textContent=no+" is already used by "+staff.get(no).name+". Choose another number.";return}
+  const s={staffNo:no,name,role,created:Date.now()};
+  try{await run("staff","readwrite",st=>st.put(s));staff.set(no,s);msg.textContent="Added "+name+" ("+no+"). Their QR card is below.";
+    $("#aName").value="";$("#aRole").value="";delete $("#aNo").dataset.touched;renderStaff();renderRecent()}
+  catch(err){msg.textContent="Couldn't save. Try again."}
+});
+
+/* ---------- attendance ---------- */
+function minutesWorked(entries,live){let t=0,open=null;for(const l of entries){if(l.type==="in")open=l.ts;else if(open!=null){t+=l.ts-open;open=null}}if(open!=null&&live)t+=Date.now()-open;return Math.round(t/60000)}
+let dayURLs=[];
+function openViewer(url,title,sub){const v=$("#viewer");v.innerHTML="";const i=el("img");i.src=url;i.alt="Photo of "+title;v.append(i,el("div","vt",title),el("div","vs",sub),el("div","vh2","Tap anywhere to close"));v.hidden=false;v.onclick=()=>{v.hidden=true}}
+async function loadDay(){
+  const date=$("#logDate").value||today;const logs=date===today?todayLogs:await logsFor(date,date);
+  dayURLs.forEach(u=>URL.revokeObjectURL(u));dayURLs=[];
+  let photos=new Map();try{photos=new Map((await run("photos","readonly",st=>st.index("date").getAll(date))).map(p=>[p.id,p]))}catch(e){}
+  const by=new Map();for(const l of [...logs].sort((a,b)=>a.ts-b.ts)){if(!by.has(l.staffNo))by.set(l.staffNo,[]);by.get(l.staffNo).push(l)}
+  const all=[...staff.values()].sort((a,b)=>a.name.localeCompare(b.name));
+  for(const k of by.keys())if(!staff.has(k))all.push({staffNo:k,name:by.get(k)[0].name,role:"Removed"});
+  const rows=$("#rows");rows.innerHTML="";let present=0,late=0,still=0;
+  for(const s of all){
+    const e=by.get(s.staffNo)||[];const r=el("div","rowc");r.append(el("div","nm",s.name));const st=el("div","st");
+    const ins=e.filter(x=>x.type==="in"),last=e[e.length-1];
+    if(!e.length)st.append(el("span","pill absent","Absent"));
+    else{present++;if(ins[0]&&ins[0].late){late++;st.append(el("span","pill late","Late"))}else st.append(el("span","pill ontime","On time"));
+      if(last.type==="in"){still++;st.append(el("span","pill in",date===today?"Still in":"No sign-out"))}}
+    r.append(st);
+    const m=el("div","meta");m.append(el("span",null,s.staffNo));
+    if(e.length){const mins=minutesWorked(e,date===today);m.append(el("span",null,"In "+(ins[0]?fmtTime(ins[0].ts):"—")),el("span",null,"Out "+(last.type==="out"?fmtTime(last.ts):"—")),el("span",null,Math.floor(mins/60)+"h "+pad(mins%60)+"m"))}
+    r.append(m);
+    if(e.length){const sh=el("div","shots");
+      for(const l of e){const b=el("button","shot");b.type="button";const p=photos.get(l.id);
+        if(p&&p.blob){const u=URL.createObjectURL(p.blob);dayURLs.push(u);const i=el("img");i.src=u;i.alt="";b.append(i);b.onclick=()=>openViewer(u,s.name,(l.type==="in"?"Signed in ":"Signed out ")+fmtTime(l.ts)+" · "+fmtDate(new Date(l.ts)))}
+        else{b.append(el("span","nophoto","No photo"));b.disabled=true}
+        b.append(el("span","cap",(l.type==="in"?"In ":"Out ")+fmtTime(l.ts)));sh.append(b)}
+      r.append(sh)}
+    rows.append(r);
+  }
+  if(!all.length)rows.append(el("div","empty","Add staff to see attendance here."));
+  const t=$("#tally");t.innerHTML="";
+  for(const [n,l] of [[present,"Present"],[late,"Late"],[Math.max(0,staff.size-present),"Absent"],[still,date===today?"Still in":"No sign-out"]]){const d=el("div");d.append(el("b",null,String(n)),el("span",null,l));t.append(d)}
+}
+$("#logDate").addEventListener("change",loadDay);
+$("#expBtn").addEventListener("click",async()=>{
+  const m=$("#expMonth").value,msg=$("#expMsg");if(!m)return;
+  const L=(await logsFor(m+"-01",m+"-31")).sort((a,b)=>a.ts-b.ts);
+  const key=new Map();for(const l of L){const k=l.date+"|"+l.staffNo;if(!key.has(k))key.set(k,[]);key.get(k).push(l)}
+  const q=v=>'"'+String(v??"").replace(/"/g,'""')+'"';
+  const lines=[["Date","Staff no","Name","Signed in","Signed out","Hours","Late"].map(q).join(",")];
+  for(const e of key.values()){const ins=e.filter(x=>x.type==="in"),last=e[e.length-1];
+    lines.push([e[0].date,e[0].staffNo,e[0].name,ins[0]?ins[0].time:"",last.type==="out"?last.time:"",(minutesWorked(e,false)/60).toFixed(2),ins[0]&&ins[0].late?"Yes":"No"].map(q).join(","))}
+  if(lines.length===1){msg.textContent="No sign-ins recorded in that month.";return}
+  giveFile(new Blob([lines.join("\n")],{type:"text/csv"}),"attendance-"+m+".csv",msg,true);
+});
+
+/* ---------- settings + backup ---------- */
+function applySettings(){$("#coName").textContent=settings.company||"Staff Clock-In";$("#coSub").textContent="Scan your ID card · late after "+settings.lateAfter;suggestNo()}
+function fillSettings(){$("#sCo").value=settings.company;$("#sPre").value=settings.prefix;$("#sLate").value=settings.lateAfter;$("#sPin").value=settings.pin;$("#sSelfie").checked=!!settings.selfie;$("#sKeep").value=String(settings.keepDays);$("#setMsg").textContent=""}
+$("#setForm").addEventListener("submit",async e=>{
+  e.preventDefault();const pin=$("#sPin").value.trim();
+  if(pin&&!/^\d{4}$/.test(pin)){$("#setMsg").textContent="The PIN must be exactly 4 digits, or empty.";return}
+  settings={company:$("#sCo").value.trim(),prefix:cleanNo($("#sPre").value)||"STF",lateAfter:$("#sLate").value||"08:30",pin,selfie:$("#sSelfie").checked,keepDays:+$("#sKeep").value||90};
+  await run("kv","readwrite",st=>st.put(settings,"settings"));applySettings();setScanStatus();prunePhotos();
+  $("#setMsg").textContent=pin?"Saved. The manager PIN is now "+pin+". Don't forget it.":"Saved.";
+  if(pin)unlocked=true;$("#lockBtn").hidden=!pin;
+});
+async function prunePhotos(){
+  try{const cutoff=localDate(new Date(Date.now()-settings.keepDays*86400000));
+    await run("photos","readwrite",st=>{const r=st.index("date").openCursor(IDBKeyRange.upperBound(cutoff,true));r.onsuccess=()=>{const c=r.result;if(c){c.delete();c.continue()}}})}catch(e){}
+}
+const blobToData=b=>new Promise((ok,bad)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=bad;r.readAsDataURL(b)});
+async function dataToBlob(u){return (await fetch(u)).blob()}
+$("#backupBtn").addEventListener("click",async()=>{
+  const msg=$("#bakMsg");const withPhotos=$("#bakPhotos").checked;
+  const data={app:"staff-clockin",version:2,exported:new Date().toISOString(),settings,staff:await getAll("staff"),logs:await getAll("logs")};
+  if(withPhotos){msg.textContent="Preparing photos…";data.photos=[];for(const p of await getAll("photos"))data.photos.push({id:p.id,date:p.date,ts:p.ts,staffNo:p.staffNo,data:await blobToData(p.blob)})}
+  giveFile(new Blob([JSON.stringify(data)],{type:"application/json"}),"clockin-backup-"+today+".json",$("#bakMsg"),true);
+});
+$("#restoreBtn").addEventListener("click",()=>$("#restoreFile").click());
+$("#restoreFile").addEventListener("change",async e=>{
+  const f=e.target.files[0];e.target.value="";if(!f)return;const msg=$("#bakMsg");
+  try{const d=JSON.parse(await f.text());if(d.app!=="staff-clockin")throw 0;
+    await run("staff","readwrite",st=>{st.clear();for(const s of d.staff||[])st.put(s)});
+    await run("logs","readwrite",st=>{st.clear();for(const l of d.logs||[])st.put(l)});
+    if(d.settings)await run("kv","readwrite",st=>st.put({...DEF,...d.settings},"settings"));
+    let np=0;
+    if(Array.isArray(d.photos)){const ps=[];for(const p of d.photos){try{ps.push({id:p.id,date:p.date,ts:p.ts,staffNo:p.staffNo,blob:await dataToBlob(p.data)})}catch(err){}}
+      await run("photos","readwrite",st=>{st.clear();for(const p of ps)st.put(p)});np=ps.length}
+    await loadAll();applySettings();fillSettings();renderRecent();setScanStatus();
+    msg.textContent="Restored "+(d.staff||[]).length+" staff, "+(d.logs||[]).length+" scans"+(np?" and "+np+" photos":"")+".";
+  }catch(err){msg.textContent="That file isn't a Staff Clock-In backup."}
+});
+
+/* ---------- boot ---------- */
+(async()=>{
+  $("#logDate").value=today;$("#expMonth").value=today.slice(0,7);
+  try{idb=await openDB();await loadAll()}catch(e){$("#scanStatus").className="scanstatus warn";$("#scanStatus").textContent="This phone's storage couldn't be opened. Check the browser isn't in private mode."}
+  try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
+  applySettings();setScanStatus();renderRecent();await setupDetector();show("scan");prunePhotos();
+  if("serviceWorker" in navigator&&location.protocol==="https:")navigator.serviceWorker.register("sw.js").catch(()=>{});
+})();
+})();
+</script>
+</body>
+</html>
