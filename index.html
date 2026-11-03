@@ -60,26 +60,28 @@
     <!-- Navigation -->
     <nav class="fixed w-full z-50 bg-white/95 backdrop-blur-sm shadow-sm transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-24">
-                <!-- Logo --> <a href="#" class="logo-link">
-  <img src="REAL LOGO 1.png" alt="KPATEI CONCEPT & BUILD Logo" style="height: 50px; width: auto; vertical-align: middle;">
-</a>
-                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
-                    <img src="REAL LOGO 1.jpg" alt="KPATEI Concept & Build Logo" class="h-20 w-auto object-contain drop-shadow-md" onerror="this.onerror=null; this.src='https://placehold.co/200x80/ffffff/1a202c?text=KPATEI+CONCEPT';">
-                </div>
-                
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <a href="#" class="flex-shrink-0 flex items-center" aria-label="KPATEI Concept & Build home">
+                    <img src="logo.png" alt="KPATEI Concept & Build Logo" class="h-16 w-auto object-contain">
+                </a>
+
                 <!-- Desktop Menu -->
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="#about" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors">About Us</a>
+                <div class="hidden lg:flex items-center space-x-6">
+                    <a href="#about" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors">About</a>
                     <a href="#services" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors">Services</a>
+                    <a href="#plans" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors" data-needs="plans">House Plans</a>
                     <a href="#portfolio" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors">Portfolio</a>
-                    <a href="#contact" class="bg-kpatei-cyan hover:bg-kpatei-cyanDark text-white px-6 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-cyan-500/30 transform hover:-translate-y-0.5">
-                        Consult With Us
+                    <a href="#gallery" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors" data-needs="gallery">Gallery</a>
+                    <a href="#estimator" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors" data-needs="estimator">Cost Estimator</a>
+                    <a href="#reviews" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors" data-needs="reviews">Reviews</a>
+                    <a href="#request" class="bg-kpatei-cyan hover:bg-kpatei-cyanDark text-white px-6 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-cyan-500/30 transform hover:-translate-y-0.5">
+                        Request a Plan
                     </a>
                 </div>
 
                 <!-- Mobile menu button -->
-                <div class="md:hidden flex items-center">
+                <div class="lg:hidden flex items-center">
                     <button id="mobile-menu-btn" class="text-kpatei-slate hover:text-kpatei-cyan focus:outline-none p-2">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
@@ -88,12 +90,17 @@
         </div>
 
         <!-- Mobile Menu (Hidden by default) -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg">
-            <div class="px-4 pt-2 pb-6 space-y-2">
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t border-gray-100 absolute w-full shadow-lg max-h-[80vh] overflow-y-auto">
+            <div class="px-4 pt-2 pb-6 space-y-1">
                 <a href="#about" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">About Us</a>
                 <a href="#services" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Services</a>
+                <a href="#plans" data-needs="plans" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">House Plans</a>
                 <a href="#portfolio" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Portfolio</a>
-                <a href="#contact" class="block px-3 py-3 mt-4 text-center text-base font-medium bg-kpatei-cyan text-white rounded-md">Consult With Us</a>
+                <a href="#gallery" data-needs="gallery" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Gallery</a>
+                <a href="#estimator" data-needs="estimator" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Cost Estimator</a>
+                <a href="#reviews" data-needs="reviews" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Reviews</a>
+                <a href="#contact" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Contact</a>
+                <a href="#request" class="block px-3 py-3 mt-4 text-center text-base font-medium bg-kpatei-cyan text-white rounded-md">Request a Plan</a>
             </div>
         </div>
     </nav>
@@ -140,10 +147,10 @@
                 <!-- Image Side -->
                 <div class="relative w-full h-full flex gap-4">
   <!-- First Image -->
-  <img src="MAIN IMAGE.jpg" alt="Architect drafting plans" class="w-1/2 rounded-2xl shadow-2xl object-cover border-4 border-white">
+  <img src="images/about-1.jpg" alt="Architect drafting plans" class="w-1/2 rounded-2xl shadow-2xl object-cover border-4 border-white">
   
   <!-- Second Image -->
-  <img src="IMAGE WITH PLAN.png" alt="Structural Engineer" class="w-1/2 rounded-2xl shadow-2xl object-cover border-4 border-white">
+  <img src="images/about-2.jpg" alt="Structural Engineer" class="w-1/2 rounded-2xl shadow-2xl object-cover border-4 border-white">
 </div>
 
                 <!-- Text Side -->
@@ -242,6 +249,28 @@
         </div>
     </section>
 
+    <!-- House Plan Catalogue (filled from the PLANS list in the script at the bottom) -->
+    <section id="plans" class="py-20 md:py-28 bg-kpatei-light" hidden>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+                <div class="max-w-2xl">
+                    <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">House Plan Catalogue</h4>
+                    <h2 class="text-3xl md:text-5xl font-heading font-extrabold text-kpatei-dark mb-4">Find a Plan You Love</h2>
+                    <p class="text-gray-600 text-lg">Browse some of our designs. Every plan can be adjusted to your plot, budget and family, and comes as a full package for your building permit.</p>
+                </div>
+            </div>
+            <div id="plan-filters" class="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filter plans by type"></div>
+            <div id="plan-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div class="mt-10 bg-white border border-gray-100 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 md:items-center justify-between">
+                <div>
+                    <h3 class="font-heading font-bold text-xl text-kpatei-dark mb-2">Every plan comes as a full permit package</h3>
+                    <p class="text-gray-600 text-sm">Floor plans, elevations, sections, roof plan and site plan, ready to submit for your building permit.</p>
+                </div>
+                <a href="#request" class="shrink-0 bg-kpatei-dark hover:bg-kpatei-slate text-white px-6 py-3 rounded-full font-semibold transition-colors text-center">Don't see your dream? Request a custom plan</a>
+            </div>
+        </div>
+    </section>
+
     <!-- Portfolio Section -->
     <section id="portfolio" class="py-20 md:py-32 bg-kpatei-slate text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -305,6 +334,155 @@
         </div>
     </section>
 
+    <!-- Project Photo Gallery (filled from the GALLERY list) -->
+    <section id="gallery" class="py-20 md:py-28 bg-white" hidden>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Photo Gallery</h4>
+                <h2 class="text-3xl md:text-5xl font-heading font-extrabold text-kpatei-dark mb-4">Our Projects in Pictures</h2>
+                <p class="text-gray-600 text-lg">Designs, sites and finished buildings from across Sierra Leone. Tap a photo to see it full size.</p>
+            </div>
+            <div id="gallery-filters" class="flex flex-wrap justify-center gap-2 mb-8" role="group" aria-label="Filter photos"></div>
+            <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"></div>
+        </div>
+    </section>
+
+    <!-- Building Cost Estimator (uses RATES in the script) -->
+    <section id="estimator" class="py-20 md:py-28 bg-kpatei-dark text-white relative overflow-hidden" hidden>
+        <div class="absolute -top-32 -right-32 w-96 h-96 bg-kpatei-cyan rounded-full filter blur-3xl opacity-10"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="max-w-3xl mb-10">
+                <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Building Cost Estimator</h4>
+                <h2 class="text-3xl md:text-5xl font-heading font-extrabold mb-4">What Will Your House Cost to Build?</h2>
+                <p class="text-gray-400 text-lg">Choose the size of house you want. We'll estimate the floor area and a rough building cost to help you plan your budget.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <form id="est-form" class="lg:col-span-3 glass-panel rounded-2xl p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label for="est-floors" class="block text-sm font-medium text-gray-300 mb-2">Number of floors</label>
+                        <select id="est-floors" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white outline-none focus:border-kpatei-cyan">
+                            <option value="1" class="text-gray-900">1 (Bungalow)</option>
+                            <option value="2" class="text-gray-900">2 (Duplex / storey)</option>
+                            <option value="3" class="text-gray-900">3</option>
+                            <option value="4" class="text-gray-900">4</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="est-finish" class="block text-sm font-medium text-gray-300 mb-2">Finishing</label>
+                        <select id="est-finish" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white outline-none focus:border-kpatei-cyan"></select>
+                    </div>
+                    <div>
+                        <label for="est-bed" class="block text-sm font-medium text-gray-300 mb-2">Bedrooms</label>
+                        <input id="est-bed" type="number" min="1" max="12" value="3" inputmode="numeric" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white outline-none focus:border-kpatei-cyan">
+                    </div>
+                    <div>
+                        <label for="est-bath" class="block text-sm font-medium text-gray-300 mb-2">Bathrooms / toilets</label>
+                        <input id="est-bath" type="number" min="1" max="12" value="2" inputmode="numeric" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white outline-none focus:border-kpatei-cyan">
+                    </div>
+                    <fieldset class="sm:col-span-2">
+                        <legend class="block text-sm font-medium text-gray-300 mb-3">Extras</legend>
+                        <div class="flex flex-wrap gap-3 text-sm">
+                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 cursor-pointer"><input type="checkbox" id="est-dining" checked class="accent-cyan-400"> Separate dining</label>
+                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 cursor-pointer"><input type="checkbox" id="est-veranda" checked class="accent-cyan-400"> Veranda / porch</label>
+                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 cursor-pointer"><input type="checkbox" id="est-store" class="accent-cyan-400"> Store room</label>
+                            <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 cursor-pointer"><input type="checkbox" id="est-bq" class="accent-cyan-400"> Boys' quarters</label>
+                        </div>
+                    </fieldset>
+                </form>
+                <div class="lg:col-span-2 bg-white text-kpatei-dark rounded-2xl p-6 md:p-8 flex flex-col">
+                    <p class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-1">Estimated floor area</p>
+                    <p class="font-heading font-extrabold text-3xl mb-1"><span id="est-area">–</span></p>
+                    <p class="text-sm text-gray-500 mb-6" id="est-area-ft"></p>
+                    <p class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-1">Rough building cost</p>
+                    <p class="font-heading font-extrabold text-3xl md:text-4xl text-kpatei-cyanDark mb-2" id="est-cost">–</p>
+                    <p class="text-xs text-gray-500 leading-relaxed mb-6" id="est-note"></p>
+                    <a href="#request" id="est-cta" class="mt-auto bg-kpatei-cyan hover:bg-kpatei-cyanDark text-white text-center px-6 py-3 rounded-full font-semibold transition-colors">Get a plan for this house</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Client Reviews (filled from the REVIEWS list) -->
+    <section id="reviews" class="py-20 md:py-28 bg-kpatei-light" hidden>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Client Reviews</h4>
+                <h2 class="text-3xl md:text-5xl font-heading font-extrabold text-kpatei-dark mb-4">What Our Clients Say</h2>
+            </div>
+            <div id="review-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div class="text-center mt-10">
+                <a href="https://wa.me/23278646003?text=Hello%20KPATEI%2C%20I%20would%20like%20to%20share%20a%20review%20of%20your%20work%3A%20" target="_blank" rel="noopener" class="inline-flex items-center gap-2 border border-kpatei-slate text-kpatei-slate hover:bg-kpatei-slate hover:text-white px-6 py-3 rounded-full font-semibold transition-colors">
+                    <i class="fab fa-whatsapp"></i> Worked with us? Send your review
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Request a Plan (opens WhatsApp with the details filled in) -->
+    <section id="request" class="py-20 md:py-28 bg-white">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-10">
+                <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Request a Plan</h4>
+                <h2 class="text-3xl md:text-5xl font-heading font-extrabold text-kpatei-dark mb-4">Tell Us About Your House</h2>
+                <p class="text-gray-600 text-lg">Fill in what you know and tap send. Your request opens in WhatsApp, ready to send straight to our team.</p>
+            </div>
+            <form id="request-form" class="bg-gray-50 border border-gray-100 rounded-3xl p-6 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-5" novalidate>
+                <div>
+                    <label for="rq-name" class="block text-sm font-medium text-gray-700 mb-2">Your name *</label>
+                    <input id="rq-name" required autocomplete="name" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-kpatei-cyan" placeholder="Mohamed Kamara">
+                </div>
+                <div>
+                    <label for="rq-phone" class="block text-sm font-medium text-gray-700 mb-2">Phone / WhatsApp *</label>
+                    <input id="rq-phone" required type="tel" autocomplete="tel" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-kpatei-cyan" placeholder="+232 ..">
+                </div>
+                <div>
+                    <label for="rq-type" class="block text-sm font-medium text-gray-700 mb-2">Type of building *</label>
+                    <select id="rq-type" required class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-kpatei-cyan text-gray-700">
+                        <option value="">Choose…</option>
+                        <option>Bungalow</option>
+                        <option>Duplex / storey house</option>
+                        <option>Villa / mansion</option>
+                        <option>Apartment building</option>
+                        <option>Commercial plaza / office</option>
+                        <option>Minimalist home</option>
+                        <option>Extension to existing house</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="rq-plan" class="block text-sm font-medium text-gray-700 mb-2">Plan from our catalogue</label>
+                    <input id="rq-plan" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-kpatei-cyan" placeholder="Optional, or 'custom design'">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="rq-bed" class="block text-sm font-medium text-gray-700 mb-2">Bedrooms</label>
+                        <input id="rq-bed" type="number" min="0" max="30" inputmode="numeric" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-kpatei-cyan">
+                    </div>
+                    <div>
+                        <label for="rq-floors" class="block text-sm font-medium text-gray-700 mb-2">Floors</label>
+                        <input id="rq-floors" type="number" min="1" max="20" inputmode="numeric" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-kpatei-cyan">
+                    </div>
+                </div>
+                <div>
+                    <label for="rq-plot" class="block text-sm font-medium text-gray-700 mb-2">Plot size</label>
+                    <input id="rq-plot" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-kpatei-cyan" placeholder="e.g. 50 × 100 ft, or 1 town lot">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="rq-loc" class="block text-sm font-medium text-gray-700 mb-2">Where is the land?</label>
+                    <input id="rq-loc" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-kpatei-cyan" placeholder="e.g. Waterloo, Freetown, Bo, Makeni">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="rq-msg" class="block text-sm font-medium text-gray-700 mb-2">Anything else?</label>
+                    <textarea id="rq-msg" rows="3" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-kpatei-cyan resize-none" placeholder="Style you like, number of toilets, shop in front, when you want to start…"></textarea>
+                </div>
+                <p id="rq-error" class="md:col-span-2 text-red-600 text-sm hidden" role="alert"></p>
+                <button type="submit" class="md:col-span-2 bg-[#25D366] hover:bg-[#1ebe5a] text-white font-bold py-4 rounded-lg transition-colors shadow-lg flex items-center justify-center gap-3 text-lg">
+                    <i class="fab fa-whatsapp text-2xl"></i> Send request on WhatsApp
+                </button>
+                <p class="md:col-span-2 text-center text-sm text-gray-500">No WhatsApp? Call <span class="font-semibold select-all">+232 78 64 60 03</span> or use the contact form below.</p>
+            </form>
+        </div>
+    </section>
+
     <!-- Contact Section -->
     <section id="contact" class="py-20 md:py-32 bg-white relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -353,19 +531,13 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="flex gap-4 mt-10">
+                            <a href="https://www.facebook.com/share/188av59C1R/" target="_blank" rel="noopener" class="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-kpatei-cyan hover:bg-kpatei-cyan hover:text-white transition-colors text-xl" title="Follow KPATEI on Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://www.tiktok.com/@kpatei.concept.bui?_r=1&_t=ZS-9871mtiwdmy" target="_blank" rel="noopener" class="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-kpatei-cyan hover:bg-kpatei-cyan hover:text-white transition-colors text-xl" title="Follow KPATEI on TikTok"><i class="fab fa-tiktok"></i></a>
+                            <a href="https://wa.me/23278646003" target="_blank" rel="noopener" class="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-kpatei-cyan hover:bg-kpatei-cyan hover:text-white transition-colors text-xl" title="Chat with KPATEI on WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        </div>
                     </div>
                 </div>
-                <div class="flex gap-4 mt-6">
-    <!-- Facebook -->
-    <a href="https://www.facebook.com/share/188av59C1R/" target="_blank" class="text-kpatei-cyan hover:text-kpatei-slate transition-colors text-2xl" title="Follow KPATEI on Facebook">
-        <i class="fab fa-facebook"></i>
-    </a>
-    
-    <!-- TikTok -->
-    <a href="https://www.tiktok.com/@kpatei.concept.bui?_r=1&_t=ZS-9871mtiwdmy" target="_blank" class="text-kpatei-cyan hover:text-kpatei-slate transition-colors text-2xl" title="Follow KPATEI on TikTok">
-        <i class="fab fa-tiktok"></i>
-    </a>
-</div>
 
                 <!-- Contact Form Right Side -->
 <div class="lg:w-3/5 p-10 md:p-16 bg-white">
@@ -418,16 +590,6 @@
         </button>
     </form>
 </div>
-                            Send Message
-                            <i class="fas fa-paper-plane transform group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
-                        </button>
-                        
-                        <!-- Success Message Area -->
-                        <div id="form-success" class="hidden mt-4 p-4 bg-green-50 text-green-700 rounded-lg text-center border border-green-200">
-                            Thank you! Your message has been sent to our team. We will contact you shortly.
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
     </section>
@@ -438,14 +600,14 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
                 <!-- Brand col -->
                 <div class="md:col-span-1">
-                    <img src="REAL LOGO 1.jpg" alt="KPATEI Logo" class="h-16 w-auto mb-6 bg-white p-2 rounded-lg object-contain" onerror="this.onerror=null; this.src='https://placehold.co/200x80/ffffff/1a202c?text=KPATEI+CONCEPT';">
+                    <img src="logo.png" alt="KPATEI Logo" class="h-16 w-auto mb-6 bg-white p-2 rounded-lg object-contain">
                     <p class="text-gray-400 text-sm leading-relaxed mb-6">
                         Premier architectural and construction firm dedicated to building Sierra Leone's future through innovative design and structural integrity.
                     </p>
                     <div class="flex space-x-4">
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-kpatei-cyan transition-colors"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-kpatei-cyan transition-colors"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-kpatei-cyan transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://www.facebook.com/share/188av59C1R/" target="_blank" rel="noopener" title="Facebook" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-kpatei-cyan transition-colors"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.tiktok.com/@kpatei.concept.bui?_r=1&_t=ZS-9871mtiwdmy" target="_blank" rel="noopener" title="TikTok" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-kpatei-cyan transition-colors"><i class="fab fa-tiktok"></i></a>
+                        <a href="https://wa.me/23278646003" target="_blank" rel="noopener" title="WhatsApp" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-kpatei-cyan transition-colors"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
 
@@ -455,8 +617,13 @@
                     <ul class="space-y-3">
                         <li><a href="#about" class="text-gray-400 hover:text-kpatei-cyan transition-colors">About Us</a></li>
                         <li><a href="#services" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Our Services</a></li>
+                        <li data-needs="plans"><a href="#plans" class="text-gray-400 hover:text-kpatei-cyan transition-colors">House Plan Catalogue</a></li>
                         <li><a href="#portfolio" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Project Portfolio</a></li>
-                        <li><a href="#contact" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Contact Support</a></li>
+                        <li data-needs="gallery"><a href="#gallery" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Photo Gallery</a></li>
+                        <li data-needs="estimator"><a href="#estimator" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Cost Estimator</a></li>
+                        <li data-needs="reviews"><a href="#reviews" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Client Reviews</a></li>
+                        <li><a href="#request" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Request a Plan</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Contact Us</a></li>
                     </ul>
                 </div>
 
@@ -487,8 +654,7 @@
             <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
                 <p>&copy; 2026 KPATEI Concept & Build. All rights reserved.</p>
                 <div class="flex space-x-4 mt-4 md:mt-0">
-                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="clockin/" class="hover:text-white transition-colors"><i class="fas fa-id-badge mr-1"></i> Staff Clock-In</a>
                 </div>
             </div>
         </div>
@@ -523,6 +689,199 @@
             }
         });
 
+    </script>
+
+    <!-- Full-size photo viewer -->
+    <div id="lightbox" class="fixed inset-0 z-[60] bg-black/95 hidden flex-col items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Photo viewer">
+        <button id="lb-close" class="absolute top-4 right-4 text-white/80 hover:text-white text-3xl w-12 h-12" aria-label="Close"><i class="fas fa-times"></i></button>
+        <button id="lb-prev" class="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-3xl w-12 h-12" aria-label="Previous photo"><i class="fas fa-chevron-left"></i></button>
+        <button id="lb-next" class="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 text-white/80 hover:text-white text-3xl w-12 h-12" aria-label="Next photo"><i class="fas fa-chevron-right"></i></button>
+        <img id="lb-img" src="" alt="" class="max-h-[80vh] max-w-full rounded-lg object-contain">
+        <p id="lb-cap" class="text-white mt-4 text-center font-medium"></p>
+        <p id="lb-count" class="text-white/50 text-sm mt-1"></p>
+    </div>
+
+    <script>
+    /* =====================================================================
+       EASY-TO-EDIT CONTENT
+       Add your plans, photos, reviews and cost rates in these lists.
+       A section stays hidden on the website until its list has something in it.
+       Put image files in the  images/  folder and write their names below.
+       ===================================================================== */
+
+    // HOUSE PLAN CATALOGUE  (no prices)
+    // category must be one of: "Bungalows & Duplexes", "Villas & Mansions",
+    //   "Commercial", "Apartments", "Minimalist & Extensions"
+    const PLANS = [
+        // { name: "3-Bedroom Modern Bungalow", category: "Bungalows & Duplexes",
+        //   bedrooms: 3, bathrooms: 2, floors: 1, size: "Fits a 50 × 100 ft plot",
+        //   description: "Open living and dining, kitchen with store, master bedroom en-suite.",
+        //   images: ["images/plans/bungalow-3bed-1.jpg", "images/plans/bungalow-3bed-2.jpg"] },
+    ];
+
+    // PHOTO GALLERY
+    // category: any short word, e.g. "Designs", "Construction", "Completed"
+    const GALLERY = [
+        // { src: "images/gallery/waterloo-duplex.jpg", title: "Duplex at Waterloo", category: "Completed" },
+    ];
+
+    // CLIENT REVIEWS  (real clients only)
+    const REVIEWS = [
+        // { name: "Aminata K.", place: "Lumley, Freetown", project: "4-bedroom duplex",
+        //   text: "What the client said, in their own words.", stars: 5 },
+    ];
+
+    // BUILDING COST RATES  (per square metre of floor area)
+    // Set currency and the rate for each finish level. Leave rates empty to hide the estimator.
+    const RATES = {
+        currency: "$",          // e.g. "$" or "NLe "
+        perSquareMetre: {
+            // "Standard": 0,
+            // "Premium": 0,
+            // "Luxury": 0,
+        },
+        note: "This is a rough guide only. The real cost depends on your land, soil, materials and current market prices. Contact us for an exact estimate.",
+    };
+
+    const WHATSAPP = "23278646003";
+
+    /* ===================== website code below (no need to edit) ===================== */
+    (function () {
+        const $ = (s, r = document) => r.querySelector(s);
+        const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+        const showSection = (key, on) => {
+            const s = document.getElementById(key); if (s) s.hidden = !on;
+            document.querySelectorAll('[data-needs="' + key + '"]').forEach(n => { n.hidden = !on; n.style.display = on ? '' : 'none'; });
+        };
+
+        /* ---------- lightbox ---------- */
+        const lb = $('#lightbox'); let lbItems = [], lbIndex = 0;
+        function lbShow(i) {
+            lbIndex = (i + lbItems.length) % lbItems.length; const it = lbItems[lbIndex];
+            $('#lb-img').src = it.src; $('#lb-img').alt = it.title || ''; $('#lb-cap').textContent = it.title || '';
+            $('#lb-count').textContent = lbItems.length > 1 ? (lbIndex + 1) + ' / ' + lbItems.length : '';
+            $('#lb-prev').style.display = $('#lb-next').style.display = lbItems.length > 1 ? '' : 'none';
+        }
+        function openLightbox(items, i) { lbItems = items; lb.classList.remove('hidden'); lb.classList.add('flex'); document.body.style.overflow = 'hidden'; lbShow(i); $('#lb-close').focus(); }
+        function closeLightbox() { lb.classList.add('hidden'); lb.classList.remove('flex'); document.body.style.overflow = ''; }
+        $('#lb-close').onclick = closeLightbox; $('#lb-prev').onclick = () => lbShow(lbIndex - 1); $('#lb-next').onclick = () => lbShow(lbIndex + 1);
+        lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
+        document.addEventListener('keydown', e => { if (lb.classList.contains('hidden')) return; if (e.key === 'Escape') closeLightbox(); if (e.key === 'ArrowLeft') lbShow(lbIndex - 1); if (e.key === 'ArrowRight') lbShow(lbIndex + 1); });
+        let tx = null; lb.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
+        lb.addEventListener('touchend', e => { if (tx == null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) lbShow(lbIndex + (dx < 0 ? 1 : -1)); tx = null; });
+
+        /* ---------- filter chips ---------- */
+        function chips(box, cats, onPick) {
+            box.innerHTML = '';
+            ['All', ...cats].forEach((c, i) => {
+                const b = el('button', 'px-4 py-2 rounded-full text-sm font-semibold border transition-colors', c); b.type = 'button';
+                const set = on => { b.setAttribute('aria-pressed', on); b.classList.toggle('bg-kpatei-dark', on); b.classList.toggle('text-white', on); b.classList.toggle('border-kpatei-dark', on); b.classList.toggle('bg-white', !on); b.classList.toggle('text-kpatei-slate', !on); b.classList.toggle('border-gray-200', !on); };
+                set(i === 0); b.onclick = () => { box.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', 'false')); [...box.children].forEach(x => { const on = x === b; x.classList.toggle('bg-kpatei-dark', on); x.classList.toggle('text-white', on); x.classList.toggle('border-kpatei-dark', on); x.classList.toggle('bg-white', !on); x.classList.toggle('text-kpatei-slate', !on); x.classList.toggle('border-gray-200', !on); }); b.setAttribute('aria-pressed', 'true'); onPick(c); };
+                box.append(b);
+            });
+            if (cats.length < 2) box.style.display = 'none';
+        }
+
+        /* ---------- plan catalogue ---------- */
+        function requestPlan(p) {
+            $('#rq-plan').value = p.name;
+            const t = $('#rq-type'); const map = { 'Bungalows & Duplexes': p.floors > 1 ? 'Duplex / storey house' : 'Bungalow', 'Villas & Mansions': 'Villa / mansion', 'Commercial': 'Commercial plaza / office', 'Apartments': 'Apartment building', 'Minimalist & Extensions': 'Minimalist home' };
+            if (map[p.category]) t.value = map[p.category];
+            if (p.bedrooms) $('#rq-bed').value = p.bedrooms; if (p.floors) $('#rq-floors').value = p.floors;
+            document.getElementById('request').scrollIntoView({ behavior: 'smooth' }); setTimeout(() => $('#rq-name').focus({ preventScroll: true }), 600);
+        }
+        function renderPlans(filter) {
+            const grid = $('#plan-grid'); grid.innerHTML = '';
+            PLANS.filter(p => filter === 'All' || p.category === filter).forEach(p => {
+                const card = el('article', 'bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-shadow flex flex-col');
+                const imgs = (p.images || []).map(src => ({ src, title: p.name }));
+                const fig = el('button', 'relative block w-full aspect-[4/3] bg-gray-100 overflow-hidden group'); fig.type = 'button'; fig.setAttribute('aria-label', 'View photos of ' + p.name);
+                if (imgs.length) { const im = el('img', 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-105'); im.src = imgs[0].src; im.alt = p.name; im.loading = 'lazy'; fig.append(im); fig.onclick = () => openLightbox(imgs, 0); }
+                if (imgs.length > 1) { const n = el('span', 'absolute bottom-3 right-3 bg-black/60 text-white text-xs font-semibold px-2.5 py-1 rounded-full'); n.innerHTML = '<i class="fas fa-images mr-1"></i>'; n.append(imgs.length + ' photos'); fig.append(n); }
+                const tag = el('span', 'absolute top-3 left-3 bg-white/95 text-kpatei-slate text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full', p.category); fig.append(tag);
+                card.append(fig);
+                const body = el('div', 'p-6 flex flex-col gap-3 flex-1');
+                body.append(el('h3', 'font-heading font-bold text-xl text-kpatei-dark', p.name));
+                const specs = el('div', 'flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-600');
+                [['fa-bed', p.bedrooms, 'bed'], ['fa-bath', p.bathrooms, 'bath'], ['fa-layer-group', p.floors, p.floors > 1 ? 'floors' : 'floor']].forEach(([ic, v, l]) => { if (v) { const s = el('span'); s.innerHTML = '<i class="fas ' + ic + ' text-kpatei-cyan mr-1"></i>'; s.append(v + ' ' + l); specs.append(s); } });
+                if (p.size) { const s = el('span'); s.innerHTML = '<i class="fas fa-ruler-combined text-kpatei-cyan mr-1"></i>'; s.append(p.size); specs.append(s); }
+                body.append(specs);
+                if (p.description) body.append(el('p', 'text-gray-600 text-sm leading-relaxed', p.description));
+                const acts = el('div', 'mt-auto pt-3 flex gap-2');
+                const r = el('button', 'flex-1 bg-kpatei-cyan hover:bg-kpatei-cyanDark text-white font-semibold py-2.5 rounded-full transition-colors text-sm', 'Request this plan'); r.type = 'button'; r.onclick = () => requestPlan(p);
+                const w = el('a', 'w-11 h-11 shrink-0 rounded-full border border-gray-200 flex items-center justify-center text-[#25D366] hover:bg-gray-50 text-xl'); w.href = 'https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent('Hello KPATEI, I am interested in the "' + p.name + '" plan from your website.'); w.target = '_blank'; w.rel = 'noopener'; w.title = 'Ask about this plan on WhatsApp'; w.innerHTML = '<i class="fab fa-whatsapp"></i>';
+                acts.append(r, w); body.append(acts); card.append(body); grid.append(card);
+            });
+        }
+        if (PLANS.length) { showSection('plans', true); chips($('#plan-filters'), [...new Set(PLANS.map(p => p.category))], renderPlans); renderPlans('All'); } else showSection('plans', false);
+
+        /* ---------- gallery ---------- */
+        function renderGallery(filter) {
+            const grid = $('#gallery-grid'); grid.innerHTML = '';
+            const items = GALLERY.filter(g => filter === 'All' || g.category === filter);
+            items.forEach((g, i) => {
+                const b = el('button', 'relative aspect-square overflow-hidden rounded-xl bg-gray-100 group'); b.type = 'button'; b.setAttribute('aria-label', 'View ' + (g.title || 'photo'));
+                const im = el('img', 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'); im.src = g.src; im.alt = g.title || ''; im.loading = 'lazy'; b.append(im);
+                if (g.title) { const c = el('span', 'absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent text-white text-xs md:text-sm font-semibold text-left p-3 pt-8', g.title); b.append(c); }
+                b.onclick = () => openLightbox(items, i); grid.append(b);
+            });
+        }
+        if (GALLERY.length) { showSection('gallery', true); chips($('#gallery-filters'), [...new Set(GALLERY.map(g => g.category).filter(Boolean))], renderGallery); renderGallery('All'); } else showSection('gallery', false);
+
+        /* ---------- reviews ---------- */
+        if (REVIEWS.length) {
+            showSection('reviews', true); const grid = $('#review-grid');
+            REVIEWS.forEach(r => {
+                const c = el('figure', 'bg-white rounded-2xl p-7 border border-gray-100 shadow-sm flex flex-col gap-4');
+                const st = el('div', 'text-amber-400 text-sm'); st.setAttribute('aria-label', (r.stars || 5) + ' out of 5 stars'); st.innerHTML = '<i class="fas fa-star"></i>'.repeat(Math.max(0, Math.min(5, r.stars || 5)));
+                const q = el('blockquote', 'text-gray-700 leading-relaxed flex-1'); q.append(el('i', 'fas fa-quote-left text-kpatei-cyan/40 text-2xl block mb-2')); q.append(r.text);
+                const who = el('figcaption', 'pt-4 border-t border-gray-100'); who.append(el('div', 'font-heading font-bold text-kpatei-dark', r.name));
+                const meta = [r.project, r.place].filter(Boolean).join(' · '); if (meta) who.append(el('div', 'text-sm text-gray-500', meta));
+                c.append(st, q, who); grid.append(c);
+            });
+        } else showSection('reviews', false);
+
+        /* ---------- cost estimator ---------- */
+        const rateNames = Object.keys(RATES.perSquareMetre || {}).filter(k => RATES.perSquareMetre[k] > 0);
+        if (rateNames.length) {
+            showSection('estimator', true);
+            const fin = $('#est-finish'); rateNames.forEach(n => { const o = el('option', 'text-gray-900', n); o.value = n; fin.append(o); });
+            const num = (id, d) => { const v = parseInt($(id).value, 10); return isNaN(v) ? d : Math.max(0, Math.min(12, v)); };
+            const fmt = n => RATES.currency + Math.round(n).toLocaleString('en-US');
+            function calc() {
+                const floors = +$('#est-floors').value, bed = Math.max(1, num('#est-bed', 3)), bath = Math.max(1, num('#est-bath', 2));
+                // typical Sierra Leone room sizes in square metres
+                let rooms = 26 /* sitting room */ + 12 /* kitchen */ + bed * 13 + 5 /* master bedroom extra */ + bath * 4.5;
+                if ($('#est-dining').checked) rooms += 12; if ($('#est-store').checked) rooms += 5;
+                let area = rooms * 1.22;                       // walls and corridors
+                if (floors > 1) area += (floors - 1) * 10;      // staircase on each floor
+                if ($('#est-veranda').checked) area += 12;
+                if ($('#est-bq').checked) area += 22;           // 1 room, toilet, small kitchen
+                const rate = RATES.perSquareMetre[fin.value];
+                const low = area * rate * 0.9, high = area * rate * 1.15;
+                $('#est-area').textContent = Math.round(area) + ' m²';
+                $('#est-area-ft').textContent = 'about ' + Math.round(area * 10.764).toLocaleString('en-US') + ' sq ft, over ' + floors + (floors > 1 ? ' floors' : ' floor');
+                $('#est-cost').textContent = fmt(low) + ' – ' + fmt(high);
+                $('#est-note').textContent = RATES.note;
+                $('#est-cta').onclick = () => { $('#rq-bed').value = bed; $('#rq-floors').value = floors; $('#rq-type').value = floors > 1 ? 'Duplex / storey house' : 'Bungalow'; $('#rq-msg').value = 'From the cost estimator: ' + bed + ' bedrooms, ' + bath + ' bathrooms, ' + fin.value + ' finishing, about ' + Math.round(area) + ' m².'; };
+            }
+            $('#est-form').addEventListener('input', calc); $('#est-form').addEventListener('change', calc); calc();
+        } else showSection('estimator', false);
+
+        /* ---------- request a plan -> WhatsApp ---------- */
+        $('#request-form').addEventListener('submit', e => {
+            e.preventDefault();
+            const v = id => $(id).value.trim(); const err = $('#rq-error');
+            const missing = [['#rq-name', 'your name'], ['#rq-phone', 'your phone number'], ['#rq-type', 'the type of building']].filter(([id]) => !v(id)).map(x => x[1]);
+            if (missing.length) { err.textContent = 'Please add ' + missing.join(', ') + '.'; err.classList.remove('hidden'); return; }
+            err.classList.add('hidden');
+            const lines = ['*New house plan request (website)*', 'Name: ' + v('#rq-name'), 'Phone: ' + v('#rq-phone'), 'Building: ' + v('#rq-type')];
+            [['Plan', '#rq-plan'], ['Bedrooms', '#rq-bed'], ['Floors', '#rq-floors'], ['Plot size', '#rq-plot'], ['Location', '#rq-loc'], ['Details', '#rq-msg']].forEach(([l, id]) => { if (v(id)) lines.push(l + ': ' + v(id)); });
+            window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(lines.join('\n')), '_blank');
+        });
+    })();
+    </script>
+    <script>
         // Form Success Simulator
         function showSuccessMessage() {
             const successDiv = document.getElementById('form-success');
