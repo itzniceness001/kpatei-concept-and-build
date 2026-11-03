@@ -73,7 +73,7 @@
                     <a href="#plans" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors" data-needs="plans">House Plans</a>
                     <a href="#portfolio" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors">Portfolio</a>
                     <a href="#gallery" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors" data-needs="gallery">Gallery</a>
-                    <a href="#estimator" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors" data-needs="estimator">Cost Estimator</a>
+                    <a href="#estimator" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors" data-needs="estimator">Plan Prices</a>
                     <a href="#reviews" class="text-kpatei-slate hover:text-kpatei-cyan font-medium transition-colors" data-needs="reviews">Reviews</a>
                     <a href="#request" class="bg-kpatei-cyan hover:bg-kpatei-cyanDark text-white px-6 py-2.5 rounded-full font-medium transition-all shadow-lg shadow-cyan-500/30 transform hover:-translate-y-0.5">
                         Request a Plan
@@ -97,7 +97,7 @@
                 <a href="#plans" data-needs="plans" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">House Plans</a>
                 <a href="#portfolio" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Portfolio</a>
                 <a href="#gallery" data-needs="gallery" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Gallery</a>
-                <a href="#estimator" data-needs="estimator" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Cost Estimator</a>
+                <a href="#estimator" data-needs="estimator" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Plan Prices</a>
                 <a href="#reviews" data-needs="reviews" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Reviews</a>
                 <a href="#contact" class="block px-3 py-3 text-base font-medium text-gray-700 hover:text-kpatei-cyan hover:bg-gray-50 rounded-md">Contact</a>
                 <a href="#request" class="block px-3 py-3 mt-4 text-center text-base font-medium bg-kpatei-cyan text-white rounded-md">Request a Plan</a>
@@ -347,14 +347,14 @@
         </div>
     </section>
 
-    <!-- Building Cost Estimator (uses RATES in the script) -->
+    <!-- House Plan Price Calculator (uses PLAN_RATES in the script) -->
     <section id="estimator" class="py-20 md:py-28 bg-kpatei-dark text-white relative overflow-hidden" hidden>
         <div class="absolute -top-32 -right-32 w-96 h-96 bg-kpatei-cyan rounded-full filter blur-3xl opacity-10"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div class="max-w-3xl mb-10">
-                <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Building Cost Estimator</h4>
-                <h2 class="text-3xl md:text-5xl font-heading font-extrabold mb-4">What Will Your House Cost to Build?</h2>
-                <p class="text-gray-400 text-lg">Choose the size of house you want. We'll estimate the floor area and a rough building cost to help you plan your budget.</p>
+                <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Plan Price Calculator</h4>
+                <h2 class="text-3xl md:text-5xl font-heading font-extrabold mb-4">How Much Is Your House Plan?</h2>
+                <p class="text-gray-400 text-lg">Our plans are priced by floor area: <strong class="text-white">NLe <span data-rate="1">20</span> per square metre</strong> for a bungalow and <strong class="text-white">NLe <span data-rate="2">25</span> per square metre</strong> for a duplex or any building with more floors. Choose your rooms to see the price.</p>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
                 <form id="est-form" class="lg:col-span-3 glass-panel rounded-2xl p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -363,13 +363,15 @@
                         <select id="est-floors" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white outline-none focus:border-kpatei-cyan">
                             <option value="1" class="text-gray-900">1 (Bungalow)</option>
                             <option value="2" class="text-gray-900">2 (Duplex / storey)</option>
-                            <option value="3" class="text-gray-900">3</option>
-                            <option value="4" class="text-gray-900">4</option>
+                            <option value="3" class="text-gray-900">3 floors</option>
+                            <option value="4" class="text-gray-900">4 floors</option>
+                            <option value="5" class="text-gray-900">5 floors</option>
+                            <option value="6" class="text-gray-900">6 floors</option>
                         </select>
                     </div>
                     <div>
-                        <label for="est-finish" class="block text-sm font-medium text-gray-300 mb-2">Finishing</label>
-                        <select id="est-finish" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white outline-none focus:border-kpatei-cyan"></select>
+                        <label for="est-known" class="block text-sm font-medium text-gray-300 mb-2">Know your floor area? (m²)</label>
+                        <input id="est-known" type="number" min="0" inputmode="decimal" placeholder="Optional" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-500 outline-none focus:border-kpatei-cyan">
                     </div>
                     <div>
                         <label for="est-bed" class="block text-sm font-medium text-gray-300 mb-2">Bedrooms</label>
@@ -390,13 +392,14 @@
                     </fieldset>
                 </form>
                 <div class="lg:col-span-2 bg-white text-kpatei-dark rounded-2xl p-6 md:p-8 flex flex-col">
-                    <p class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-1">Estimated floor area</p>
+                    <p class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-1" id="est-area-label">Estimated floor area</p>
                     <p class="font-heading font-extrabold text-3xl mb-1"><span id="est-area">–</span></p>
                     <p class="text-sm text-gray-500 mb-6" id="est-area-ft"></p>
-                    <p class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-1">Rough building cost</p>
-                    <p class="font-heading font-extrabold text-3xl md:text-4xl text-kpatei-cyanDark mb-2" id="est-cost">–</p>
+                    <p class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-1">House plan price</p>
+                    <p class="font-heading font-extrabold text-4xl md:text-5xl text-kpatei-cyanDark mb-1" id="est-cost">–</p>
+                    <p class="text-sm text-gray-600 font-medium mb-3" id="est-sum"></p>
                     <p class="text-xs text-gray-500 leading-relaxed mb-6" id="est-note"></p>
-                    <a href="#request" id="est-cta" class="mt-auto bg-kpatei-cyan hover:bg-kpatei-cyanDark text-white text-center px-6 py-3 rounded-full font-semibold transition-colors">Get a plan for this house</a>
+                    <a href="#request" id="est-cta" class="mt-auto bg-kpatei-cyan hover:bg-kpatei-cyanDark text-white text-center px-6 py-3 rounded-full font-semibold transition-colors">Order this plan</a>
                 </div>
             </div>
         </div>
@@ -620,7 +623,7 @@
                         <li data-needs="plans"><a href="#plans" class="text-gray-400 hover:text-kpatei-cyan transition-colors">House Plan Catalogue</a></li>
                         <li><a href="#portfolio" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Project Portfolio</a></li>
                         <li data-needs="gallery"><a href="#gallery" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Photo Gallery</a></li>
-                        <li data-needs="estimator"><a href="#estimator" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Cost Estimator</a></li>
+                        <li data-needs="estimator"><a href="#estimator" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Plan Prices</a></li>
                         <li data-needs="reviews"><a href="#reviews" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Client Reviews</a></li>
                         <li><a href="#request" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Request a Plan</a></li>
                         <li><a href="#contact" class="text-gray-400 hover:text-kpatei-cyan transition-colors">Contact Us</a></li>
@@ -731,16 +734,12 @@
         //   text: "What the client said, in their own words.", stars: 5 },
     ];
 
-    // BUILDING COST RATES  (per square metre of floor area)
-    // Set currency and the rate for each finish level. Leave rates empty to hide the estimator.
-    const RATES = {
-        currency: "$",          // e.g. "$" or "NLe "
-        perSquareMetre: {
-            // "Standard": 0,
-            // "Premium": 0,
-            // "Luxury": 0,
-        },
-        note: "This is a rough guide only. The real cost depends on your land, soil, materials and current market prices. Contact us for an exact estimate.",
+    // HOUSE PLAN PRICES  (New Leones per square metre of floor area)
+    const PLAN_RATES = {
+        currency: "NLe ",
+        bungalow: 20,        // 1 floor
+        multiFloor: 25,      // duplex and every building with 2 or more floors
+        note: "Price is based on the floor area of your final design, so it may change slightly once your plan is drawn.",
     };
 
     const WHATSAPP = "23278646003";
@@ -841,29 +840,37 @@
             });
         } else showSection('reviews', false);
 
-        /* ---------- cost estimator ---------- */
-        const rateNames = Object.keys(RATES.perSquareMetre || {}).filter(k => RATES.perSquareMetre[k] > 0);
-        if (rateNames.length) {
+        /* ---------- house plan price calculator ---------- */
+        if (PLAN_RATES.bungalow > 0 && PLAN_RATES.multiFloor > 0) {
             showSection('estimator', true);
-            const fin = $('#est-finish'); rateNames.forEach(n => { const o = el('option', 'text-gray-900', n); o.value = n; fin.append(o); });
-            const num = (id, d) => { const v = parseInt($(id).value, 10); return isNaN(v) ? d : Math.max(0, Math.min(12, v)); };
-            const fmt = n => RATES.currency + Math.round(n).toLocaleString('en-US');
+            document.querySelectorAll('[data-rate="1"]').forEach(n => n.textContent = PLAN_RATES.bungalow);
+            document.querySelectorAll('[data-rate="2"]').forEach(n => n.textContent = PLAN_RATES.multiFloor);
+            const num = (id, d) => { const v = parseInt($(id).value, 10); return isNaN(v) ? d : Math.max(0, Math.min(30, v)); };
+            const fmt = n => PLAN_RATES.currency + Math.round(n).toLocaleString('en-US');
             function calc() {
                 const floors = +$('#est-floors').value, bed = Math.max(1, num('#est-bed', 3)), bath = Math.max(1, num('#est-bath', 2));
-                // typical Sierra Leone room sizes in square metres
-                let rooms = 26 /* sitting room */ + 12 /* kitchen */ + bed * 13 + 5 /* master bedroom extra */ + bath * 4.5;
-                if ($('#est-dining').checked) rooms += 12; if ($('#est-store').checked) rooms += 5;
-                let area = rooms * 1.22;                       // walls and corridors
-                if (floors > 1) area += (floors - 1) * 10;      // staircase on each floor
-                if ($('#est-veranda').checked) area += 12;
-                if ($('#est-bq').checked) area += 22;           // 1 room, toilet, small kitchen
-                const rate = RATES.perSquareMetre[fin.value];
-                const low = area * rate * 0.9, high = area * rate * 1.15;
-                $('#est-area').textContent = Math.round(area) + ' m²';
-                $('#est-area-ft').textContent = 'about ' + Math.round(area * 10.764).toLocaleString('en-US') + ' sq ft, over ' + floors + (floors > 1 ? ' floors' : ' floor');
-                $('#est-cost').textContent = fmt(low) + ' – ' + fmt(high);
-                $('#est-note').textContent = RATES.note;
-                $('#est-cta').onclick = () => { $('#rq-bed').value = bed; $('#rq-floors').value = floors; $('#rq-type').value = floors > 1 ? 'Duplex / storey house' : 'Bungalow'; $('#rq-msg').value = 'From the cost estimator: ' + bed + ' bedrooms, ' + bath + ' bathrooms, ' + fin.value + ' finishing, about ' + Math.round(area) + ' m².'; };
+                const known = parseFloat($('#est-known').value);
+                let area;
+                if (known > 0) { area = known; }
+                else {
+                    // typical Sierra Leone room sizes in square metres
+                    let rooms = 26 /* sitting room */ + 12 /* kitchen */ + bed * 13 + 5 /* master bedroom extra */ + bath * 4.5;
+                    if ($('#est-dining').checked) rooms += 12; if ($('#est-store').checked) rooms += 5;
+                    area = rooms * 1.22;                            // walls and corridors
+                    if (floors > 1) area += (floors - 1) * 10;      // staircase on each floor
+                    if ($('#est-veranda').checked) area += 12;
+                    if ($('#est-bq').checked) area += 22;           // 1 room, toilet, small kitchen
+                }
+                area = Math.round(area);
+                const rate = floors > 1 ? PLAN_RATES.multiFloor : PLAN_RATES.bungalow;
+                const price = area * rate;
+                $('#est-area-label').textContent = known > 0 ? 'Your floor area' : 'Estimated floor area';
+                $('#est-area').textContent = area.toLocaleString('en-US') + ' m²';
+                $('#est-area-ft').textContent = (floors > 1 ? 'Total of all ' + floors + ' floors' : 'Bungalow, 1 floor') + ' · about ' + Math.round(area * 10.764).toLocaleString('en-US') + ' sq ft';
+                $('#est-cost').textContent = fmt(price);
+                $('#est-sum').textContent = area.toLocaleString('en-US') + ' m² × ' + fmt(rate) + ' per m² (' + (floors > 1 ? 'duplex / multi-floor rate' : 'bungalow rate') + ')';
+                $('#est-note').textContent = PLAN_RATES.note;
+                $('#est-cta').onclick = () => { $('#rq-bed').value = bed; $('#rq-floors').value = floors; $('#rq-type').value = floors > 1 ? 'Duplex / storey house' : 'Bungalow'; $('#rq-msg').value = 'From the plan price calculator: ' + bed + ' bedrooms, ' + bath + ' bathrooms, ' + floors + (floors > 1 ? ' floors' : ' floor') + ', about ' + area + ' m² = ' + fmt(price) + '.'; };
             }
             $('#est-form').addEventListener('input', calc); $('#est-form').addEventListener('change', calc); calc();
         } else showSection('estimator', false);
