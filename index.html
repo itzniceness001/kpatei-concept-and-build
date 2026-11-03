@@ -343,7 +343,7 @@
                 <p class="text-gray-600 text-lg">Designs, sites and finished buildings from across Sierra Leone. Tap a photo to see it full size.</p>
             </div>
             <div id="gallery-filters" class="flex flex-wrap justify-center gap-2 mb-8" role="group" aria-label="Filter photos"></div>
-            <div id="gallery-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4"></div>
+            <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
         </div>
     </section>
 
@@ -771,7 +771,14 @@
     // PHOTO GALLERY
     // category: any short word, e.g. "Designs", "Construction", "Completed"
     const GALLERY = [
-        // { src: "images/gallery/waterloo-duplex.jpg", title: "Duplex at Waterloo", category: "Completed" },
+        { src: "images/gallery/bungalow-pool-compound.jpg", title: "Bungalow with Pool & Landscaped Compound", category: "Residential" },
+        { src: "images/gallery/two-storey-house-verandas.jpg", title: "Two-Storey House with Verandas", category: "Residential" },
+        { src: "images/gallery/bungalow-columned-porch.jpg", title: "Bungalow with Columned Porch", category: "Residential" },
+        { src: "images/gallery/apartment-block-twin-stairs.jpg", title: "Two-Storey Apartment Block", category: "Apartments" },
+        { src: "images/gallery/three-storey-residence.jpg", title: "Three-Storey Residence", category: "Residential" },
+        { src: "images/gallery/duplex-fenced-compound.jpg", title: "Modern Duplex with Fenced Compound", category: "Residential" },
+        { src: "images/gallery/commercial-arched-facade.jpg", title: "Commercial Building with Arched Facade", category: "Commercial" },
+        { src: "images/gallery/single-storey-office.jpg", title: "Single-Storey Office Building", category: "Commercial" },
     ];
 
     // CLIENT REVIEWS  (real clients only)
@@ -867,7 +874,7 @@
             const grid = $('#gallery-grid'); grid.innerHTML = '';
             const items = GALLERY.filter(g => filter === 'All' || g.category === filter);
             items.forEach((g, i) => {
-                const b = el('button', 'relative aspect-square overflow-hidden rounded-xl bg-gray-100 group'); b.type = 'button'; b.setAttribute('aria-label', 'View ' + (g.title || 'photo'));
+                const b = el('button', 'relative aspect-[4/3] overflow-hidden rounded-xl bg-gray-100 group'); b.type = 'button'; b.setAttribute('aria-label', 'View ' + (g.title || 'photo'));
                 const im = el('img', 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-110'); im.src = g.src; im.alt = g.title || ''; im.loading = 'lazy'; b.append(im);
                 if (g.title) { const c = el('span', 'absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent text-white text-xs md:text-sm font-semibold text-left p-3 pt-8', g.title); b.append(c); }
                 b.onclick = () => openLightbox(items, i); grid.append(b);
