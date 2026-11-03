@@ -599,18 +599,76 @@
         </div>
     </section>
 
-    <!-- Client Reviews (filled from the REVIEWS list) -->
+    <!-- Client Reviews: written by clients on this page, filtered automatically -->
     <section id="reviews" class="py-20 md:py-28 bg-kpatei-light" hidden>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="reveal text-center max-w-3xl mx-auto mb-12">
+            <div class="reveal text-center max-w-3xl mx-auto mb-10">
                 <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Client Reviews</h4>
                 <h2 class="text-3xl md:text-5xl font-heading font-extrabold text-kpatei-dark mb-4">What Our Clients Say</h2>
+                <div id="review-summary" class="hidden inline-flex items-center gap-3 bg-white rounded-full px-5 py-2 shadow-sm border border-gray-100">
+                    <span class="text-amber-400" id="review-avg-stars"></span>
+                    <span class="font-heading font-extrabold text-kpatei-dark" id="review-avg"></span>
+                    <span class="text-sm text-gray-500" id="review-count"></span>
+                </div>
             </div>
+
             <div id="review-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            <div class="text-center mt-10">
-                <a href="https://wa.me/23278646003?text=Hello%20KPATEI%2C%20I%20would%20like%20to%20share%20a%20review%20of%20your%20work%3A%20" target="_blank" rel="noopener" class="inline-flex items-center gap-2 border border-kpatei-slate text-kpatei-slate hover:bg-kpatei-slate hover:text-white px-6 py-3 rounded-full font-semibold transition-colors">
-                    <i class="fab fa-whatsapp"></i> Worked with us? Send your review
-                </a>
+            <p id="review-empty" class="hidden text-center text-gray-500 py-6">No reviews yet. Worked with us? Be the first to share your experience.</p>
+            <p id="review-loading" class="hidden text-center text-gray-400 py-6"><i class="fas fa-circle-notch fa-spin mr-2"></i>Loading reviews…</p>
+            <div id="review-more-wrap" class="hidden text-center mt-6"><button type="button" id="review-more" class="text-kpatei-cyanDark font-semibold hover:underline">Show more reviews</button></div>
+
+            <!-- write a review -->
+            <div class="max-w-3xl mx-auto mt-12">
+                <div class="text-center" id="review-open-wrap">
+                    <button type="button" id="review-open" class="inline-flex items-center gap-2 bg-kpatei-dark hover:bg-kpatei-slate text-white px-7 py-3.5 rounded-full font-semibold transition-colors shadow-lg">
+                        <i class="fas fa-pen"></i> Write a review
+                    </button>
+                </div>
+                <form id="review-form" class="hidden bg-white rounded-3xl border border-gray-100 shadow-xl p-6 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-5" novalidate>
+                    <div class="md:col-span-2 flex items-start justify-between gap-4">
+                        <div>
+                            <h3 class="font-heading font-extrabold text-2xl text-kpatei-dark">Share your experience</h3>
+                            <p class="text-sm text-gray-500 mt-1">Your review appears on this page straight away.</p>
+                        </div>
+                        <button type="button" id="review-close" class="text-gray-400 hover:text-gray-700 text-xl w-10 h-10" aria-label="Close review form"><i class="fas fa-times"></i></button>
+                    </div>
+                    <fieldset class="md:col-span-2">
+                        <legend class="block text-sm font-medium text-gray-700 mb-2">Your rating *</legend>
+                        <div class="flex gap-1" id="rv-stars" role="radiogroup" aria-label="Rating out of 5"></div>
+                    </fieldset>
+                    <div>
+                        <label for="rv-name" class="block text-sm font-medium text-gray-700 mb-2">Your name *</label>
+                        <input id="rv-name" maxlength="60" autocomplete="name" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 outline-none focus:ring-2 focus:ring-kpatei-cyan" placeholder="e.g. Aminata K.">
+                    </div>
+                    <div>
+                        <label for="rv-place" class="block text-sm font-medium text-gray-700 mb-2">Where are you? </label>
+                        <input id="rv-place" maxlength="60" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 outline-none focus:ring-2 focus:ring-kpatei-cyan" placeholder="e.g. Lumley, Freetown or London, UK">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="rv-project" class="block text-sm font-medium text-gray-700 mb-2">What did we do for you?</label>
+                        <select id="rv-project" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 outline-none focus:ring-2 focus:ring-kpatei-cyan text-gray-700">
+                            <option value="">Choose…</option>
+                            <option>House plan / drawings</option>
+                            <option>3D realistic video</option>
+                            <option>Construction supervision</option>
+                            <option>Diaspora project management</option>
+                            <option>Interior design</option>
+                            <option>Commercial / large building plan</option>
+                        </select>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="rv-text" class="block text-sm font-medium text-gray-700 mb-2">Your review *</label>
+                        <textarea id="rv-text" rows="4" maxlength="800" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 outline-none focus:ring-2 focus:ring-kpatei-cyan resize-none" placeholder="How was working with KPATEI?"></textarea>
+                        <p class="text-xs text-gray-400 mt-1 text-right"><span id="rv-count">0</span>/800</p>
+                    </div>
+                    <!-- spam trap: real people never see or fill this -->
+                    <div class="hidden" aria-hidden="true"><label for="rv-website">Website</label><input id="rv-website" tabindex="-1" autocomplete="off"></div>
+                    <p id="rv-msg" class="md:col-span-2 text-sm hidden" role="status"></p>
+                    <div class="md:col-span-2 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+                        <p class="text-xs text-gray-500 max-w-sm">Reviews with rude, hateful or abusive words, links or phone numbers are removed automatically.</p>
+                        <button type="submit" id="rv-submit" class="shrink-0 bg-kpatei-cyan hover:bg-kpatei-cyanDark text-white font-bold px-8 py-3.5 rounded-full transition-colors shadow-lg disabled:opacity-60">Post review</button>
+                    </div>
+                </form>
             </div>
         </div>
     </section>
@@ -970,7 +1028,11 @@
         { src: "images/gallery/single-storey-office.jpg", title: "Single-Storey Office Building", category: "Commercial" },
     ];
 
-    // CLIENT REVIEWS  (real clients only)
+    // LIVE REVIEWS: paste the web app address from your "KPATEI Reviews" Google Sheet script here.
+    // While it is empty, the review form is shown but cannot post.
+    const REVIEWS_API = "";
+
+    // CLIENT REVIEWS you add by hand (real clients only). Reviews written on the website are added automatically.
     const REVIEWS = [
         // { name: "Aminata K.", place: "Lumley, Freetown", project: "4-bedroom duplex",
         //   text: "What the client said, in their own words.", stars: 5 },
@@ -1071,18 +1133,90 @@
         }
         if (GALLERY.length) { showSection('gallery', true); chips($('#gallery-filters'), [...new Set(GALLERY.map(g => g.category).filter(Boolean))], renderGallery); renderGallery('All'); } else showSection('gallery', false);
 
-        /* ---------- reviews ---------- */
-        if (REVIEWS.length) {
-            showSection('reviews', true); const grid = $('#review-grid');
-            REVIEWS.forEach(r => {
+        /* ---------- reviews: shown from the sheet + hand-added list ---------- */
+        (function () {
+            let all = REVIEWS.slice(), shown = 6;
+            const grid = $('#review-grid');
+            const starsHtml = n => '<i class="fas fa-star"></i>'.repeat(n) + '<i class="far fa-star"></i>'.repeat(5 - n);
+            function card(r) {
                 const c = el('figure', 'bg-white rounded-2xl p-7 border border-gray-100 shadow-sm flex flex-col gap-4');
-                const st = el('div', 'text-amber-400 text-sm'); st.setAttribute('aria-label', (r.stars || 5) + ' out of 5 stars'); st.innerHTML = '<i class="fas fa-star"></i>'.repeat(Math.max(0, Math.min(5, r.stars || 5)));
+                const st = el('div', 'text-amber-400 text-sm'); const n = Math.max(1, Math.min(5, Math.round(r.stars || 5)));
+                st.setAttribute('aria-label', n + ' out of 5 stars'); st.innerHTML = starsHtml(n);
                 const q = el('blockquote', 'text-gray-700 leading-relaxed flex-1'); q.append(el('i', 'fas fa-quote-left text-kpatei-cyan/40 text-2xl block mb-2')); q.append(r.text);
-                const who = el('figcaption', 'pt-4 border-t border-gray-100'); who.append(el('div', 'font-heading font-bold text-kpatei-dark', r.name));
-                const meta = [r.project, r.place].filter(Boolean).join(' · '); if (meta) who.append(el('div', 'text-sm text-gray-500', meta));
-                c.append(st, q, who); grid.append(c);
+                const who = el('figcaption', 'pt-4 border-t border-gray-100 flex items-center gap-3');
+                const av = el('span', 'w-10 h-10 shrink-0 rounded-full bg-kpatei-dark text-white font-heading font-bold flex items-center justify-center', (String(r.name || '?').trim()[0] || '?').toUpperCase());
+                const box = el('div', 'min-w-0'); box.append(el('div', 'font-heading font-bold text-kpatei-dark truncate', r.name));
+                const when = r.date ? new Date(r.date) : null;
+                const meta = [r.project, r.place, when && !isNaN(when) ? when.toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }) : ''].filter(Boolean).join(' · ');
+                if (meta) box.append(el('div', 'text-sm text-gray-500', meta));
+                who.append(av, box); c.append(st, q, who); return c;
+            }
+            function render() {
+                grid.innerHTML = '';
+                all.slice(0, shown).forEach(r => grid.append(card(r)));
+                $('#review-empty').classList.toggle('hidden', all.length > 0);
+                $('#review-more-wrap').classList.toggle('hidden', all.length <= shown);
+                const sum = $('#review-summary');
+                if (all.length) {
+                    const avg = all.reduce((a, r) => a + (Number(r.stars) || 5), 0) / all.length;
+                    $('#review-avg').textContent = avg.toFixed(1);
+                    $('#review-avg-stars').innerHTML = starsHtml(Math.round(avg));
+                    $('#review-count').textContent = all.length + (all.length === 1 ? ' review' : ' reviews');
+                    sum.classList.remove('hidden'); sum.classList.add('inline-flex');
+                } else sum.classList.add('hidden');
+            }
+            $('#review-more').onclick = () => { shown += 6; render(); };
+            const live = !!REVIEWS_API;
+            if (live || REVIEWS.length) showSection('reviews', true); else showSection('reviews', false);
+            render();
+            if (live) {
+                $('#review-loading').classList.remove('hidden'); $('#review-empty').classList.add('hidden');
+                fetch(REVIEWS_API).then(r => r.json()).then(d => {
+                    if (d && Array.isArray(d.reviews)) all = d.reviews.concat(REVIEWS);
+                }).catch(() => {}).finally(() => { $('#review-loading').classList.add('hidden'); render(); });
+            }
+
+            /* write a review */
+            const form = $('#review-form'), msg = $('#rv-msg'); let stars = 0, openedAt = 0;
+            const starBox = $('#rv-stars');
+            const labels = ['Poor', 'Fair', 'Good', 'Very good', 'Excellent'];
+            for (let i = 1; i <= 5; i++) {
+                const b = el('button', 'text-3xl text-gray-300 hover:scale-110 transition-transform px-0.5'); b.type = 'button';
+                b.setAttribute('role', 'radio'); b.setAttribute('aria-label', i + ' star' + (i > 1 ? 's' : '') + ' – ' + labels[i - 1]); b.setAttribute('aria-checked', 'false');
+                b.innerHTML = '<i class="fas fa-star"></i>';
+                b.onclick = () => { stars = i; [...starBox.children].forEach((x, j) => { x.classList.toggle('text-amber-400', j < i); x.classList.toggle('text-gray-300', j >= i); x.setAttribute('aria-checked', String(j === i - 1)); }); };
+                starBox.append(b);
+            }
+            const say = (t, ok) => { msg.textContent = t; msg.className = 'md:col-span-2 text-sm ' + (ok ? 'text-green-700' : 'text-red-600'); };
+            $('#review-open').onclick = () => { form.classList.remove('hidden'); form.classList.add('grid'); $('#review-open-wrap').classList.add('hidden'); openedAt = Date.now(); $('#rv-name').focus(); };
+            $('#review-close').onclick = () => { form.classList.add('hidden'); form.classList.remove('grid'); $('#review-open-wrap').classList.remove('hidden'); };
+            $('#rv-text').addEventListener('input', e => { $('#rv-count').textContent = e.target.value.length; });
+            form.addEventListener('submit', async e => {
+                e.preventDefault();
+                const data = { name: $('#rv-name').value.trim(), place: $('#rv-place').value.trim(), project: $('#rv-project').value, stars, text: $('#rv-text').value.trim(), website: $('#rv-website').value, elapsed: Date.now() - openedAt };
+                if (!stars) return say('Please choose a star rating.');
+                if (!data.name) return say('Please add your name.');
+                if (data.text.length < 10) return say('Please write a little more about your experience.');
+                if (!live) return say('Reviews are not connected yet. Please try again later.');
+                const btn = $('#rv-submit'); btn.disabled = true; btn.textContent = 'Posting…';
+                try {
+                    const res = await fetch(REVIEWS_API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) });
+                    const d = await res.json();
+                    if (d.ok) {
+                        all.unshift(d.review); shown = Math.max(shown, 6); render();
+                        form.reset(); stars = 0; [...starBox.children].forEach(x => { x.classList.remove('text-amber-400'); x.classList.add('text-gray-300'); });
+                        $('#rv-count').textContent = '0';
+                        say('Thank you! Your review is now on our website.', true);
+                        setTimeout(() => { $('#review-close').click(); msg.classList.add('hidden'); grid.firstChild && grid.firstChild.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 1800);
+                    } else {
+                        say({ blocked: 'Your review was not posted because it contains rude or offensive words, a link, or a phone number. Please change it and try again.',
+                              limit: 'You have already posted reviews today. Thank you!', duplicate: 'This review has already been posted.',
+                              too_fast: 'Please take a moment to write your review, then try again.', missing: 'Please fill in your name, rating and review.' }[d.reason] || 'Your review could not be posted. Please try again.');
+                    }
+                } catch (err) { say('Your review could not be sent. Check your internet connection and try again.'); }
+                finally { btn.disabled = false; btn.textContent = 'Post review'; }
             });
-        } else showSection('reviews', false);
+        })();
 
         /* ---------- plan price calculator ---------- */
         if (PLAN_RATES.bungalow > 0 && PLAN_RATES.multiFloor > 0) {
