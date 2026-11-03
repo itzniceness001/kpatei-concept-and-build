@@ -351,13 +351,35 @@
     <section id="estimator" class="py-20 md:py-28 bg-kpatei-dark text-white relative overflow-hidden" hidden>
         <div class="absolute -top-32 -right-32 w-96 h-96 bg-kpatei-cyan rounded-full filter blur-3xl opacity-10"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div class="max-w-3xl mb-10">
+            <div class="max-w-3xl mb-8">
                 <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Plan Price Calculator</h4>
-                <h2 class="text-3xl md:text-5xl font-heading font-extrabold mb-4">How Much Is Your House Plan?</h2>
-                <p class="text-gray-400 text-lg">Our plans are priced by floor area: <strong class="text-white">NLe <span data-rate="1">20</span> per square metre</strong> for a bungalow and <strong class="text-white">NLe <span data-rate="2">25</span> per square metre</strong> for a duplex or any building with more floors. Choose your rooms to see the price.</p>
+                <h2 class="text-3xl md:text-5xl font-heading font-extrabold mb-4">How Much Is Your Plan?</h2>
+                <p class="text-gray-400 text-lg">Our plans are priced by floor area, in New Leones. Choose your building to see the price.</p>
+            </div>
+            <!-- price list -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
+                <div class="glass-panel rounded-2xl p-4 md:p-5"><i class="fas fa-home text-kpatei-cyan text-xl mb-2"></i><p class="text-sm text-gray-300">Bungalow (1 floor)</p><p class="font-heading font-extrabold text-xl md:text-2xl">NLe <span data-rate="bungalow">20</span><span class="text-sm font-semibold text-gray-400"> / m²</span></p></div>
+                <div class="glass-panel rounded-2xl p-4 md:p-5"><i class="fas fa-building text-kpatei-cyan text-xl mb-2"></i><p class="text-sm text-gray-300">Duplex &amp; houses with more floors</p><p class="font-heading font-extrabold text-xl md:text-2xl">NLe <span data-rate="multiFloor">25</span><span class="text-sm font-semibold text-gray-400"> / m²</span></p></div>
+                <div class="glass-panel rounded-2xl p-4 md:p-5"><i class="fas fa-school text-kpatei-cyan text-xl mb-2"></i><p class="text-sm text-gray-300">Schools, offices, factories, estates &amp; other large buildings</p><p class="font-heading font-extrabold text-xl md:text-2xl">NLe <span data-rate="largeBuilding">30</span><span class="text-sm font-semibold text-gray-400"> / m²</span></p></div>
+                <div class="rounded-2xl p-4 md:p-5 bg-kpatei-cyan/15 border border-kpatei-cyan/40"><i class="fas fa-video text-kpatei-cyan text-xl mb-2"></i><p class="text-sm text-gray-300">3D realistic video of the finished building</p><p class="font-heading font-extrabold text-xl md:text-2xl"><span class="text-sm font-semibold text-gray-400">from </span>NLe <span data-rate="video3d">1,500</span></p></div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
                 <form id="est-form" class="lg:col-span-3 glass-panel rounded-2xl p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div class="sm:col-span-2">
+                        <label for="est-kind" class="block text-sm font-medium text-gray-300 mb-2">Type of building</label>
+                        <select id="est-kind" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white outline-none focus:border-kpatei-cyan">
+                            <option value="house" class="text-gray-900">House / home</option>
+                            <option value="School" class="text-gray-900">School</option>
+                            <option value="Office building" class="text-gray-900">Office building</option>
+                            <option value="Factory / warehouse" class="text-gray-900">Factory / warehouse</option>
+                            <option value="Estate (several houses)" class="text-gray-900">Estate (several houses)</option>
+                            <option value="Commercial plaza" class="text-gray-900">Commercial plaza / shops</option>
+                            <option value="Hotel / guest house" class="text-gray-900">Hotel / guest house</option>
+                            <option value="Hospital / clinic" class="text-gray-900">Hospital / clinic</option>
+                            <option value="Church / mosque" class="text-gray-900">Church / mosque</option>
+                            <option value="Other large building" class="text-gray-900">Other large building</option>
+                        </select>
+                    </div>
                     <div>
                         <label for="est-floors" class="block text-sm font-medium text-gray-300 mb-2">Number of floors</label>
                         <select id="est-floors" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white outline-none focus:border-kpatei-cyan">
@@ -367,21 +389,22 @@
                             <option value="4" class="text-gray-900">4 floors</option>
                             <option value="5" class="text-gray-900">5 floors</option>
                             <option value="6" class="text-gray-900">6 floors</option>
+                            <option value="8" class="text-gray-900">7 or more floors</option>
                         </select>
                     </div>
                     <div>
-                        <label for="est-known" class="block text-sm font-medium text-gray-300 mb-2">Know your floor area? (m²)</label>
+                        <label for="est-known" class="block text-sm font-medium text-gray-300 mb-2" id="est-known-label">Know your floor area? (m²)</label>
                         <input id="est-known" type="number" min="0" inputmode="decimal" placeholder="Optional" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-500 outline-none focus:border-kpatei-cyan">
                     </div>
-                    <div>
+                    <div data-house>
                         <label for="est-bed" class="block text-sm font-medium text-gray-300 mb-2">Bedrooms</label>
                         <input id="est-bed" type="number" min="1" max="12" value="3" inputmode="numeric" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white outline-none focus:border-kpatei-cyan">
                     </div>
-                    <div>
+                    <div data-house>
                         <label for="est-bath" class="block text-sm font-medium text-gray-300 mb-2">Bathrooms / toilets</label>
                         <input id="est-bath" type="number" min="1" max="12" value="2" inputmode="numeric" class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white outline-none focus:border-kpatei-cyan">
                     </div>
-                    <fieldset class="sm:col-span-2">
+                    <fieldset class="sm:col-span-2" data-house>
                         <legend class="block text-sm font-medium text-gray-300 mb-3">Extras</legend>
                         <div class="flex flex-wrap gap-3 text-sm">
                             <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 cursor-pointer"><input type="checkbox" id="est-dining" checked class="accent-cyan-400"> Separate dining</label>
@@ -390,14 +413,22 @@
                             <label class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 cursor-pointer"><input type="checkbox" id="est-bq" class="accent-cyan-400"> Boys' quarters</label>
                         </div>
                     </fieldset>
+                    <label class="sm:col-span-2 flex items-start gap-3 bg-kpatei-cyan/10 border border-kpatei-cyan/40 rounded-xl p-4 cursor-pointer">
+                        <input type="checkbox" id="est-video" class="accent-cyan-400 w-5 h-5 mt-0.5 shrink-0">
+                        <span><span class="font-semibold text-white">Add a 3D realistic video</span><br><span class="text-sm text-gray-300">See your building fully finished before you build, inside and out. From NLe <span data-rate="video3d">1,500</span>, price depends on the type and size of the building.</span></span>
+                    </label>
                 </form>
                 <div class="lg:col-span-2 bg-white text-kpatei-dark rounded-2xl p-6 md:p-8 flex flex-col">
                     <p class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-1" id="est-area-label">Estimated floor area</p>
                     <p class="font-heading font-extrabold text-3xl mb-1"><span id="est-area">–</span></p>
                     <p class="text-sm text-gray-500 mb-6" id="est-area-ft"></p>
-                    <p class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-1">House plan price</p>
+                    <p class="text-sm font-semibold uppercase tracking-wider text-gray-500 mb-1" id="est-cost-label">Plan price</p>
                     <p class="font-heading font-extrabold text-4xl md:text-5xl text-kpatei-cyanDark mb-1" id="est-cost">–</p>
                     <p class="text-sm text-gray-600 font-medium mb-3" id="est-sum"></p>
+                    <div id="est-video-row" class="hidden border-t border-gray-100 pt-3 mb-3">
+                        <div class="flex justify-between gap-3 text-sm"><span class="text-gray-600"><i class="fas fa-video text-kpatei-cyan mr-1"></i> 3D realistic video</span><span class="font-semibold whitespace-nowrap" id="est-video-price"></span></div>
+                        <div class="flex justify-between gap-3 mt-2"><span class="font-semibold">Total</span><span class="font-heading font-extrabold text-xl whitespace-nowrap" id="est-total"></span></div>
+                    </div>
                     <p class="text-xs text-gray-500 leading-relaxed mb-6" id="est-note"></p>
                     <a href="#request" id="est-cta" class="mt-auto bg-kpatei-cyan hover:bg-kpatei-cyanDark text-white text-center px-6 py-3 rounded-full font-semibold transition-colors">Order this plan</a>
                 </div>
@@ -449,6 +480,15 @@
                         <option>Commercial plaza / office</option>
                         <option>Minimalist home</option>
                         <option>Extension to existing house</option>
+                        <option>School</option>
+                        <option>Office building</option>
+                        <option>Factory / warehouse</option>
+                        <option>Estate (several houses)</option>
+                        <option>Commercial plaza</option>
+                        <option>Hotel / guest house</option>
+                        <option>Hospital / clinic</option>
+                        <option>Church / mosque</option>
+                        <option>Other large building</option>
                     </select>
                 </div>
                 <div>
@@ -477,6 +517,10 @@
                     <label for="rq-msg" class="block text-sm font-medium text-gray-700 mb-2">Anything else?</label>
                     <textarea id="rq-msg" rows="3" class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white outline-none focus:ring-2 focus:ring-kpatei-cyan resize-none" placeholder="Style you like, number of toilets, shop in front, when you want to start…"></textarea>
                 </div>
+                <label class="md:col-span-2 flex items-start gap-3 bg-white border border-gray-200 rounded-xl p-4 cursor-pointer">
+                    <input type="checkbox" id="rq-3d" class="w-5 h-5 mt-0.5 shrink-0 accent-cyan-500">
+                    <span><span class="font-semibold text-kpatei-dark">I also want a 3D realistic video</span><br><span class="text-sm text-gray-500">See the finished building before you build. From NLe <span data-rate="video3d">1,500</span>, depending on the building.</span></span>
+                </label>
                 <p id="rq-error" class="md:col-span-2 text-red-600 text-sm hidden" role="alert"></p>
                 <button type="submit" class="md:col-span-2 bg-[#25D366] hover:bg-[#1ebe5a] text-white font-bold py-4 rounded-lg transition-colors shadow-lg flex items-center justify-center gap-3 text-lg">
                     <i class="fab fa-whatsapp text-2xl"></i> Send request on WhatsApp
@@ -638,6 +682,8 @@
                         <li class="text-gray-400">Luxury Villas & Mansions</li>
                         <li class="text-gray-400">Commercial Plazas</li>
                         <li class="text-gray-400">Multi-Family Units</li>
+                        <li class="text-gray-400">Schools, Offices &amp; Factories</li>
+                        <li class="text-gray-400">3D Realistic Videos</li>
                     </ul>
                 </div>
 
@@ -734,11 +780,13 @@
         //   text: "What the client said, in their own words.", stars: 5 },
     ];
 
-    // HOUSE PLAN PRICES  (New Leones per square metre of floor area)
+    // PLAN PRICES  (New Leones per square metre of floor area)
     const PLAN_RATES = {
         currency: "NLe ",
-        bungalow: 20,        // 1 floor
-        multiFloor: 25,      // duplex and every building with 2 or more floors
+        bungalow: 20,        // house with 1 floor
+        multiFloor: 25,      // duplex and every house with 2 or more floors
+        largeBuilding: 30,   // schools, offices, factories, estates and other large buildings
+        video3dFrom: 1500,   // 3D realistic video of the finished building: starting price
         note: "Price is based on the floor area of your final design, so it may change slightly once your plan is drawn.",
     };
 
@@ -840,19 +888,29 @@
             });
         } else showSection('reviews', false);
 
-        /* ---------- house plan price calculator ---------- */
+        /* ---------- plan price calculator ---------- */
         if (PLAN_RATES.bungalow > 0 && PLAN_RATES.multiFloor > 0) {
             showSection('estimator', true);
-            document.querySelectorAll('[data-rate="1"]').forEach(n => n.textContent = PLAN_RATES.bungalow);
-            document.querySelectorAll('[data-rate="2"]').forEach(n => n.textContent = PLAN_RATES.multiFloor);
-            const num = (id, d) => { const v = parseInt($(id).value, 10); return isNaN(v) ? d : Math.max(0, Math.min(30, v)); };
             const fmt = n => PLAN_RATES.currency + Math.round(n).toLocaleString('en-US');
+            ['bungalow', 'multiFloor', 'largeBuilding'].forEach(k => document.querySelectorAll('[data-rate="' + k + '"]').forEach(n => n.textContent = PLAN_RATES[k]));
+            document.querySelectorAll('[data-rate="video3d"]').forEach(n => n.textContent = PLAN_RATES.video3dFrom.toLocaleString('en-US'));
+            const num = (id, d) => { const v = parseInt($(id).value, 10); return isNaN(v) ? d : Math.max(0, Math.min(30, v)); };
+            const floorsSel = $('#est-floors');
             function calc() {
-                const floors = +$('#est-floors').value, bed = Math.max(1, num('#est-bed', 3)), bath = Math.max(1, num('#est-bath', 2));
-                const known = parseFloat($('#est-known').value);
-                let area;
-                if (known > 0) { area = known; }
-                else {
+                const kind = $('#est-kind').value, isHouse = kind === 'house';
+                document.querySelectorAll('#est-form [data-house]').forEach(n => { n.hidden = !isHouse; n.style.display = isHouse ? '' : 'none'; });
+                floorsSel.options[0].textContent = isHouse ? '1 (Bungalow)' : '1 floor'; floorsSel.options[1].textContent = isHouse ? '2 (Duplex / storey)' : '2 floors';
+                $('#est-known-label').textContent = isHouse ? 'Know your floor area? (m²)' : 'Total floor area of all floors (m²)';
+                $('#est-known').placeholder = isHouse ? 'Optional' : 'e.g. 600';
+                const floors = +floorsSel.value, bed = Math.max(1, num('#est-bed', 3)), bath = Math.max(1, num('#est-bath', 2));
+                const known = parseFloat($('#est-known').value), video = $('#est-video').checked;
+                const rate = !isHouse ? (PLAN_RATES.largeBuilding || PLAN_RATES.multiFloor) : floors > 1 ? PLAN_RATES.multiFloor : PLAN_RATES.bungalow;
+                const rateName = !isHouse ? 'large building rate' : floors > 1 ? 'duplex / multi-floor rate' : 'bungalow rate';
+                $('#est-cost-label').textContent = isHouse ? 'House plan price' : 'Building plan price';
+                $('#est-video-row').classList.toggle('hidden', !video);
+                let area = null;
+                if (known > 0) area = known;
+                else if (isHouse) {
                     // typical Sierra Leone room sizes in square metres
                     let rooms = 26 /* sitting room */ + 12 /* kitchen */ + bed * 13 + 5 /* master bedroom extra */ + bath * 4.5;
                     if ($('#est-dining').checked) rooms += 12; if ($('#est-store').checked) rooms += 5;
@@ -861,16 +919,31 @@
                     if ($('#est-veranda').checked) area += 12;
                     if ($('#est-bq').checked) area += 22;           // 1 room, toilet, small kitchen
                 }
-                area = Math.round(area);
-                const rate = floors > 1 ? PLAN_RATES.multiFloor : PLAN_RATES.bungalow;
-                const price = area * rate;
-                $('#est-area-label').textContent = known > 0 ? 'Your floor area' : 'Estimated floor area';
-                $('#est-area').textContent = area.toLocaleString('en-US') + ' m²';
-                $('#est-area-ft').textContent = (floors > 1 ? 'Total of all ' + floors + ' floors' : 'Bungalow, 1 floor') + ' · about ' + Math.round(area * 10.764).toLocaleString('en-US') + ' sq ft';
-                $('#est-cost').textContent = fmt(price);
-                $('#est-sum').textContent = area.toLocaleString('en-US') + ' m² × ' + fmt(rate) + ' per m² (' + (floors > 1 ? 'duplex / multi-floor rate' : 'bungalow rate') + ')';
-                $('#est-note').textContent = PLAN_RATES.note;
-                $('#est-cta').onclick = () => { $('#rq-bed').value = bed; $('#rq-floors').value = floors; $('#rq-type').value = floors > 1 ? 'Duplex / storey house' : 'Bungalow'; $('#rq-msg').value = 'From the plan price calculator: ' + bed + ' bedrooms, ' + bath + ' bathrooms, ' + floors + (floors > 1 ? ' floors' : ' floor') + ', about ' + area + ' m² = ' + fmt(price) + '.'; };
+                const fl = floors >= 8 ? '7+ floors' : floors + (floors > 1 ? ' floors' : ' floor');
+                if (area == null) {
+                    $('#est-area-label').textContent = 'Floor area'; $('#est-area').textContent = 'Enter the area';
+                    $('#est-area-ft').textContent = 'Type the total floor area of all floors to see the price.';
+                    $('#est-cost').textContent = fmt(rate) + ' / m²'; $('#est-sum').textContent = 'Large building rate';
+                    $('#est-video-price').textContent = 'from ' + fmt(PLAN_RATES.video3dFrom); $('#est-total').textContent = '–';
+                } else {
+                    area = Math.round(area); const price = area * rate;
+                    $('#est-area-label').textContent = known > 0 ? 'Your floor area' : 'Estimated floor area';
+                    $('#est-area').textContent = area.toLocaleString('en-US') + ' m²';
+                    $('#est-area-ft').textContent = (isHouse ? (floors > 1 ? 'Total of all ' + fl : 'Bungalow, 1 floor') : kind + ', ' + fl) + ' · about ' + Math.round(area * 10.764).toLocaleString('en-US') + ' sq ft';
+                    $('#est-cost').textContent = fmt(price);
+                    $('#est-sum').textContent = area.toLocaleString('en-US') + ' m² × ' + fmt(rate) + ' per m² (' + rateName + ')';
+                    $('#est-video-price').textContent = 'from ' + fmt(PLAN_RATES.video3dFrom);
+                    $('#est-total').textContent = 'from ' + fmt(price + PLAN_RATES.video3dFrom);
+                }
+                $('#est-note').textContent = PLAN_RATES.note + (video ? ' The 3D video price depends on the type and size of the building.' : '');
+                $('#est-cta').onclick = () => {
+                    $('#rq-type').value = isHouse ? (floors > 1 ? 'Duplex / storey house' : 'Bungalow') : kind;
+                    $('#rq-floors').value = floors >= 8 ? '' : floors; $('#rq-bed').value = isHouse ? bed : '';
+                    $('#rq-3d').checked = video;
+                    const parts = ['From the plan price calculator: ' + (isHouse ? bed + ' bedrooms, ' + bath + ' bathrooms, ' : kind + ', ') + fl];
+                    if (area != null) parts.push('about ' + Math.round(area) + ' m² = ' + fmt(Math.round(area) * rate));
+                    $('#rq-msg').value = parts.join(', ') + '.';
+                };
             }
             $('#est-form').addEventListener('input', calc); $('#est-form').addEventListener('change', calc); calc();
         } else showSection('estimator', false);
@@ -882,8 +955,10 @@
             const missing = [['#rq-name', 'your name'], ['#rq-phone', 'your phone number'], ['#rq-type', 'the type of building']].filter(([id]) => !v(id)).map(x => x[1]);
             if (missing.length) { err.textContent = 'Please add ' + missing.join(', ') + '.'; err.classList.remove('hidden'); return; }
             err.classList.add('hidden');
-            const lines = ['*New house plan request (website)*', 'Name: ' + v('#rq-name'), 'Phone: ' + v('#rq-phone'), 'Building: ' + v('#rq-type')];
-            [['Plan', '#rq-plan'], ['Bedrooms', '#rq-bed'], ['Floors', '#rq-floors'], ['Plot size', '#rq-plot'], ['Location', '#rq-loc'], ['Details', '#rq-msg']].forEach(([l, id]) => { if (v(id)) lines.push(l + ': ' + v(id)); });
+            const lines = ['*New plan request (website)*', 'Name: ' + v('#rq-name'), 'Phone: ' + v('#rq-phone'), 'Building: ' + v('#rq-type')];
+            [['Plan', '#rq-plan'], ['Bedrooms', '#rq-bed'], ['Floors', '#rq-floors'], ['Plot size', '#rq-plot'], ['Location', '#rq-loc']].forEach(([l, id]) => { if (v(id)) lines.push(l + ': ' + v(id)); });
+            if ($('#rq-3d').checked) lines.push('3D realistic video: YES');
+            if (v('#rq-msg')) lines.push('Details: ' + v('#rq-msg'));
             window.open('https://wa.me/' + WHATSAPP + '?text=' + encodeURIComponent(lines.join('\n')), '_blank');
         });
     })();
