@@ -4,11 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KPATEI Concept & Build | Premier Architecture in Sierra Leone</title>
-    
+    <meta name="description" content="House plans for building permits in Sierra Leone: bungalows, duplexes, villas, apartments, schools, offices and factories, plus 3D realistic videos. Freetown. Call or WhatsApp +232 78 64 60 03.">
+    <meta name="theme-color" content="#1a202c">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+    <!-- How the link looks when shared on WhatsApp / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="KPATEI Concept & Build">
+    <meta property="og:title" content="KPATEI Concept & Build | You imagine, we draft it">
+    <meta property="og:description" content="House plans for building permits, 3D realistic videos and designs for homes, schools, offices and factories across Sierra Leone.">
+    <meta property="og:image" content="https://www.kpateiconceptandbuild.com/images/gallery/bungalow-pool-compound.jpg">
+    <meta property="og:url" content="https://www.kpateiconceptandbuild.com/">
+    <meta name="twitter:card" content="summary_large_image">
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;700;800;900&display=swap" rel="stylesheet">
     
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -35,9 +47,6 @@
                             light: '#f7fafc',     // Off-white background
                         }
                     },
-                    backgroundImage: {
-                        'hero-pattern': "linear-gradient(to right bottom, rgba(26, 32, 44, 0.85), rgba(45, 55, 72, 0.7)), url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop')",
-                    }
                 }
             }
         }
@@ -52,6 +61,47 @@
         .service-card:hover .service-icon {
             transform: scale(1.1);
             color: #00d2ff;
+        }
+
+        /* ---- Home page: fading slideshow of our own designs ---- */
+        .hero-slide {
+            position: absolute; inset: 0;
+            background-size: cover; background-position: center;
+            opacity: 0; transform: scale(1.04);
+            transition: opacity 1.8s ease-in-out;
+        }
+        .hero-slide.is-active { opacity: 1; animation: heroZoom 9s ease-out forwards; }
+        @keyframes heroZoom { from { transform: scale(1.04); } to { transform: scale(1.14); } }
+        .hero-shade {
+            position: absolute; inset: 0; pointer-events: none;
+            background:
+                linear-gradient(90deg, rgba(15,20,30,.92) 0%, rgba(15,20,30,.72) 45%, rgba(15,20,30,.25) 100%),
+                linear-gradient(180deg, rgba(15,20,30,.55) 0%, rgba(15,20,30,0) 30%, rgba(15,20,30,0) 70%, rgba(15,20,30,.6) 100%);
+        }
+        @media (max-width: 767px) {
+            .hero-shade { background: linear-gradient(180deg, rgba(15,20,30,.75) 0%, rgba(15,20,30,.82) 55%, rgba(15,20,30,.92) 100%); }
+        }
+        .hero-dot { width: 28px; height: 4px; border-radius: 4px; background: rgba(255,255,255,.35); transition: background .4s, width .4s; }
+        .hero-dot.is-active { width: 44px; background: #00d2ff; }
+        .hero-in > * { animation: heroIn .9s ease-out both; }
+        .hero-in > *:nth-child(2) { animation-delay: .12s; } .hero-in > *:nth-child(3) { animation-delay: .24s; }
+        .hero-in > *:nth-child(4) { animation-delay: .36s; } .hero-in > *:nth-child(5) { animation-delay: .48s; }
+        @keyframes heroIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
+        /* ---- Sections ease in as you scroll (only when JavaScript runs) ---- */
+        .js-reveal .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s ease; }
+        .js-reveal .reveal.is-visible { opacity: 1; transform: none; }
+
+        /* ---- Floating WhatsApp button ---- */
+        .wa-float { box-shadow: 0 10px 30px rgba(37,211,102,.45); }
+        .wa-float::before { content: ""; position: absolute; inset: 0; border-radius: 9999px; background: #25D366; z-index: -1; animation: waPulse 2.4s ease-out infinite; }
+        @keyframes waPulse { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(1.7); opacity: 0; } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero-slide, .hero-slide.is-active { animation: none; transform: none; transition: opacity .01s; }
+            .hero-in > * { animation: none; }
+            .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
+            .wa-float::before { animation: none; }
         }
     </style>
 </head>
@@ -105,33 +155,52 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative bg-hero-pattern bg-cover bg-center bg-no-repeat min-h-screen flex items-center pt-20">
+    <!-- Hero Section: fading slideshow of our own designs -->
+    <section id="home" class="relative min-h-screen flex items-center pt-20 pb-24 overflow-hidden bg-kpatei-dark" aria-label="Welcome">
+        <div class="absolute inset-0" id="hero-slides" aria-hidden="true">
+            <div class="hero-slide is-active" style="background-image:url('images/gallery/bungalow-pool-compound.jpg')" data-caption="Bungalow with Pool &amp; Landscaped Compound"></div>
+            <div class="hero-slide" style="background-image:url('images/gallery/two-storey-house-verandas.jpg')" data-caption="Two-Storey House with Verandas"></div>
+            <div class="hero-slide" style="background-image:url('images/gallery/bungalow-columned-porch.jpg')" data-caption="Bungalow with Columned Porch"></div>
+            <div class="hero-slide" style="background-image:url('images/gallery/apartment-block-twin-stairs.jpg')" data-caption="Two-Storey Apartment Block"></div>
+        </div>
+        <div class="hero-shade"></div>
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center md:text-left">
-            <div class="md:w-2/3">
-                <span class="inline-block py-1 px-3 rounded-full bg-kpatei-cyan/20 text-kpatei-cyan border border-kpatei-cyan/30 font-semibold tracking-wider text-sm mb-6 uppercase">
-                    "You imagine, we draft it."
+            <div class="md:w-2/3 lg:w-3/5 hero-in">
+                <span class="inline-flex items-center gap-2 py-1.5 px-4 rounded-full bg-kpatei-cyan/15 text-kpatei-cyan border border-kpatei-cyan/40 font-semibold tracking-wider text-xs md:text-sm mb-6 uppercase backdrop-blur-sm">
+                    <i class="fas fa-pencil-ruler"></i> "You imagine, we draft it."
                 </span>
-                <h1 class="text-5xl md:text-6xl lg:text-[5rem] font-heading font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-50 to-kpatei-cyan mb-4 drop-shadow-2xl tracking-tight uppercase leading-none">
-                    KPATEI CONCEPT & BUILD
+                <h1 class="text-[2.6rem] sm:text-6xl lg:text-[5.2rem] font-heading font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-50 to-kpatei-cyan mb-4 drop-shadow-2xl tracking-tight uppercase leading-[0.95]">
+                    KPATEI CONCEPT &amp; BUILD
                 </h1>
-                <h2 class="text-2xl md:text-4xl font-heading font-extrabold text-white leading-tight mb-6">
+                <h2 class="text-2xl md:text-4xl font-heading font-extrabold text-white leading-tight mb-5">
                     Building Sierra Leone's <span class="text-kpatei-cyan">Future</span>
                 </h2>
-                <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl leading-relaxed font-light">
-                    <strong>Do you need a house plan?</strong> We transform your imagination into precision blueprints and enduring masterpieces. From modern bungalows to luxury villas, we draft all types of house plans.
+                <p class="text-lg md:text-xl text-gray-200 mb-8 max-w-2xl leading-relaxed font-light mx-auto md:mx-0">
+                    <strong class="font-semibold text-white">Do you need a house plan?</strong> We turn your idea into permit-ready drawings and lifelike 3D designs, from modern bungalows and duplexes to schools, offices and factories.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                    <a href="#contact" class="bg-kpatei-cyan hover:bg-kpatei-cyanDark text-white px-8 py-4 rounded-full font-semibold text-lg transition-all shadow-lg shadow-cyan-500/40 flex items-center justify-center gap-2">
-                        Get a Consultation <i class="fas fa-arrow-right"></i>
+                    <a href="#request" class="bg-kpatei-cyan hover:bg-kpatei-cyanDark text-white px-8 py-4 rounded-full font-semibold text-lg transition-all shadow-lg shadow-cyan-500/40 flex items-center justify-center gap-2 hover:-translate-y-0.5">
+                        Request a Plan <i class="fas fa-arrow-right"></i>
                     </a>
-                    <a href="#portfolio" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all flex items-center justify-center">
-                        View Our Work
+                    <a href="#gallery" class="bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/30 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all flex items-center justify-center gap-2">
+                        <i class="fas fa-images"></i> View Our Work
                     </a>
                 </div>
             </div>
+            <ul class="mt-10 md:mt-14 flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-3 text-sm text-gray-200 hero-in">
+                <li class="flex items-center gap-2"><i class="fas fa-file-signature text-kpatei-cyan"></i> Permit-ready plan packages</li>
+                <li class="flex items-center gap-2"><i class="fas fa-video text-kpatei-cyan"></i> 3D realistic videos</li>
+                <li class="flex items-center gap-2"><i class="fas fa-calculator text-kpatei-cyan"></i> Clear prices per m² in NLe</li>
+            </ul>
         </div>
-        
+
+        <!-- slide caption and dots -->
+        <div class="absolute z-10 bottom-20 md:bottom-28 right-4 sm:right-8 flex flex-col items-end gap-3">
+            <p class="text-white/80 text-xs md:text-sm font-medium bg-black/30 backdrop-blur-sm px-3 py-1.5 rounded-full"><i class="fas fa-cube text-kpatei-cyan mr-1.5"></i><span id="hero-caption">Bungalow with Pool &amp; Landscaped Compound</span></p>
+            <div class="flex gap-2" id="hero-dots" role="group" aria-label="Choose background picture"></div>
+        </div>
+
         <!-- Bottom decorative wave/shape -->
         <div class="absolute bottom-0 w-full overflow-hidden leading-none">
             <svg class="relative block w-full h-12 md:h-24" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
@@ -154,7 +223,7 @@
 </div>
 
                 <!-- Text Side -->
-                <div class="lg:w-1/2">
+                <div class="lg:w-1/2 reveal">
                     <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">About KPATEI</h4>
                     <h2 class="text-3xl md:text-4xl font-heading font-extrabold text-kpatei-dark mb-6">
                         Rooted in Local Knowledge. <br>Driven by Modern Design.
@@ -189,7 +258,7 @@
     <!-- Services Section -->
     <section id="services" class="py-20 md:py-32 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
+            <div class="reveal text-center max-w-3xl mx-auto mb-16">
                 <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">What We Design</h4>
                 <h2 class="text-3xl md:text-5xl font-heading font-extrabold text-kpatei-dark mb-6">
                     All Types of House Plans
@@ -202,7 +271,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 
                 <!-- Service Card 1 -->
-                <div class="service-card bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                <div class="reveal service-card bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
                     <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-3xl text-kpatei-slate service-icon transition-all duration-300">
                         <i class="fas fa-home"></i>
                     </div>
@@ -213,7 +282,7 @@
                 </div>
 
                 <!-- Service Card 2 -->
-                <div class="service-card bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                <div class="reveal service-card bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
                     <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-3xl text-kpatei-slate service-icon transition-all duration-300">
                         <i class="fas fa-gem"></i>
                     </div>
@@ -224,7 +293,7 @@
                 </div>
 
                 <!-- Service Card 3 -->
-                <div class="service-card bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                <div class="reveal service-card bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
                     <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-3xl text-kpatei-slate service-icon transition-all duration-300">
                         <i class="fas fa-building"></i>
                     </div>
@@ -235,7 +304,7 @@
                 </div>
 
                 <!-- Service Card 4 -->
-                <div class="service-card bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
+                <div class="reveal service-card bg-gray-50 rounded-2xl p-8 border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group">
                     <div class="w-16 h-16 bg-white rounded-xl shadow-sm flex items-center justify-center mb-6 text-3xl text-kpatei-slate service-icon transition-all duration-300">
                         <i class="fas fa-city"></i>
                     </div>
@@ -245,6 +314,33 @@
                     </p>
                 </div>
 
+            </div>
+
+            <!-- How it works -->
+            <div class="mt-20 reveal">
+                <h3 class="text-center font-heading font-extrabold text-2xl md:text-3xl text-kpatei-dark mb-10">How It Works</h3>
+                <ol class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <li class="relative bg-kpatei-light rounded-2xl p-6 border border-gray-100">
+                        <span class="absolute -top-4 left-6 w-9 h-9 rounded-full bg-kpatei-cyan text-white font-heading font-extrabold flex items-center justify-center shadow-lg">1</span>
+                        <h4 class="font-heading font-bold text-kpatei-dark mt-3 mb-2">Tell us your idea</h4>
+                        <p class="text-sm text-gray-600">Call or WhatsApp us with your plot size, location and the house you want.</p>
+                    </li>
+                    <li class="relative bg-kpatei-light rounded-2xl p-6 border border-gray-100">
+                        <span class="absolute -top-4 left-6 w-9 h-9 rounded-full bg-kpatei-cyan text-white font-heading font-extrabold flex items-center justify-center shadow-lg">2</span>
+                        <h4 class="font-heading font-bold text-kpatei-dark mt-3 mb-2">We design your plan</h4>
+                        <p class="text-sm text-gray-600">Our architects draft the layout and adjust it with you until it's right.</p>
+                    </li>
+                    <li class="relative bg-kpatei-light rounded-2xl p-6 border border-gray-100">
+                        <span class="absolute -top-4 left-6 w-9 h-9 rounded-full bg-kpatei-cyan text-white font-heading font-extrabold flex items-center justify-center shadow-lg">3</span>
+                        <h4 class="font-heading font-bold text-kpatei-dark mt-3 mb-2">See it in 3D</h4>
+                        <p class="text-sm text-gray-600">Add a 3D realistic video to see your finished building before you build.</p>
+                    </li>
+                    <li class="relative bg-kpatei-light rounded-2xl p-6 border border-gray-100">
+                        <span class="absolute -top-4 left-6 w-9 h-9 rounded-full bg-kpatei-cyan text-white font-heading font-extrabold flex items-center justify-center shadow-lg">4</span>
+                        <h4 class="font-heading font-bold text-kpatei-dark mt-3 mb-2">Get your permit package</h4>
+                        <p class="text-sm text-gray-600">Receive complete drawings, ready to submit for your building permit.</p>
+                    </li>
+                </ol>
             </div>
         </div>
     </section>
@@ -271,65 +367,49 @@
         </div>
     </section>
 
-    <!-- Portfolio Section -->
+    <!-- Portfolio Section: featured designs -->
     <section id="portfolio" class="py-20 md:py-32 bg-kpatei-slate text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+            <div class="flex flex-col md:flex-row justify-between md:items-end gap-6 mb-12 reveal">
                 <div class="max-w-2xl">
-                    <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Our Gallery</h4>
-                    <h2 class="text-3xl md:text-5xl font-heading font-extrabold mb-6">
-                        Featured Projects
-                    </h2>
-                    <p class="text-gray-400 text-lg">
-                        A glimpse into our capability to deliver both aesthetic brilliance and structural perfection across Sierra Leone.
-                    </p>
+                    <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Our Work</h4>
+                    <h2 class="text-3xl md:text-5xl font-heading font-extrabold mb-6">Featured Projects</h2>
+                    <p class="text-gray-300 text-lg">A few of our recent designs, drawn and modelled by our team for clients across Sierra Leone.</p>
                 </div>
-                <div class="mt-6 md:mt-0">
-                    <button class="bg-transparent border border-kpatei-cyan text-kpatei-cyan hover:bg-kpatei-cyan hover:text-white px-6 py-2.5 rounded-full font-medium transition-all">
-                        View All Projects
-                    </button>
-                </div>
+                <a href="#gallery" class="self-start md:self-auto shrink-0 bg-transparent border border-kpatei-cyan text-kpatei-cyan hover:bg-kpatei-cyan hover:text-white px-6 py-2.5 rounded-full font-medium transition-all">
+                    View All Projects <i class="fas fa-arrow-down ml-1 text-sm"></i>
+                </a>
             </div>
 
-            <!-- Gallery Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                
-                <!-- Project 1 -->
-                <div class="relative group overflow-hidden rounded-2xl aspect-[4/3] md:aspect-[16/9]">
-                    <img src="https://images.unsplash.com/photo-1613490908571-9ce224946bc3?q=80&w=2070&auto=format&fit=crop" alt="Freetown Multi-Story Residence" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
-                        <span class="text-kpatei-cyan font-semibold text-sm uppercase tracking-wider mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Completed Build</span>
-                        <h3 class="text-2xl font-bold font-heading transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">Freetown Multi-Story Residence</h3>
+                <a href="#gallery" data-open-gallery="images/gallery/bungalow-pool-compound.jpg" class="reveal relative group overflow-hidden rounded-2xl aspect-[4/3] md:aspect-[16/10] block shadow-xl">
+                    <img src="images/gallery/bungalow-pool-compound.jpg" alt="Bungalow with Pool &amp; Landscaped Compound" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent md:opacity-70 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 md:p-8">
+                        <span class="text-kpatei-cyan font-semibold text-xs md:text-sm uppercase tracking-wider mb-1">3D Design · Residential</span>
+                        <h3 class="text-xl md:text-2xl font-bold font-heading">Bungalow with Pool &amp; Landscaped Compound</h3>
                     </div>
-                </div>
-
-                <!-- Project 2 -->
-                <div class="relative group overflow-hidden rounded-2xl aspect-[4/3] md:aspect-[16/9]">
-                    <img src="https://images.unsplash.com/photo-1541888086925-0c1bb6789c1e?q=80&w=2070&auto=format&fit=crop" alt="Custom Split-Level Foundation" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
-                        <span class="text-kpatei-cyan font-semibold text-sm uppercase tracking-wider mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Engineering Phase</span>
-                        <h3 class="text-2xl font-bold font-heading transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">Custom Split-Level Foundation</h3>
+                </a>
+                <a href="#gallery" data-open-gallery="images/gallery/two-storey-house-verandas.jpg" class="reveal relative group overflow-hidden rounded-2xl aspect-[4/3] md:aspect-[16/10] block shadow-xl">
+                    <img src="images/gallery/two-storey-house-verandas.jpg" alt="Two-Storey House with Verandas" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent md:opacity-70 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 md:p-8">
+                        <span class="text-kpatei-cyan font-semibold text-xs md:text-sm uppercase tracking-wider mb-1">3D Design · Residential</span>
+                        <h3 class="text-xl md:text-2xl font-bold font-heading">Two-Storey House with Verandas</h3>
                     </div>
-                </div>
-
-                <!-- Project 3 -->
-                <div class="relative group overflow-hidden rounded-2xl aspect-[4/3] md:aspect-[16/9]">
-                    <img src="https://images.unsplash.com/photo-1581094722400-ee4ba24bd2b3?q=80&w=2070&auto=format&fit=crop" alt="Hillside Topography Blueprint" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
-                        <span class="text-kpatei-cyan font-semibold text-sm uppercase tracking-wider mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Design & Planning</span>
-                        <h3 class="text-2xl font-bold font-heading transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">Hillside Topography Blueprint</h3>
+                </a>
+                <a href="#gallery" data-open-gallery="images/gallery/apartment-block-twin-stairs.jpg" class="reveal relative group overflow-hidden rounded-2xl aspect-[4/3] md:aspect-[16/10] block shadow-xl">
+                    <img src="images/gallery/apartment-block-twin-stairs.jpg" alt="Two-Storey Apartment Block" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent md:opacity-70 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 md:p-8">
+                        <span class="text-kpatei-cyan font-semibold text-xs md:text-sm uppercase tracking-wider mb-1">3D Design · Apartments</span>
+                        <h3 class="text-xl md:text-2xl font-bold font-heading">Two-Storey Apartment Block</h3>
                     </div>
-                </div>
-
-                <!-- Project 4 -->
-                <div class="relative group overflow-hidden rounded-2xl aspect-[4/3] md:aspect-[16/9]">
-                    <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop" alt="Modern Tropical Villa" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-8">
-                        <span class="text-kpatei-cyan font-semibold text-sm uppercase tracking-wider mb-2 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Residential</span>
-                        <h3 class="text-2xl font-bold font-heading transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-75">Modern Peninsula Villa</h3>
+                </a>
+                <a href="#gallery" data-open-gallery="images/gallery/bungalow-columned-porch.jpg" class="reveal relative group overflow-hidden rounded-2xl aspect-[4/3] md:aspect-[16/10] block shadow-xl">
+                    <img src="images/gallery/bungalow-columned-porch.jpg" alt="Bungalow with Columned Porch" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent md:opacity-70 md:group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6 md:p-8">
+                        <span class="text-kpatei-cyan font-semibold text-xs md:text-sm uppercase tracking-wider mb-1">3D Design · Residential</span>
+                        <h3 class="text-xl md:text-2xl font-bold font-heading">Bungalow with Columned Porch</h3>
                     </div>
-                </div>
-
+                </a>
             </div>
         </div>
     </section>
@@ -337,7 +417,7 @@
     <!-- Project Photo Gallery (filled from the GALLERY list) -->
     <section id="gallery" class="py-20 md:py-28 bg-white" hidden>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-10">
+            <div class="reveal text-center max-w-3xl mx-auto mb-10">
                 <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Photo Gallery</h4>
                 <h2 class="text-3xl md:text-5xl font-heading font-extrabold text-kpatei-dark mb-4">Our Projects in Pictures</h2>
                 <p class="text-gray-600 text-lg">Designs, sites and finished buildings from across Sierra Leone. Tap a photo to see it full size.</p>
@@ -351,7 +431,7 @@
     <section id="estimator" class="py-20 md:py-28 bg-kpatei-dark text-white relative overflow-hidden" hidden>
         <div class="absolute -top-32 -right-32 w-96 h-96 bg-kpatei-cyan rounded-full filter blur-3xl opacity-10"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-            <div class="max-w-3xl mb-8">
+            <div class="reveal max-w-3xl mb-8">
                 <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Plan Price Calculator</h4>
                 <h2 class="text-3xl md:text-5xl font-heading font-extrabold mb-4">How Much Is Your Plan?</h2>
                 <p class="text-gray-400 text-lg">Our plans are priced by floor area, in New Leones. Choose your building to see the price.</p>
@@ -439,7 +519,7 @@
     <!-- Client Reviews (filled from the REVIEWS list) -->
     <section id="reviews" class="py-20 md:py-28 bg-kpatei-light" hidden>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12">
+            <div class="reveal text-center max-w-3xl mx-auto mb-12">
                 <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Client Reviews</h4>
                 <h2 class="text-3xl md:text-5xl font-heading font-extrabold text-kpatei-dark mb-4">What Our Clients Say</h2>
             </div>
@@ -455,7 +535,7 @@
     <!-- Request a Plan (opens WhatsApp with the details filled in) -->
     <section id="request" class="py-20 md:py-28 bg-white">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-10">
+            <div class="reveal text-center max-w-3xl mx-auto mb-10">
                 <h4 class="text-kpatei-cyan font-bold tracking-wider uppercase mb-2">Request a Plan</h4>
                 <h2 class="text-3xl md:text-5xl font-heading font-extrabold text-kpatei-dark mb-4">Tell Us About Your House</h2>
                 <p class="text-gray-600 text-lg">Fill in what you know and tap send. Your request opens in WhatsApp, ready to send straight to our team.</p>
@@ -689,14 +769,12 @@
 
                 <!-- Newsletter -->
                 <div>
-                    <h4 class="text-lg font-bold mb-6 font-heading border-b-2 border-kpatei-cyan inline-block pb-1">Stay Updated</h4>
-                    <p class="text-gray-400 text-sm mb-4">Subscribe to our newsletter for construction tips and latest projects in Freetown.</p>
-                    <div class="flex">
-                        <input type="email" placeholder="Your email..." class="w-full px-4 py-2 rounded-l-lg bg-white/10 border border-white/20 text-white focus:outline-none focus:border-kpatei-cyan">
-                        <button class="bg-kpatei-cyan hover:bg-kpatei-cyanDark px-4 py-2 rounded-r-lg transition-colors">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
-                    </div>
+                    <h4 class="text-lg font-bold mb-6 font-heading border-b-2 border-kpatei-cyan inline-block pb-1">Talk to Us</h4>
+                    <p class="text-gray-400 text-sm mb-4">Questions about a plan, prices or 3D videos? Chat with us on WhatsApp.</p>
+                    <a href="https://wa.me/23278646003?text=Hello%20KPATEI%2C%20I%20need%20a%20house%20plan." target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#1ebe5a] text-white font-semibold px-5 py-2.5 rounded-full transition-colors">
+                        <i class="fab fa-whatsapp text-lg"></i> +232 78 64 60 03
+                    </a>
+                    <p class="text-gray-500 text-xs mt-3">Furniture Junction, Freetown</p>
                 </div>
             </div>
             
@@ -739,6 +817,12 @@
         });
 
     </script>
+
+    <!-- Floating WhatsApp button -->
+    <a href="https://wa.me/23278646003?text=Hello%20KPATEI%2C%20I%20need%20a%20house%20plan." target="_blank" rel="noopener" aria-label="Chat with KPATEI on WhatsApp"
+       class="wa-float fixed z-40 right-4 bottom-4 md:right-6 md:bottom-6 w-14 h-14 rounded-full bg-[#25D366] text-white flex items-center justify-center text-3xl hover:scale-105 transition-transform">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 
     <!-- Full-size photo viewer -->
     <div id="lightbox" class="fixed inset-0 z-[60] bg-black/95 hidden flex-col items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Photo viewer">
@@ -847,7 +931,7 @@
         function renderPlans(filter) {
             const grid = $('#plan-grid'); grid.innerHTML = '';
             PLANS.filter(p => filter === 'All' || p.category === filter).forEach(p => {
-                const card = el('article', 'bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-shadow flex flex-col');
+                const card = el('article', 'reveal bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-shadow flex flex-col');
                 const imgs = (p.images || []).map(src => ({ src, title: p.name }));
                 const fig = el('button', 'relative block w-full aspect-[4/3] bg-gray-100 overflow-hidden group'); fig.type = 'button'; fig.setAttribute('aria-label', 'View photos of ' + p.name);
                 if (imgs.length) { const im = el('img', 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-105'); im.src = imgs[0].src; im.alt = p.name; im.loading = 'lazy'; fig.append(im); fig.onclick = () => openLightbox(imgs, 0); }
@@ -954,6 +1038,40 @@
             }
             $('#est-form').addEventListener('input', calc); $('#est-form').addEventListener('change', calc); calc();
         } else showSection('estimator', false);
+
+        /* ---------- home page slideshow (fades between our designs) ---------- */
+        (function () {
+            const slides = [...document.querySelectorAll('#hero-slides .hero-slide')], dotsBox = $('#hero-dots'), cap = $('#hero-caption');
+            if (!slides.length) return;
+            const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            let cur = 0, timer = null;
+            const dots = slides.map((s, i) => { const d = el('button', 'hero-dot' + (i === 0 ? ' is-active' : '')); d.type = 'button'; d.setAttribute('aria-label', 'Show picture ' + (i + 1)); d.onclick = () => { go(i); restart(); }; dotsBox.append(d); return d; });
+            function go(i) {
+                slides[cur].classList.remove('is-active'); dots[cur].classList.remove('is-active');
+                cur = (i + slides.length) % slides.length;
+                const s = slides[cur]; s.classList.remove('is-active'); void s.offsetWidth; s.classList.add('is-active'); dots[cur].classList.add('is-active');
+                cap.innerHTML = s.dataset.caption;
+            }
+            function restart() { clearInterval(timer); if (!reduce) timer = setInterval(() => go(cur + 1), 6500); }
+            // load the other pictures after the first one is showing
+            setTimeout(() => slides.slice(1).forEach(s => { const m = s.style.backgroundImage.match(/url\(['"]?(.*?)['"]?\)/); if (m) new Image().src = m[1]; }), 1200);
+            document.addEventListener('visibilitychange', () => document.hidden ? clearInterval(timer) : restart());
+            restart();
+        })();
+
+        /* ---------- featured projects open full size ---------- */
+        document.querySelectorAll('[data-open-gallery]').forEach(a => a.addEventListener('click', e => {
+            const src = a.dataset.openGallery, i = GALLERY.findIndex(g => g.src === src);
+            if (i < 0) return; e.preventDefault(); openLightbox(GALLERY, i);
+        }));
+
+        /* ---------- sections ease in as you scroll ---------- */
+        if ('IntersectionObserver' in window) {
+            document.documentElement.classList.add('js-reveal');
+            const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { en.target.classList.add('is-visible'); io.unobserve(en.target); } }), { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+            const watch = () => document.querySelectorAll('.reveal:not(.is-visible)').forEach(n => io.observe(n));
+            watch(); setTimeout(watch, 500);
+        }
 
         /* ---------- request a plan -> WhatsApp ---------- */
         $('#request-form').addEventListener('submit', e => {
