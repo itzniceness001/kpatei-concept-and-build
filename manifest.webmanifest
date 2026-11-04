@@ -1,0 +1,24 @@
+{
+  "id": "/",
+  "name": "KPATEI Concept & Build",
+  "short_name": "KPATEI",
+  "description": "House plans for building permits, construction supervision, diaspora project management, interior design and 3D realistic videos in Sierra Leone.",
+  "lang": "en",
+  "start_url": "/?source=app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#1a202c",
+  "categories": ["business", "lifestyle", "productivity"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Request a Plan", "short_name": "Request", "url": "/?source=app#request", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Plan Prices", "short_name": "Prices", "url": "/?source=app#estimator", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Our Projects", "short_name": "Projects", "url": "/?source=app#gallery", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

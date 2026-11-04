@@ -7,7 +7,8 @@
     <meta name="description" content="Architectural drafting, construction supervision, diaspora project management and interior design in Sierra Leone. Permit-ready house plans and 3D realistic videos. Freetown. Call or WhatsApp +232 78 64 60 03.">
     <meta name="theme-color" content="#1a202c">
     <link rel="icon" type="image/png" href="logo.png">
-    <link rel="apple-touch-icon" href="logo.png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <link rel="manifest" href="manifest.webmanifest">
     <!-- How the link looks when shared on WhatsApp / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="KPATEI Concept & Build">
@@ -944,6 +945,7 @@
             <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
                 <p>&copy; 2026 KPATEI Concept & Build. All rights reserved.</p>
                 <div class="flex space-x-4 mt-4 md:mt-0">
+                    <a href="privacy.html" class="hover:text-white transition-colors">Privacy Policy</a>
                     <a href="clockin/" class="hover:text-white transition-colors"><i class="fas fa-id-badge mr-1"></i> Staff Clock-In</a>
                 </div>
             </div>
@@ -1346,6 +1348,12 @@
             setTimeout(() => {
                 successDiv.classList.add('hidden');
             }, 5000);
+        }
+    </script>
+    <script>
+        // lets the website install as an app and open without internet
+        if ('serviceWorker' in navigator && location.protocol === 'https:') {
+            window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
         }
     </script>
 </body>
