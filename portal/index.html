@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1a202c">
+<meta name="robots" content="noindex">
+<title>Client Portal | KPATEI Concept &amp; Build</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--dark:#1a202c;--slate:#2d3748;--cyan:#00d2ff;--cyanD:#009bbf;--ink:#1a202c;--text:#4a5568;--muted:#718096;--line:#e2e8f0;--bg:#f4f7fa;--card:#fff;
+  --ok:#1e7a4c;--okS:#ddf1e5;--warn:#b7791f;--warnS:#fdf3dc;--bad:#b4352a;--badS:#f8e0dc;--live:#e02424;color-scheme:light}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:Montserrat,sans-serif;color:var(--ink);margin:0;line-height:1.2}
+h1{font-size:24px;font-weight:800}h2{font-size:19px;font-weight:800}h3{font-size:16px;font-weight:700}
+a{color:var(--cyanD)}
+button{font:inherit;cursor:pointer}
+[hidden]{display:none!important}
+.bar{position:sticky;top:0;z-index:20;background:var(--dark);color:#fff;display:flex;align-items:center;gap:10px;padding:10px max(16px,env(safe-area-inset-left)) 10px max(16px,env(safe-area-inset-right));min-height:60px}
+.bar img{width:40px;height:40px;border-radius:50%;background:#fff;flex:none}
+.bar .t{min-width:0;flex:1}
+.bar .t b{display:block;font-family:Montserrat,sans-serif;font-weight:800;font-size:15px;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar .t small{color:var(--cyan);font-size:12px;font-weight:600}
+.bar .ib{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:600;white-space:nowrap}
+main{max-width:860px;margin:0 auto;padding:16px 16px 110px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+.muted{color:var(--muted);font-size:13px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:999px;padding:10px 18px;font-weight:600;font-size:14px;text-decoration:none;min-height:42px}
+.btn.pri{background:var(--cyan);border-color:var(--cyan);color:#fff}
+.btn.dark{background:var(--dark);border-color:var(--dark);color:#fff}
+.btn.danger{color:var(--bad);border-color:#f0c4be}
+.btn.sm{padding:6px 12px;min-height:34px;font-size:13px}
+.btn.wa{background:#25D366;border-color:#25D366;color:#fff}
+.btn:disabled{opacity:.55;cursor:default}
+label.l{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:#fff;border:1px solid #cbd5e0;border-radius:12px;padding:11px 13px;width:100%;min-width:0}
+textarea{min-height:90px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--cyan);outline-offset:1px;border-color:var(--cyan)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.grid2{grid-template-columns:1fr}}
+.msg{font-size:14px;min-height:1.2em;margin:0}
+.msg.err{color:var(--bad)}.msg.ok{color:var(--ok)}
+.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;background:#edf2f7;color:var(--slate);white-space:nowrap}
+.pill.ok{background:var(--okS);color:var(--ok)}.pill.warn{background:var(--warnS);color:var(--warn)}.pill.bad{background:var(--badS);color:var(--bad)}.pill.cy{background:#dff8ff;color:#00708a}
+.pill.live{background:var(--live);color:#fff}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor;display:inline-block}
+.live .dot{animation:pulse 1.2s infinite}
+@keyframes pulse{50%{opacity:.25}}
+/* sign in */
+.auth{max-width:420px;margin:28px auto}
+.auth .logo{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:18px;text-align:center}
+.auth .logo img{width:96px;height:96px;border-radius:50%;background:#fff;box-shadow:0 6px 24px rgba(0,0,0,.08)}
+.pw{display:flex;gap:6px}.pw input{flex:1}
+.pw button{flex:none;border:1px solid #cbd5e0;background:#fff;border-radius:12px;padding:0 12px;font-size:13px;font-weight:600;color:var(--muted)}
+.link{background:none;border:none;color:var(--cyanD);text-decoration:underline;padding:6px;font-size:14px}
+/* project list */
+.plist{display:grid;gap:12px}
+.pcard{display:flex;gap:12px;align-items:center;text-align:left;width:100%;background:#fff;border:1px solid var(--line);border-radius:16px;padding:12px;color:inherit}
+.pcard .th{width:76px;height:76px;border-radius:12px;background:#e2e8f0 center/cover;flex:none;display:flex;align-items:center;justify-content:center;color:#a0aec0;font-family:Montserrat;font-weight:800}
+.bar2{height:8px;border-radius:99px;background:#e2e8f0;overflow:hidden}
+.bar2 i{display:block;height:100%;background:linear-gradient(90deg,var(--cyanD),var(--cyan));border-radius:99px}
+/* project page */
+.hero{border-radius:18px;overflow:hidden;background:var(--dark) center/cover;color:#fff;position:relative;min-height:190px;display:flex;align-items:flex-end}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,32,44,.15),rgba(26,32,44,.92))}
+.hero .in{position:relative;padding:18px;width:100%}
+.hero h1{color:#fff}
+.hero .bar2{background:rgba(255,255,255,.25)}
+.stages{display:flex;gap:6px;overflow-x:auto;padding:4px 2px 8px;scrollbar-width:none}
+.stages::-webkit-scrollbar{display:none}
+.stg{flex:none;font-size:12px;font-weight:600;border-radius:999px;padding:6px 11px;border:1px solid var(--line);background:#fff;color:var(--muted);white-space:nowrap}
+.stg.done{background:var(--okS);border-color:var(--okS);color:var(--ok)}
+.stg.now{background:var(--dark);border-color:var(--dark);color:#fff}
+.tabs{display:flex;gap:4px;overflow-x:auto;position:sticky;top:60px;z-index:10;background:var(--bg);padding:10px 0;margin:0 -2px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;border:none;background:none;padding:9px 14px;border-radius:999px;font-weight:600;color:var(--muted);font-size:14px;position:relative}
+.tab[aria-selected=true]{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.badge{display:inline-flex;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--live);color:#fff;font-size:11px;font-weight:700;align-items:center;justify-content:center;margin-left:4px}
+.upd .head{display:flex;gap:10px;align-items:flex-start}
+.upd .body{white-space:pre-wrap;color:var(--ink);margin:8px 0 0}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:10px}
+.fact{background:var(--bg);border-radius:10px;padding:8px 10px;font-size:13px}
+.fact b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.mgrid.big{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+.mthumb{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:#e2e8f0;border:none;padding:0}
+.mthumb img,.mthumb video{width:100%;height:100%;object-fit:cover;display:block}
+.mthumb .play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:28px;background:rgba(0,0,0,.25)}
+.mthumb.sel{outline:3px solid var(--cyan);outline-offset:-3px}
+.mthumb .n{position:absolute;top:6px;left:6px;background:var(--cyan);color:#fff;border-radius:50%;width:22px;height:22px;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.yt{position:relative;padding-top:56.25%;border-radius:12px;overflow:hidden;background:#000;margin-top:10px}
+.yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.livebox{border:2px solid var(--live);border-radius:18px;padding:14px;background:#fff}
+.doc{display:flex;gap:12px;align-items:center}
+.doc .ic{width:42px;height:42px;border-radius:10px;background:#dff8ff;color:#00708a;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;flex:none}
+.chat{display:flex;flex-direction:column;gap:8px}
+.bub{max-width:82%;padding:9px 12px;border-radius:16px;background:#fff;border:1px solid var(--line);white-space:pre-wrap;word-wrap:break-word}
+.bub.me{align-self:flex-end;background:var(--dark);color:#fff;border-color:var(--dark)}
+.bub small{display:block;font-size:11px;opacity:.7;margin-top:3px}
+.composer{position:sticky;bottom:0;background:var(--bg);padding:10px 0 calc(10px + env(safe-area-inset-bottom));display:flex;gap:8px}
+.composer textarea{min-height:46px;height:46px}
+.fab{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:calc(18px + env(safe-area-inset-bottom));z-index:15;background:var(--cyan);color:#fff;border:none;border-radius:999px;padding:15px 22px;font-weight:700;box-shadow:0 8px 24px rgba(0,155,191,.4);display:flex;gap:8px;align-items:center}
+/* sheet */
+.sheet{position:fixed;inset:0;z-index:40;background:rgba(10,14,20,.55);display:flex;align-items:flex-end;justify-content:center}
+.sheet .pane{background:#fff;width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
+@media (min-width:700px){.sheet{align-items:center}.sheet .pane{border-radius:20px}}
+.sheet .top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.x{margin-left:auto;background:var(--bg);border:none;border-radius:50%;width:36px;height:36px;font-size:18px;color:var(--muted)}
+.prog{height:6px;border-radius:9px;background:#e2e8f0;overflow:hidden}.prog i{display:block;height:100%;background:var(--cyan);width:0;transition:width .2s}
+.prev{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.prev div{aspect-ratio:1;border-radius:8px;background:#e2e8f0 center/cover;position:relative;font-size:11px;color:#fff;display:flex;align-items:flex-end;padding:4px}
+/* viewer */
+.viewer{position:fixed;inset:0;z-index:60;background:#000;display:flex;flex-direction:column}
+.viewer .vtop{display:flex;align-items:center;gap:10px;color:#fff;padding:12px 14px}
+.viewer .vtop button{background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:999px;padding:8px 14px;font-weight:600}
+.viewer .vbody{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;position:relative}
+.viewer img,.viewer video{max-width:100%;max-height:100%;object-fit:contain}
+.viewer .nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);color:#fff;border:none;width:44px;height:44px;border-radius:50%;font-size:22px}
+.cmp{position:relative;width:100%;max-width:900px;aspect-ratio:4/3;overflow:hidden;touch-action:none}
+.cmp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:none;max-height:none}
+.cmp .after{clip-path:inset(0 0 0 50%)}
+.cmp .handle{position:absolute;top:0;bottom:0;left:50%;width:3px;background:#fff;box-shadow:0 0 8px rgba(0,0,0,.6)}
+.cmp .lab{position:absolute;top:10px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px}
+.empty{text-align:center;padding:36px 12px;color:var(--muted)}
+.empty b{display:block;color:var(--ink);font-family:Montserrat;margin-bottom:4px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom));z-index:80;background:var(--dark);color:#fff;padding:11px 18px;border-radius:999px;font-weight:600;font-size:14px;max-width:90vw;text-align:center}
+.cred{font-family:ui-monospace,Menlo,monospace;background:var(--bg);border:1px dashed var(--cyanD);border-radius:12px;padding:12px;font-size:15px;word-break:break-all}
+.chk{display:flex;gap:10px;align-items:center;padding:8px 0}
+.chk input{width:20px;height:20px;flex:none;accent-color:var(--cyanD)}
+#print{display:none}
+@media print{
+  body>*:not(#print){display:none!important}
+  #print{display:block;color:#000;font-size:12px}
+  #print h1{font-size:22px}#print h2{font-size:16px;margin-top:18px}
+  #print .pimg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  #print .pimg img{width:100%;aspect-ratio:4/3;object-fit:cover}
+  #print .pu{break-inside:avoid;border-top:1px solid #ccc;padding:8px 0}
+}
+</style>
+</head>
+<body>
+<header class="bar">
+  <a href="/" aria-label="KPATEI home"><img src="/logo.png" alt=""></a>
+  <div class="t"><b id="barTitle">KPATEI CLIENT PORTAL</b><small id="barSub">Your project, live from site</small></div>
+  <button class="ib" id="backBtn" type="button" hidden>‹ Projects</button>
+  <button class="ib" id="meBtn" type="button" hidden>Account</button>
+</header>
+<main id="app"><div class="empty"><b>Loading…</b></div></main>
+<button class="fab" id="fab" type="button" hidden>＋ Post update</button>
+<div id="sheet" class="sheet" hidden><div class="pane" id="pane"></div></div>
+<div id="viewer" class="viewer" hidden></div>
+<div id="toast" class="toast" hidden></div>
+<div id="print"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+(function(){
+"use strict";
+const SB_URL="https://skqkbrwckegcjaxcupaz.supabase.co";
+const SB_KEY="sb_publishable_FkqxREmfD6xGVRLTyVOFFw_xscwWbFI";   // public key: safe to publish, data is protected by the database rules
+const BUCKET="project-files";
+const WHATSAPP="23278646003";
+const STAGES=["Site preparation","Foundation","Blockwork","Lintel & columns","Roofing","Plastering","Electrical & plumbing","Tiling & finishing","Painting","Handover"];
+const DOC_CATS=["Drawings","Building permit","Contract","Invoice / receipt","Report","Other"];
+const PORTAL_URL=location.origin+"/portal/";
+
+const app=document.getElementById("app"),$=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtDate=d=>d?new Date(d).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"}):"";
+const fmtWhen=d=>{const t=new Date(d),n=new Date(),s=(n-t)/1000;if(s<60)return"just now";if(s<3600)return Math.floor(s/60)+" min ago";if(s<86400&&t.getDate()===n.getDate())return"today "+t.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});return fmtDate(d)+" "+t.toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})};
+const initials=n=>String(n||"?").trim().split(/\s+/).map(w=>w[0]).slice(0,2).join("").toUpperCase();
+function toast(t,ms){const e=$("#toast");e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,ms||2600)}
+function ytId(u){if(!u)return null;const m=String(u).match(/(?:youtu\.be\/|v=|\/live\/|\/shorts\/|\/embed\/)([A-Za-z0-9_-]{11})/);return m?m[1]:null}
+const ytFrame=id=>`<div class="yt"><iframe src="https://www.youtube-nocookie.com/embed/${id}?rel=0&playsinline=1" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen title="Video"></iframe></div>`;
+const waLink=(phone,text)=>"https://wa.me/"+String(phone||"").replace(/[^\d]/g,"")+"?text="+encodeURIComponent(text);
+
+if(!window.supabase){app.innerHTML='<div class="empty"><b>Can\'t load the portal</b>Check your internet connection and try again.</div>';return}
+
+// read what kind of link brought us here before the library clears it
+const hashType=(new URLSearchParams(location.hash.slice(1))).get("type")||(new URLSearchParams(location.search)).get("type");
+const sb=supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:"implicit"}});
+
+let me=null, user=null, projects=[], cur=null, tab="updates", urlCache=new Map(), channel=null, people=[];
+const isOwner=()=>me&&me.role==="owner", isStaff=()=>me&&me.role==="staff";
+const canManage=p=>isOwner()||(isStaff()&&p&&p._staff&&p._staff.some(s=>s.user_id===me.id));
+
+/* ---------- files ---------- */
+async function signed(paths){
+  const need=[...new Set(paths.filter(p=>p&&!urlCache.has(p)))];
+  for(let i=0;i<need.length;i+=100){const {data}=await sb.storage.from(BUCKET).createSignedUrls(need.slice(i,i+100),3600*6);(data||[]).forEach(d=>{if(d.signedUrl)urlCache.set(d.path,d.signedUrl)})}
+  return p=>urlCache.get(p)||"";
+}
+async function shrinkImage(file){
+  try{const bmp=await createImageBitmap(file,{imageOrientation:"from-image"});const max=1800,sc=Math.min(1,max/Math.max(bmp.width,bmp.height));
+    const c=document.createElement("canvas");c.width=Math.round(bmp.width*sc);c.height=Math.round(bmp.height*sc);c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+    const b=await new Promise(r=>c.toBlob(r,"image/jpeg",.82));return b&&b.size<file.size?b:file}catch(e){return file}
+}
+const rid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+async function upload(pid,folder,file,onProg){
+  const isImg=/^image\//.test(file.type),isVid=/^video\//.test(file.type);
+  let blob=file,ext=(file.name.split(".").pop()||"bin").toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,5)||"bin";
+  if(isImg&&!/gif|svg/.test(file.type)){blob=await shrinkImage(file);if(blob!==file)ext="jpg"}
+  if(blob.size>50*1024*1024)throw new Error(file.name+" is larger than 50 MB. Put long videos on YouTube (Unlisted) and paste the link instead.");
+  const path=`${pid}/${folder}/${rid()}.${ext}`;
+  const {error}=await sb.storage.from(BUCKET).upload(path,blob,{contentType:blob.type||file.type||"application/octet-stream",upsert:false});
+  if(error)throw error;onProg&&onProg();
+  return {path,type:isVid?"video":isImg?"image":"file",size:blob.size};
+}
+
+/* ---------- sign in ---------- */
+function eyeBtns(root){root.querySelectorAll("[data-eye]").forEach(b=>b.onclick=()=>{const i=root.querySelector("#"+b.dataset.eye);const on=i.type==="password";i.type=on?"text":"password";b.textContent=on?"Hide":"Show"})}
+function viewSignIn(note){
+  setBar();
+  app.innerHTML=`<div class="auth">
+   <div class="logo"><img src="/logo.png" alt="KPATEI Concept & Build"><h1>Client Portal</h1><p class="muted" style="margin:0">Follow your building project: photos, videos, live site visits and documents.</p></div>
+   <form class="card stack" id="f" novalidate>
+     <div><label class="l" for="em">Email</label><input id="em" type="email" autocomplete="username" inputmode="email" required></div>
+     <div><label class="l" for="pw">Password</label><div class="pw"><input id="pw" type="password" autocomplete="current-password" required><button type="button" data-eye="pw">Show</button></div></div>
+     <button class="btn pri" id="go">Sign in</button>
+     <p class="msg ${note&&note.ok?"ok":"err"}" id="m">${esc(note?note.text:"")}</p>
+   </form>
+   <div class="row" style="justify-content:center;margin-top:10px"><button class="link" id="forgot" type="button">Forgot password?</button></div>
+   <p class="muted" style="text-align:center;margin-top:16px">Accounts are given by KPATEI to clients with construction supervision. Not a client yet? <a href="${esc(waLink(WHATSAPP,"Hello KPATEI, I'd like construction supervision for my project."))}" target="_blank" rel="noopener">Talk to us on WhatsApp</a>.</p>
+  </div>`;
+  eyeBtns(app);
+  $("#f").onsubmit=async e=>{e.preventDefault();const m=$("#m");m.className="msg err";m.textContent="";const go=$("#go");go.disabled=true;go.textContent="Signing in…";
+    const {error}=await sb.auth.signInWithPassword({email:$("#em").value.trim(),password:$("#pw").value});
+    go.disabled=false;go.textContent="Sign in";
+    if(error){m.textContent=/invalid/i.test(error.message)?"Wrong email or password.":error.message;return}
+    boot();};
+  $("#forgot").onclick=async()=>{const m=$("#m"),em=$("#em").value.trim();
+    if(!/^\S+@\S+\.\S+$/.test(em)){m.className="msg err";m.textContent="Type your email above first, then tap Forgot password.";return}
+    const {error}=await sb.auth.resetPasswordForEmail(em,{redirectTo:PORTAL_URL});
+    m.className="msg "+(error?"err":"ok");m.textContent=error?"Couldn't send the email right now. Ask KPATEI to reset your password on WhatsApp.":"If that email has an account, a link to set a new password is on its way. Check your inbox and spam.";};
+}
+function viewSetPassword(reason){
+  setBar();
+  app.innerHTML=`<div class="auth"><div class="logo"><img src="/logo.png" alt=""><h1>${reason==="first"?"Welcome!":"Set a new password"}</h1>
+   <p class="muted" style="margin:0">${reason==="first"?"Please choose your own password. Only you will know it.":"Choose a new password for your account."}</p></div>
+   <form class="card stack" id="f" novalidate>
+    <div><label class="l" for="p1">New password</label><div class="pw"><input id="p1" type="password" autocomplete="new-password"><button type="button" data-eye="p1">Show</button></div><p class="muted" style="margin:4px 0 0">At least 8 characters. Mix letters and numbers.</p></div>
+    <div><label class="l" for="p2">Type it again</label><div class="pw"><input id="p2" type="password" autocomplete="new-password"><button type="button" data-eye="p2">Show</button></div></div>
+    <button class="btn pri" id="go">Save password</button><p class="msg err" id="m"></p></form></div>`;
+  eyeBtns(app);
+  $("#f").onsubmit=async e=>{e.preventDefault();const a=$("#p1").value,b=$("#p2").value,m=$("#m");
+    if(a.length<8)return m.textContent="Use at least 8 characters.";if(a!==b)return m.textContent="The two passwords don't match.";
+    const {error}=await sb.auth.updateUser({password:a,data:{must_change_password:false}});
+    if(error)return m.textContent=/same/i.test(error.message)?"Choose a different password from your temporary one.":error.message;
+    toast("Password saved");history.replaceState(null,"",location.pathname);boot();};
+}
+
+/* ---------- top bar ---------- */
+function setBar(title,sub,back){
+  $("#barTitle").textContent=title||"KPATEI CLIENT PORTAL";$("#barSub").textContent=sub||"Your project, live from site";
+  $("#backBtn").hidden=!back;$("#meBtn").hidden=!me;$("#fab").hidden=true;
+}
+$("#backBtn").onclick=()=>{location.hash="";};
+$("#meBtn").onclick=()=>openAccount();
+
+/* ---------- sheet (pop-up panel) ---------- */
+function openSheet(title,html,onReady){const s=$("#sheet");$("#pane").innerHTML=`<div class="top"><h2>${esc(title)}</h2><button class="x" type="button" aria-label="Close">✕</button></div>${html}`;
+  s.hidden=false;document.body.style.overflow="hidden";$("#pane .x").onclick=closeSheet;onReady&&onReady($("#pane"))}
+function closeSheet(){$("#sheet").hidden=true;document.body.style.overflow=""}
+$("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")closeSheet()});
+
+function openAccount(){
+  openSheet("My account",`<div class="stack">
+    <div class="card" style="background:var(--bg)"><b style="color:var(--ink)">${esc(me.full_name||"")}</b><div class="muted">${esc(user.email)} · ${esc({owner:"Owner",staff:"Site supervisor",client:"Client"}[me.role])}</div></div>
+    ${isOwner()?`<button class="btn dark" id="aPeople">Clients &amp; staff accounts</button>`:""}
+    <form class="stack" id="aPw" novalidate><h3>Change password</h3>
+      <div class="pw"><input id="ap1" type="password" placeholder="New password" autocomplete="new-password"><button type="button" data-eye="ap1">Show</button></div>
+      <div class="pw"><input id="ap2" type="password" placeholder="Type it again" autocomplete="new-password"><button type="button" data-eye="ap2">Show</button></div>
+      <button class="btn">Save new password</button><p class="msg" id="apm"></p></form>
+    <button class="btn" id="aOut">Sign out</button>
+    ${isOwner()?"":`<details><summary class="muted" style="cursor:pointer">Delete my account</summary><div class="stack" style="margin-top:10px"><p class="muted">This removes your login, name and contact details. Your project's photos and documents stay with KPATEI as business records. This can't be undone.</p><button class="btn danger" id="aDel">Delete my account</button><p class="msg err" id="adm"></p></div></details>`}
+  </div>`,p=>{eyeBtns(p);
+    p.querySelector("#aOut").onclick=async()=>{await sb.auth.signOut();closeSheet();me=null;boot()};
+    const pe=p.querySelector("#aPeople");if(pe)pe.onclick=()=>{closeSheet();location.hash="#people"};
+    p.querySelector("#aPw").onsubmit=async e=>{e.preventDefault();const a=p.querySelector("#ap1").value,b=p.querySelector("#ap2").value,m=p.querySelector("#apm");m.className="msg err";
+      if(a.length<8)return m.textContent="Use at least 8 characters.";if(a!==b)return m.textContent="The two passwords don't match.";
+      const {error}=await sb.auth.updateUser({password:a});if(error)return m.textContent=error.message;m.className="msg ok";m.textContent="Password changed.";e.target.reset()};
+    const d=p.querySelector("#aDel");if(d)d.onclick=async()=>{if(!confirm("Delete your KPATEI portal account? This can't be undone."))return;
+      d.disabled=true;const r=await callAdmin({action:"delete_self"});if(r.error){p.querySelector("#adm").textContent=r.error;d.disabled=false;return}
+      await sb.auth.signOut();closeSheet();me=null;viewSignIn({ok:true,text:"Your account has been deleted."})};
+  });
+}
+async function callAdmin(body){
+  const {data:{session}}=await sb.auth.getSession();
+  try{const r=await fetch(SB_URL+"/functions/v1/admin-users",{method:"POST",headers:{"Content-Type":"application/json",apikey:SB_KEY,Authorization:"Bearer "+session.access_token},body:JSON.stringify(body)});return await r.json()}
+  catch(e){return {error:"No internet connection. Try again."}}
+}
+
+/* ---------- projects list ---------- */
+async function loadProjects(){
+  const {data,error}=await sb.from("projects").select("*, client:profiles!projects_client_id_fkey(id,full_name,phone,email), project_staff(user_id)").order("created_at",{ascending:false});
+  if(error)throw error;projects=data||[];
+  const covers=await signed(projects.map(p=>p.cover_path));projects.forEach(p=>{p._cover=covers(p.cover_path);p._staff=p.project_staff||[]});
+  if(projects.length){const {data:rd}=await sb.from("reads").select("project_id,seen_at").eq("user_id",me.id);const seen=new Map((rd||[]).map(r=>[r.project_id,r.seen_at]));
+    const {data:up}=await sb.from("updates").select("project_id,created_at").order("created_at",{ascending:false}).limit(500);
+    projects.forEach(p=>{const s=seen.get(p.id);p._new=(up||[]).filter(u=>u.project_id===p.id&&(!s||u.created_at>s)).length})}
+}
+function liveNow(p){return p.live_url&&p.live_at&&(Date.now()-new Date(p.live_at))<5*3600*1000}
+async function viewProjects(){
+  setBar(isOwner()?"ALL PROJECTS":"MY PROJECTS",me.full_name?("Hello, "+me.full_name.split(" ")[0]):"");
+  await loadProjects();
+  if(!isOwner()&&!isStaff()&&projects.length===1){location.replace("#p/"+projects[0].id);return}
+  app.innerHTML=`<div class="stack">
+    ${isOwner()?`<div class="row"><button class="btn pri" id="newP">＋ New project</button><button class="btn" id="ppl">Clients &amp; staff</button></div>`:""}
+    <div class="plist">${projects.map(p=>`<button class="pcard" data-p="${p.id}">
+      <span class="th" style="${p._cover?`background-image:url('${esc(p._cover)}')`:""}">${p._cover?"":esc(initials(p.title))}</span>
+      <span class="grow stack" style="gap:5px"><span class="row" style="gap:6px"><h3 class="grow" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(p.title)}</h3>${liveNow(p)?'<span class="pill live"><span class="dot"></span>LIVE</span>':""}${p._new?`<span class="badge">${p._new}</span>`:""}</span>
+        <span class="muted">${esc([p.location,p.client&&p.client.full_name].filter(Boolean).join(" · "))}</span>
+        <span class="bar2"><i style="width:${p.progress}%"></i></span><span class="muted">${esc(p.stage)} · ${p.progress}% ${p.status!=="active"?"· "+esc(p.status):""}</span></span></button>`).join("")||
+      `<div class="card empty"><b>${isOwner()?"No projects yet":"No project linked yet"}</b>${isOwner()?"Create your first project, then link it to a client account.":"KPATEI will link your building project to this account. Contact us on WhatsApp if you've been waiting."}</div>`}</div></div>`;
+  app.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>location.hash="#p/"+b.dataset.p);
+  const n=$("#newP");if(n)n.onclick=()=>editProject(null);const pp=$("#ppl");if(pp)pp.onclick=()=>location.hash="#people";
+}
+
+/* ---------- people (owner) ---------- */
+async function loadPeople(){const {data}=await sb.from("profiles").select("*").order("created_at",{ascending:false});people=data||[]}
+async function viewPeople(){
+  if(!isOwner()){location.hash="";return}
+  setBar("CLIENTS & STAFF","Create and manage portal logins",true);await loadPeople();
+  const row=u=>`<div class="card row"><div class="grow"><b style="color:var(--ink)">${esc(u.full_name||"(no name)")}</b> <span class="pill ${u.role==="owner"?"cy":u.role==="staff"?"warn":""}">${u.role==="owner"?"Owner":u.role==="staff"?"Supervisor":"Client"}</span><div class="muted">${esc(u.email)}${u.phone?" · "+esc(u.phone):""}</div></div>
+    ${u.role==="owner"?"":`<button class="btn sm" data-reset="${u.id}">New password</button><button class="btn sm danger" data-del="${u.id}">Remove</button>`}</div>`;
+  app.innerHTML=`<div class="stack"><div class="row"><button class="btn pri" id="addC">＋ Client account</button><button class="btn" id="addS">＋ Supervisor account</button></div>
+    <p class="muted" style="margin:0">New accounts get a temporary password that you send on WhatsApp. They must choose their own password the first time they sign in.</p>
+    ${people.map(row).join("")}</div>`;
+  $("#addC").onclick=()=>addPerson("client");$("#addS").onclick=()=>addPerson("staff");
+  app.querySelectorAll("[data-reset]").forEach(b=>b.onclick=async()=>{const u=people.find(x=>x.id===b.dataset.reset);if(!confirm("Make a new temporary password for "+u.full_name+"? Their current password will stop working."))return;
+    b.disabled=true;const r=await callAdmin({action:"reset_password",id:u.id});b.disabled=false;if(r.error)return toast(r.error);showCreds(u,r.password,false)});
+  app.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{const u=people.find(x=>x.id===b.dataset.del);if(!confirm("Remove "+u.full_name+"'s login? Their projects stay, but they can no longer sign in."))return;
+    const r=await callAdmin({action:"delete_user",id:u.id});if(r.error)return toast(r.error);toast("Account removed");viewPeople()});
+}
+function addPerson(role){
+  openSheet(role==="staff"?"New supervisor account":"New client account",`<form class="stack" id="f" novalidate>
+    <div><label class="l" for="n">Full name</label><input id="n" autocomplete="off"></div>
+    <div><label class="l" for="e">Email (used to sign in)</label><input id="e" type="email" inputmode="email" autocomplete="off"></div>
+    <div><label class="l" for="ph">WhatsApp number</label><input id="ph" inputmode="tel" placeholder="+232 ..." autocomplete="off"></div>
+    <button class="btn pri" id="go">Create account</button><p class="msg err" id="m"></p></form>`,p=>{
+    p.querySelector("#f").onsubmit=async e=>{e.preventDefault();const go=p.querySelector("#go");go.disabled=true;go.textContent="Creating…";
+      const r=await callAdmin({action:"create",role,full_name:p.querySelector("#n").value,email:p.querySelector("#e").value,phone:p.querySelector("#ph").value});
+      go.disabled=false;go.textContent="Create account";if(r.error)return p.querySelector("#m").textContent=r.error;
+      showCreds({full_name:p.querySelector("#n").value,email:r.email,phone:p.querySelector("#ph").value,role},r.password,true)}});
+}
+function showCreds(u,password,isNew){
+  const text=`Hello ${String(u.full_name||"").split(" ")[0]}, ${isNew?"your KPATEI Client Portal account is ready":"here is your new KPATEI Client Portal password"}.\n\nOpen: ${PORTAL_URL}\nEmail: ${u.email}\nTemporary password: ${password}\n\nYou'll be asked to choose your own password when you sign in. Please don't share it with anyone.`;
+  openSheet(isNew?"Account created":"New password made",`<div class="stack"><p style="margin:0">Send these details to <b>${esc(u.full_name)}</b>. The temporary password is shown only now.</p>
+    <div class="cred">Email: ${esc(u.email)}<br>Temporary password: <b>${esc(password)}</b></div>
+    ${u.phone?`<a class="btn wa" href="${esc(waLink(u.phone,text))}" target="_blank" rel="noopener">Send on WhatsApp</a>`:""}
+    <button class="btn" id="cp">Copy message</button><button class="btn dark" id="dn">Done</button></div>`,p=>{
+    p.querySelector("#cp").onclick=async()=>{try{await navigator.clipboard.writeText(text);toast("Copied")}catch(e){toast("Couldn't copy, please write it down")}};
+    p.querySelector("#dn").onclick=()=>{closeSheet();if(location.hash==="#people")viewPeople()}});
+}
+
+/* ---------- create / edit project ---------- */
+async function editProject(p){
+  if(isOwner())await loadPeople();
+  const clients=people.filter(u=>u.role==="client"),staff=people.filter(u=>u.role==="staff");
+  const st=new Set((p&&p._staff||[]).map(s=>s.user_id));
+  openSheet(p?"Edit project":"New project",`<form class="stack" id="f" novalidate>
+    <div><label class="l" for="t">Project name</label><input id="t" value="${esc(p?p.title:"")}" placeholder="e.g. Mr Kamara's 4-bedroom duplex"></div>
+    <div><label class="l" for="lo">Location</label><input id="lo" value="${esc(p?p.location:"")}" placeholder="e.g. Waterloo, Freetown"></div>
+    ${isOwner()?`<div><label class="l" for="cl">Client</label><select id="cl"><option value="">Not linked yet</option>${clients.map(c=>`<option value="${c.id}" ${p&&p.client_id===c.id?"selected":""}>${esc(c.full_name)} (${esc(c.email)})</option>`).join("")}</select>
+      <p class="muted" style="margin:4px 0 0">No client in the list? Create their account first in Clients &amp; staff.</p></div>`:""}
+    <div class="grid2"><div><label class="l" for="sg">Current stage</label><select id="sg">${STAGES.map(s=>`<option ${p&&p.stage===s?"selected":""}>${esc(s)}</option>`).join("")}</select></div>
+      <div><label class="l" for="pr">Progress: <span id="prv">${p?p.progress:0}</span>%</label><input id="pr" type="range" min="0" max="100" step="5" value="${p?p.progress:0}" style="padding:0;border:none"></div></div>
+    <div class="grid2"><div><label class="l" for="sd">Start date</label><input id="sd" type="date" value="${p&&p.start_date||""}"></div><div><label class="l" for="ed">Expected finish</label><input id="ed" type="date" value="${p&&p.expected_end||""}"></div></div>
+    <div><label class="l" for="ss">Status</label><select id="ss">${["active","paused","completed"].map(s=>`<option value="${s}" ${p&&p.status===s?"selected":""}>${s[0].toUpperCase()+s.slice(1)}</option>`).join("")}</select></div>
+    ${isOwner()&&staff.length?`<div><span class="l">Site supervisors on this project</span>${staff.map(s=>`<label class="chk"><input type="checkbox" value="${s.id}" ${st.has(s.id)?"checked":""}> ${esc(s.full_name)}</label>`).join("")}</div>`:""}
+    <div><label class="l" for="cv">Cover photo ${p&&p.cover_path?"(choose to replace)":""}</label><input id="cv" type="file" accept="image/*"></div>
+    <button class="btn pri" id="go">${p?"Save changes":"Create project"}</button><p class="msg err" id="m"></p>
+    ${p&&isOwner()?`<button class="btn danger" type="button" id="delP">Delete project</button>`:""}</form>`,pane=>{
+    pane.querySelector("#pr").oninput=e=>pane.querySelector("#prv").textContent=e.target.value;
+    pane.querySelector("#f").onsubmit=async e=>{e.preventDefault();const m=pane.querySelector("#m"),go=pane.querySelector("#go");
+      const row={title:pane.querySelector("#t").value.trim(),location:pane.querySelector("#lo").value.trim(),stage:pane.querySelector("#sg").value,progress:+pane.querySelector("#pr").value,
+        start_date:pane.querySelector("#sd").value||null,expected_end:pane.querySelector("#ed").value||null,status:pane.querySelector("#ss").value};
+      if(!row.title)return m.textContent="Give the project a name.";
+      if(isOwner())row.client_id=pane.querySelector("#cl").value||null;
+      go.disabled=true;go.textContent="Saving…";
+      try{let id=p&&p.id;
+        if(p){const {error}=await sb.from("projects").update(row).eq("id",id);if(error)throw error}
+        else{const {data,error}=await sb.from("projects").insert(row).select("id").single();if(error)throw error;id=data.id}
+        const f=pane.querySelector("#cv").files[0];if(f){const u=await upload(id,"cover",f);await sb.from("projects").update({cover_path:u.path}).eq("id",id)}
+        if(isOwner()){const want=[...pane.querySelectorAll(".chk input:checked")].map(i=>i.value);
+          await sb.from("project_staff").delete().eq("project_id",id);if(want.length){const {error}=await sb.from("project_staff").insert(want.map(u=>({project_id:id,user_id:u})));if(error)throw error}}
+        closeSheet();toast(p?"Saved":"Project created");if(p)openProject(id,true);else location.hash="#p/"+id;
+      }catch(err){m.textContent=err.message||String(err);go.disabled=false;go.textContent=p?"Save changes":"Create project"}};
+    const d=pane.querySelector("#delP");if(d)d.onclick=async()=>{if(!confirm("Delete \""+p.title+"\" and ALL its updates, photos and documents? This can't be undone."))return;
+      const {data:files}=await sb.from("media").select("path").eq("project_id",p.id);const {data:docs}=await sb.from("documents").select("path").eq("project_id",p.id);
+      const paths=[...(files||[]),...(docs||[])].map(x=>x.path).concat(p.cover_path?[p.cover_path]:[]);for(let i=0;i<paths.length;i+=100)await sb.storage.from(BUCKET).remove(paths.slice(i,i+100));
+      const {error}=await sb.from("projects").delete().eq("id",p.id);if(error)return toast(error.message);closeSheet();toast("Project deleted");location.hash=""};
+  });
+}
+
+/* ---------- project page ---------- */
+const TABS=[["updates","Updates"],["photos","Photos & videos"],["docs","Documents"],["approvals","Approvals"],["chat","Messages"],["handover","Handover"]];
+async function openProject(id,keepTab){
+  const {data:p,error}=await sb.from("projects").select("*, client:profiles!projects_client_id_fkey(id,full_name,phone,email), project_staff(user_id, profiles(full_name,phone))").eq("id",id).maybeSingle();
+  if(error||!p){app.innerHTML='<div class="card empty"><b>Project not found</b>It may have been removed, or it isn\'t linked to your account.</div>';setBar("PROJECT","",true);return}
+  p._staff=p.project_staff||[];p._cover=(await signed([p.cover_path]))(p.cover_path);cur=p;if(!keepTab)tab="updates";
+  const {data:pend}=await sb.from("approvals").select("id").eq("project_id",id).eq("status","pending");cur._pending=(pend||[]).length;
+  sb.from("reads").upsert({user_id:me.id,project_id:id,seen_at:new Date().toISOString()}).then(()=>{});
+  renderProject();subscribe(id);
+}
+function renderProject(){
+  const p=cur,mg=canManage(p),si=Math.max(0,STAGES.indexOf(p.stage));
+  setBar(isOwner()||isStaff()||projects.length>1?"PROJECT":"MY PROJECT",p.title,isOwner()||isStaff()||projects.length>1);
+  const live=liveNow(p),yid=ytId(p.live_url);
+  app.innerHTML=`<div class="stack">
+    <div class="hero" style="${p._cover?`background-image:url('${esc(p._cover)}')`:""}"><div class="in stack" style="gap:8px">
+      <div class="row" style="gap:6px">${live?'<span class="pill live"><span class="dot"></span>LIVE NOW</span>':""}<span class="pill ${p.status==="completed"?"ok":p.status==="paused"?"warn":"cy"}">${esc(p.status==="active"?"In progress":p.status[0].toUpperCase()+p.status.slice(1))}</span></div>
+      <h1>${esc(p.title)}</h1><div style="opacity:.85;font-size:14px">${esc([p.location,p.client&&p.client.full_name].filter(Boolean).join(" · "))}</div>
+      <div class="row"><div class="bar2 grow"><i style="width:${p.progress}%"></i></div><b style="font-family:Montserrat">${p.progress}%</b></div>
+      <div style="font-size:13px;opacity:.85">Stage: <b>${esc(p.stage)}</b>${p.expected_end?" · Expected finish "+esc(fmtDate(p.expected_end)):""}</div>
+    </div></div>
+    <div class="stages">${STAGES.map((s,i)=>`<span class="stg ${i<si?"done":i===si?"now":""}">${i<si?"✓ ":""}${esc(s)}</span>`).join("")}</div>
+    ${live&&yid?`<div class="livebox"><div class="row"><span class="pill live"><span class="dot"></span>LIVE</span><b class="grow" style="color:var(--ink)">${esc(p.live_title||"Live from site")}</b></div>${ytFrame(yid)}<p class="muted" style="margin:8px 0 0">Started ${esc(fmtWhen(p.live_at))}. If the video doesn't play, <a href="${esc(p.live_url)}" target="_blank" rel="noopener">open it in YouTube</a>.</p></div>`:""}
+    ${mg?`<div class="row"><button class="btn sm" id="edP">Edit project</button><button class="btn sm ${live?"danger":""}" id="liveB">${live?"End live video":"● Go live"}</button>${p.client&&p.client.phone?`<a class="btn sm wa" target="_blank" rel="noopener" href="${esc(waLink(p.client.phone,"Hello "+(p.client.full_name||"").split(" ")[0]+", there's a new update on your project in the KPATEI Client Portal: "+PORTAL_URL+"#p/"+p.id))}">Tell client on WhatsApp</a>`:""}</div>`:
+      `<div class="row"><a class="btn sm wa" target="_blank" rel="noopener" href="${esc(waLink(WHATSAPP,"Hello KPATEI, about my project \""+p.title+"\": "))}">WhatsApp KPATEI</a></div>`}
+    <div class="tabs" role="tablist">${TABS.map(([k,l])=>`<button class="tab" role="tab" data-tab="${k}" aria-selected="${tab===k}">${l}${k==="approvals"&&p._pending&&!mg?`<span class="badge">${p._pending}</span>`:""}</button>`).join("")}</div>
+    <div id="tabBody"><div class="empty">Loading…</div></div></div>`;
+  app.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;app.querySelectorAll("[data-tab]").forEach(x=>x.setAttribute("aria-selected",x===b));renderTab()});
+  if(mg){$("#edP").onclick=()=>editProject(p);$("#liveB").onclick=()=>live?endLive():goLive()}
+  const fab=$("#fab");fab.hidden=!mg;fab.onclick=()=>postUpdate();
+  renderTab();
+}
+async function renderTab(){
+  const body=$("#tabBody");if(!body)return;const pid=cur.id,mg=canManage(cur);
+  $("#fab").hidden=!mg||tab==="chat";
+  try{
+  if(tab==="updates"){
+    const {data}=await sb.from("updates").select("*, author:profiles!updates_author_id_fkey(full_name), media(*)").eq("project_id",pid).order("created_at",{ascending:false}).limit(60);
+    const ups=data||[];const url=await signed(ups.flatMap(u=>(u.media||[]).map(m=>m.path)));
+    body.innerHTML=ups.length?`<div class="stack">${ups.map(u=>updCard(u,url,mg)).join("")}</div>`:
+      `<div class="card empty"><b>No updates yet</b>${mg?"Tap “Post update” to share the first photos from site.":"Your first site photos and videos will appear here."}</div>`;
+    bindMedia(body,ups.flatMap(u=>(u.media||[]).sort((a,b)=>a.created_at<b.created_at?-1:1)),url);
+    body.querySelectorAll("[data-delu]").forEach(b=>b.onclick=async()=>{if(!confirm("Delete this update and its photos?"))return;const u=ups.find(x=>x.id===b.dataset.delu);
+      const paths=(u.media||[]).map(m=>m.path);if(paths.length)await sb.storage.from(BUCKET).remove(paths);await sb.from("updates").delete().eq("id",u.id);toast("Deleted");renderTab()});
+  }
+  else if(tab==="photos"){
+    const {data}=await sb.from("media").select("*").eq("project_id",pid).order("created_at",{ascending:false});const ms=data||[];const url=await signed(ms.map(m=>m.path));
+    const imgs=ms.filter(m=>m.type==="image");
+    body.innerHTML=ms.length?`<div class="stack"><div class="row"><span class="muted grow">${ms.length} photos and videos</span>${imgs.length>1?'<button class="btn sm" id="cmpB">Before &amp; after</button>':""}</div>
+      <p class="muted" id="cmpHelp" hidden style="margin:0">Tap the <b>before</b> photo, then the <b>after</b> photo.</p>
+      <div class="mgrid big">${ms.map((m,i)=>thumb(m,url,i)).join("")}</div></div>`:`<div class="card empty"><b>No photos yet</b>Photos and videos from site will collect here.</div>`;
+    bindMedia(body,ms,url);
+    const cb=$("#cmpB");if(cb)cb.onclick=()=>{const on=!body.classList.toggle("picking");$("#cmpHelp").hidden=on;cb.textContent=on?"Before & after":"Cancel";body._pick=[];body.querySelectorAll(".mthumb").forEach(t=>{t.classList.remove("sel");t.querySelector(".n")?.remove()})};
+  }
+  else if(tab==="docs"){
+    const {data}=await sb.from("documents").select("*").eq("project_id",pid).order("created_at",{ascending:false});const ds=data||[];
+    body.innerHTML=`<div class="stack">${mg?`<form class="card stack" id="docF"><h3>Add a document</h3><div class="grid2"><select id="dc">${DOC_CATS.map(c=>`<option>${esc(c)}</option>`).join("")}</select><input id="dn" placeholder="Name (optional)"></div><input id="df" type="file" multiple><button class="btn pri">Upload</button><p class="msg err" id="dm"></p></form>`:""}
+      ${ds.length?ds.map(d=>`<div class="card doc"><span class="ic">${esc((d.path.split(".").pop()||"").toUpperCase().slice(0,4))}</span><div class="grow"><b style="color:var(--ink);word-break:break-word">${esc(d.name)}</b><div class="muted">${esc(d.category)} · ${esc(fmtDate(d.created_at))}${d.size?" · "+(d.size/1048576).toFixed(1)+" MB":""}</div></div>
+        <button class="btn sm" data-open="${esc(d.path)}">Open</button>${mg?`<button class="btn sm danger" data-deld="${d.id}" aria-label="Delete">✕</button>`:""}</div>`).join(""):`<div class="card empty"><b>No documents yet</b>Drawings, building permit, contract and invoices will be kept here.</div>`}</div>`;
+    body.querySelectorAll("[data-open]").forEach(b=>b.onclick=async()=>{const w=window.open("","_blank");const {data}=await sb.storage.from(BUCKET).createSignedUrl(b.dataset.open,600);if(data&&data.signedUrl){if(w)w.location=data.signedUrl;else location.href=data.signedUrl}else{w&&w.close();toast("Couldn't open the file")}});
+    body.querySelectorAll("[data-deld]").forEach(b=>b.onclick=async()=>{const d=ds.find(x=>x.id===b.dataset.deld);if(!confirm("Delete "+d.name+"?"))return;await sb.storage.from(BUCKET).remove([d.path]);await sb.from("documents").delete().eq("id",d.id);renderTab()});
+    const f=$("#docF");if(f)f.onsubmit=async e=>{e.preventDefault();const files=[...$("#df").files],m=$("#dm");if(!files.length)return m.textContent="Choose a file.";const btn=f.querySelector("button");btn.disabled=true;
+      try{for(const file of files){btn.textContent="Uploading "+file.name+"…";const u=await upload(pid,"docs",file);const name=files.length===1&&$("#dn").value.trim()?$("#dn").value.trim():file.name;
+          const {error}=await sb.from("documents").insert({project_id:pid,name,category:$("#dc").value,path:u.path,size:u.size,uploaded_by:me.id});if(error)throw error}
+        toast("Uploaded");renderTab()}catch(err){m.textContent=err.message;btn.disabled=false;btn.textContent="Upload"}};
+  }
+  else if(tab==="approvals"){
+    const {data}=await sb.from("approvals").select("*").eq("project_id",pid).order("created_at",{ascending:false});const as=data||[];const url=await signed(as.map(a=>a.image_path));
+    const isClient=cur.client_id===me.id;
+    body.innerHTML=`<div class="stack">${mg?`<button class="btn pri" id="newA">＋ Ask the client to approve something</button>`:""}
+      ${as.length?as.map(a=>`<div class="card stack" style="gap:8px"><div class="row"><h3 class="grow">${esc(a.question)}</h3><span class="pill ${a.status==="approved"?"ok":a.status==="declined"?"bad":"warn"}">${a.status==="pending"?"Waiting":a.status==="approved"?"Approved":"Not approved"}</span></div>
+        ${a.details?`<p style="margin:0;white-space:pre-wrap;color:var(--ink)">${esc(a.details)}</p>`:""}${a.image_path&&url(a.image_path)?`<img src="${esc(url(a.image_path))}" alt="" style="width:100%;border-radius:12px">`:""}
+        <div class="muted">Asked ${esc(fmtWhen(a.created_at))}${a.decided_at?" · Answered "+esc(fmtWhen(a.decided_at)):""}</div>
+        ${a.client_note?`<div class="fact"><b>Client's note</b>${esc(a.client_note)}</div>`:""}
+        ${a.status==="pending"&&isClient?`<textarea placeholder="Add a note (optional)" data-note="${a.id}" style="min-height:60px"></textarea><div class="row"><button class="btn pri" data-dec="approved" data-a="${a.id}">✓ Approve</button><button class="btn danger" data-dec="declined" data-a="${a.id}">✕ Don't approve</button></div>`:""}
+        ${mg?`<button class="btn sm danger" data-dela="${a.id}" style="align-self:flex-start">Delete</button>`:""}</div>`).join(""):`<div class="card empty"><b>Nothing to approve</b>When a decision is needed (like tile colours or a design change), it will appear here for you to approve.</div>`}</div>`;
+    body.querySelectorAll("[data-dec]").forEach(b=>b.onclick=async()=>{const id=b.dataset.a,dec=b.dataset.dec;if(!confirm(dec==="approved"?"Approve this?":"Mark this as not approved?"))return;
+      const note=(body.querySelector(`[data-note="${id}"]`)||{}).value||"";const {error}=await sb.rpc("decide_approval",{a:id,decision:dec,note});if(error)return toast(error.message);
+      toast("Answer sent");cur._pending=Math.max(0,cur._pending-1);renderTab()});
+    body.querySelectorAll("[data-dela]").forEach(b=>b.onclick=async()=>{if(!confirm("Delete this approval request?"))return;await sb.from("approvals").delete().eq("id",b.dataset.dela);renderTab()});
+    const na=$("#newA");if(na)na.onclick=()=>openSheet("Ask for approval",`<form class="stack" id="f"><div><label class="l" for="q">What needs approving?</label><input id="q" placeholder="e.g. Approve the kitchen tile colour"></div>
+      <div><label class="l" for="dt">Details</label><textarea id="dt" placeholder="Explain the choice, cost difference, or what changes."></textarea></div><div><label class="l" for="im">Photo (optional)</label><input id="im" type="file" accept="image/*"></div>
+      <button class="btn pri">Send to client</button><p class="msg err" id="m"></p></form>`,pane=>{pane.querySelector("#f").onsubmit=async e=>{e.preventDefault();const q=pane.querySelector("#q").value.trim();if(!q)return pane.querySelector("#m").textContent="Write the question.";
+        const btn=pane.querySelector("button.pri");btn.disabled=true;try{let image_path=null;const f=pane.querySelector("#im").files[0];if(f)image_path=(await upload(pid,"approvals",f)).path;
+          const {error}=await sb.from("approvals").insert({project_id:pid,question:q,details:pane.querySelector("#dt").value.trim(),image_path,created_by:me.id});if(error)throw error;closeSheet();toast("Sent to client");renderTab()}catch(err){pane.querySelector("#m").textContent=err.message;btn.disabled=false}}});
+  }
+  else if(tab==="chat"){
+    const {data}=await sb.from("messages").select("*, sender:profiles!messages_sender_id_fkey(full_name,role)").eq("project_id",pid).order("created_at",{ascending:true}).limit(300);
+    body.innerHTML=`<div class="chat" id="chat">${(data||[]).map(bubble).join("")||`<div class="empty" id="chatEmpty"><b>No messages yet</b>Ask a question or leave a note. Everyone on this project can read it.</div>`}</div>
+      <form class="composer" id="cf"><textarea id="ct" placeholder="Write a message…" maxlength="4000"></textarea><button class="btn pri">Send</button></form>`;
+    const ch=$("#chat");window.scrollTo(0,document.body.scrollHeight);
+    $("#cf").onsubmit=async e=>{e.preventDefault();const t=$("#ct").value.trim();if(!t)return;$("#ct").value="";
+      const {error}=await sb.from("messages").insert({project_id:pid,sender_id:me.id,body:t});if(error){toast(error.message);$("#ct").value=t}};
+    $("#ct").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey&&window.innerWidth>700){e.preventDefault();$("#cf").requestSubmit()}});
+  }
+  else if(tab==="handover"){
+    const {data}=await sb.from("snags").select("*").eq("project_id",pid).order("created_at",{ascending:true});const sn=data||[];const url=await signed(sn.map(s=>s.photo_path));const open=sn.filter(s=>s.status==="open").length;
+    body.innerHTML=`<div class="stack"><div class="card stack" style="gap:8px"><h3>Handover pack</h3><p class="muted" style="margin:0">A complete record of your building: every update and photo from start to finish, plus the list of documents. Save it as a PDF to keep forever.</p>
+      <button class="btn dark" id="pack" style="align-self:flex-start">Make handover pack (PDF)</button></div>
+      <div class="row"><h3 class="grow">Snag list</h3><span class="pill ${open?"warn":"ok"}">${open?open+" to fix":"All fixed"}</span></div>
+      <p class="muted" style="margin:0">Small things to fix before handover. ${mg?"Add items and tick them off when fixed.":"You'll see each item ticked off as it's fixed."}</p>
+      ${mg?`<form class="card row" id="sf"><input id="si" class="grow" placeholder="e.g. Bedroom 2 door doesn't close" style="flex:1 1 200px"><input id="sp" type="file" accept="image/*" style="flex:1 1 160px"><button class="btn pri">Add</button></form>`:""}
+      ${sn.map(s=>`<div class="card row"><span style="font-size:20px">${s.status==="fixed"?"✅":"⬜"}</span><div class="grow"><span style="color:var(--ink);${s.status==="fixed"?"text-decoration:line-through;opacity:.6":""}">${esc(s.item)}</span><div class="muted">${s.status==="fixed"?"Fixed "+esc(fmtDate(s.fixed_at)):"Added "+esc(fmtDate(s.created_at))}</div></div>
+        ${s.photo_path&&url(s.photo_path)?`<img src="${esc(url(s.photo_path))}" alt="" style="width:56px;height:56px;object-fit:cover;border-radius:8px">`:""}
+        ${mg?`<button class="btn sm" data-fix="${s.id}" data-st="${s.status}">${s.status==="fixed"?"Re-open":"Mark fixed"}</button><button class="btn sm danger" data-dels="${s.id}">✕</button>`:""}</div>`).join("")}</div>`;
+    $("#pack").onclick=handoverPack;
+    const sf=$("#sf");if(sf)sf.onsubmit=async e=>{e.preventDefault();const it=$("#si").value.trim();if(!it)return;const btn=sf.querySelector("button");btn.disabled=true;
+      try{let photo_path=null;const f=$("#sp").files[0];if(f)photo_path=(await upload(pid,"snags",f)).path;const {error}=await sb.from("snags").insert({project_id:pid,item:it,photo_path});if(error)throw error;renderTab()}catch(err){toast(err.message);btn.disabled=false}};
+    body.querySelectorAll("[data-fix]").forEach(b=>b.onclick=async()=>{const fixed=b.dataset.st!=="fixed";await sb.from("snags").update({status:fixed?"fixed":"open",fixed_at:fixed?new Date().toISOString():null}).eq("id",b.dataset.fix);renderTab()});
+    body.querySelectorAll("[data-dels]").forEach(b=>b.onclick=async()=>{if(!confirm("Remove this item?"))return;await sb.from("snags").delete().eq("id",b.dataset.dels);renderTab()});
+  }
+  }catch(err){body.innerHTML=`<div class="card empty"><b>Couldn't load this</b>${esc(err.message||"Check your internet connection.")}</div>`}
+}
+function bubble(m){const mine=m.sender_id===me.id,who=m.sender?(m.sender.full_name||"")+(m.sender.role!=="client"?" · KPATEI":""):"";
+  return `<div class="bub ${mine?"me":""}">${esc(m.body)}<small>${mine?"You":esc(who)} · ${esc(fmtWhen(m.created_at))}</small></div>`}
+const KIND={update:["Update","cy"],report:["Daily report",""],live:["Live video","live"],milestone:["Milestone","ok"]};
+function updCard(u,url,mg){const k=KIND[u.kind]||KIND.update,ms=(u.media||[]).sort((a,b)=>a.created_at<b.created_at?-1:1),yid=ytId(u.youtube_url);
+  const facts=[["Workers on site",u.workers],["Work done / materials",u.materials],["Problems / delays",u.issues],["Weather",u.weather]].filter(f=>f[1]!=null&&f[1]!=="");
+  return `<article class="card upd"><div class="head"><div class="grow"><div class="row" style="gap:6px"><span class="pill ${k[1]}">${k[0]}</span>${u.stage?`<span class="pill">${esc(u.stage)}${u.progress!=null?" · "+u.progress+"%":""}</span>`:""}</div>
+    ${u.title?`<h3 style="margin-top:8px">${esc(u.title)}</h3>`:""}<div class="muted">${esc(fmtWhen(u.created_at))}${u.author?" · "+esc(u.author.full_name):""}</div></div>${mg?`<button class="btn sm danger" data-delu="${u.id}" aria-label="Delete update">✕</button>`:""}</div>
+    ${u.body?`<p class="body">${esc(u.body)}</p>`:""}${facts.length?`<div class="facts">${facts.map(f=>`<div class="fact"><b>${f[0]}</b>${esc(f[1])}</div>`).join("")}</div>`:""}
+    ${yid?ytFrame(yid):""}${ms.length?`<div class="mgrid">${ms.slice(0,9).map(m=>thumb(m,url)).join("")}</div>${ms.length>9?`<p class="muted" style="margin:6px 0 0">+${ms.length-9} more in Photos &amp; videos</p>`:""}`:""}</article>`}
+function thumb(m,url){const s=url(m.path);return `<button class="mthumb" type="button" data-m="${m.id}">${m.type==="video"?`<video src="${esc(s)}#t=0.5" preload="metadata" muted playsinline></video><span class="play">▶</span>`:`<img src="${esc(s)}" alt="${esc(m.caption||"Site photo")}" loading="lazy">`}</button>`}
+function bindMedia(root,list,url){root.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{const i=list.findIndex(m=>m.id===b.dataset.m);
+  if(root.classList.contains("picking")){const m=list[i];if(m.type!=="image")return toast("Choose photos, not videos");root._pick=root._pick||[];root._pick.push(m);b.classList.add("sel");const n=document.createElement("span");n.className="n";n.textContent=root._pick.length;b.append(n);
+    if(root._pick.length===2){compare(root._pick[0],root._pick[1],url);$("#cmpB").click()}return}
+  openViewer(list,i,url)})}
+function openViewer(list,i,url){const v=$("#viewer");let k=i;
+  const draw=()=>{const m=list[k],s=url(m.path);v.innerHTML=`<div class="vtop"><span class="grow" style="font-size:14px">${k+1} / ${list.length} · ${esc(fmtDate(m.created_at))}</span><a href="${esc(s)}" download target="_blank" rel="noopener" style="color:#fff;font-size:14px;margin-right:6px">Save</a><button type="button" id="vx">Close</button></div>
+    <div class="vbody">${m.type==="video"?`<video src="${esc(s)}" controls autoplay playsinline></video>`:`<img src="${esc(s)}" alt="">`}${list.length>1?'<button class="nav" style="left:8px" id="vp">‹</button><button class="nav" style="right:8px" id="vn">›</button>':""}</div>`;
+    v.querySelector("#vx").onclick=()=>{v.hidden=true;v.innerHTML=""};const p=v.querySelector("#vp"),n=v.querySelector("#vn");if(p)p.onclick=()=>{k=(k-1+list.length)%list.length;draw()};if(n)n.onclick=()=>{k=(k+1)%list.length;draw()}};
+  v.hidden=false;draw();let sx=null;v.ontouchstart=e=>sx=e.touches[0].clientX;v.ontouchend=e=>{if(sx==null||list.length<2)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60){k=(k+(dx<0?1:-1)+list.length)%list.length;draw()}sx=null}}
+function compare(a,b,url){const v=$("#viewer");v.hidden=false;
+  v.innerHTML=`<div class="vtop"><span class="grow" style="font-size:14px">Drag to compare · ${esc(fmtDate(a.created_at))} → ${esc(fmtDate(b.created_at))}</span><button type="button" id="vx">Close</button></div>
+   <div class="vbody"><div class="cmp" id="cmp"><img src="${esc(url(a.path))}" alt="Before"><img class="after" src="${esc(url(b.path))}" alt="After"><span class="handle"></span><span class="lab" style="left:10px">Before</span><span class="lab" style="right:10px">After</span></div></div>`;
+  v.querySelector("#vx").onclick=()=>{v.hidden=true;v.innerHTML=""};const c=v.querySelector("#cmp");
+  const set=x=>{const r=c.getBoundingClientRect(),pc=Math.max(0,Math.min(100,(x-r.left)/r.width*100));c.querySelector(".after").style.clipPath=`inset(0 0 0 ${pc}%)`;c.querySelector(".handle").style.left=pc+"%"};
+  c.onpointerdown=e=>{c.setPointerCapture(e.pointerId);set(e.clientX)};c.onpointermove=e=>{if(e.buttons)set(e.clientX)}}
+
+/* ---------- post update / daily report ---------- */
+function postUpdate(){
+  const p=cur;
+  openSheet("Post to "+p.title,`<form class="stack" id="f" novalidate>
+    <div><label class="l" for="k">Type</label><select id="k"><option value="update">Site update</option><option value="report">Daily report</option><option value="milestone">Milestone reached</option></select></div>
+    <div><label class="l" for="t">Title</label><input id="t" placeholder="e.g. Roof sheets going up"></div>
+    <div><label class="l" for="b">What happened today?</label><textarea id="b" placeholder="Describe the work, what's next, anything the client should know."></textarea></div>
+    <div id="rep" hidden class="stack"><div class="grid2"><div><label class="l" for="w">Workers on site</label><input id="w" type="number" min="0" inputmode="numeric"></div><div><label class="l" for="we">Weather</label><select id="we"><option value=""></option><option>Sunny</option><option>Cloudy</option><option>Light rain</option><option>Heavy rain (work stopped)</option></select></div></div>
+      <div><label class="l" for="ma">Work done / materials delivered</label><textarea id="ma" style="min-height:60px" placeholder="e.g. 200 blocks laid, 40 bags cement delivered"></textarea></div>
+      <div><label class="l" for="is">Problems or delays</label><textarea id="is" style="min-height:60px" placeholder="Leave empty if none"></textarea></div></div>
+    <div class="grid2"><div><label class="l" for="sg">Stage</label><select id="sg">${STAGES.map(s=>`<option ${p.stage===s?"selected":""}>${esc(s)}</option>`).join("")}</select></div>
+      <div><label class="l" for="pr">Progress: <span id="prv">${p.progress}</span>%</label><input id="pr" type="range" min="0" max="100" step="5" value="${p.progress}" style="padding:0;border:none"></div></div>
+    <div><label class="l" for="fi">Photos &amp; short videos</label><input id="fi" type="file" accept="image/*,video/*" multiple><p class="muted" style="margin:4px 0 0">Photos are made smaller automatically. Videos up to 50 MB; for longer videos use a YouTube link below.</p><div class="prev" id="pv" style="margin-top:8px"></div></div>
+    <div><label class="l" for="yt">YouTube link (optional)</label><input id="yt" inputmode="url" placeholder="Paste an Unlisted YouTube video link"></div>
+    <div class="prog" id="pg" hidden><i></i></div>
+    <button class="btn pri" id="go">Post update</button><p class="msg err" id="m"></p></form>`,pane=>{
+    const q=s=>pane.querySelector(s);
+    q("#k").onchange=e=>{q("#rep").hidden=e.target.value!=="report";if(e.target.value==="report"&&!q("#t").value)q("#t").value="Daily report – "+new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"short"})};
+    q("#pr").oninput=e=>q("#prv").textContent=e.target.value;
+    q("#fi").onchange=e=>{q("#pv").innerHTML=[...e.target.files].map(f=>/^image/.test(f.type)?`<div style="background-image:url('${URL.createObjectURL(f)}')"></div>`:`<div style="background:#2d3748">▶ ${(f.size/1048576).toFixed(0)}MB</div>`).join("")};
+    q("#f").onsubmit=async e=>{e.preventDefault();const m=q("#m"),go=q("#go"),files=[...q("#fi").files];m.textContent="";
+      const row={project_id:p.id,author_id:me.id,kind:q("#k").value,title:q("#t").value.trim(),body:q("#b").value.trim(),stage:q("#sg").value,progress:+q("#pr").value,youtube_url:q("#yt").value.trim()||null};
+      if(row.youtube_url&&!ytId(row.youtube_url))return m.textContent="That doesn't look like a YouTube link.";
+      if(row.kind==="report"){row.workers=q("#w").value===""?null:+q("#w").value;row.weather=q("#we").value||null;row.materials=q("#ma").value.trim()||null;row.issues=q("#is").value.trim()||null}
+      if(!row.title&&!row.body&&!files.length&&!row.youtube_url)return m.textContent="Add some text, photos or a video.";
+      const big=files.find(f=>/^video/.test(f.type)&&f.size>50*1024*1024);if(big)return m.textContent=big.name+" is over 50 MB. Upload it to YouTube as Unlisted and paste the link.";
+      go.disabled=true;q("#pg").hidden=false;const bar=q("#pg i");let done=0;const tick=()=>{done++;bar.style.width=Math.round(done/(files.length+1)*100)+"%";go.textContent="Uploading "+done+" of "+files.length+"…"};
+      try{const {data:up,error}=await sb.from("updates").insert(row).select("id").single();if(error)throw error;
+        const media=[];for(const f of files){const u=await upload(p.id,"media",f,tick);media.push({project_id:p.id,update_id:up.id,path:u.path,type:u.type==="video"?"video":"image"})}
+        if(media.length){const {error:me2}=await sb.from("media").insert(media);if(me2)throw me2}
+        if(row.stage!==p.stage||row.progress!==p.progress)await sb.from("projects").update({stage:row.stage,progress:row.progress}).eq("id",p.id);
+        closeSheet();tab="updates";await openProject(p.id,true);
+        if(p.client&&p.client.phone)askNotify(p);else toast("Posted");
+      }catch(err){m.textContent=err.message||String(err);go.disabled=false;go.textContent="Post update";q("#pg").hidden=true}};
+  });
+}
+function askNotify(p){openSheet("Posted!",`<div class="stack"><p style="margin:0">Let ${esc(p.client.full_name)} know there's something new?</p>
+  <a class="btn wa" target="_blank" rel="noopener" id="wa" href="${esc(waLink(p.client.phone,"Hello "+(p.client.full_name||"").split(" ")[0]+", there's a new update on your building project. See the photos here: "+PORTAL_URL+"#p/"+p.id))}">Tell client on WhatsApp</a><button class="btn" id="no">Not now</button></div>`,
+  pane=>{pane.querySelector("#no").onclick=closeSheet;pane.querySelector("#wa").addEventListener("click",()=>setTimeout(closeSheet,300))})}
+
+/* ---------- live video ---------- */
+function goLive(){
+  const p=cur;
+  openSheet("Go live from site",`<form class="stack" id="f" novalidate>
+    <ol class="muted" style="margin:0;padding-left:18px"><li>Open the <b>YouTube</b> app and tap ＋ then <b>Go live</b>.</li><li>Set visibility to <b>Unlisted</b> (not Public) so only your client can watch.</li><li>Start the live video, tap <b>Share</b> and copy the link.</li><li>Paste the link here. The video then shows on your client's project page.</li></ol>
+    <div><label class="l" for="u">YouTube live link</label><input id="u" inputmode="url" placeholder="https://youtube.com/live/..."></div>
+    <div><label class="l" for="t">Title</label><input id="t" value="Live site visit – ${esc(new Date().toLocaleDateString("en-GB",{day:"numeric",month:"short"}))}"></div>
+    <label class="chk"><input type="checkbox" id="pst" checked> Also add it to Updates so the client can watch the recording later</label>
+    <button class="btn pri">Show live to client</button><p class="msg err" id="m"></p></form>`,pane=>{
+    pane.querySelector("#f").onsubmit=async e=>{e.preventDefault();const u=pane.querySelector("#u").value.trim(),t=pane.querySelector("#t").value.trim();if(!ytId(u))return pane.querySelector("#m").textContent="Paste the YouTube link of the live video.";
+      const {error}=await sb.from("projects").update({live_url:u,live_title:t,live_at:new Date().toISOString()}).eq("id",p.id);if(error)return pane.querySelector("#m").textContent=error.message;
+      if(pane.querySelector("#pst").checked)await sb.from("updates").insert({project_id:p.id,author_id:me.id,kind:"live",title:t,youtube_url:u,stage:p.stage,progress:p.progress});
+      closeSheet();await openProject(p.id,true);
+      if(p.client&&p.client.phone)openSheet("You're live",`<div class="stack"><a class="btn wa" target="_blank" rel="noopener" href="${esc(waLink(p.client.phone,"Hello "+(p.client.full_name||"").split(" ")[0]+", we're LIVE on your building site now! Watch here: "+PORTAL_URL+"#p/"+p.id))}">Tell client on WhatsApp</a><button class="btn" id="ok">Done</button></div>`,pp=>pp.querySelector("#ok").onclick=closeSheet);}});
+}
+async function endLive(){if(!confirm("End the live video on the client's page? (Stop the stream in YouTube too.)"))return;await sb.from("projects").update({live_url:null,live_at:null,live_title:null}).eq("id",cur.id);openProject(cur.id,true)}
+
+/* ---------- handover pack (print to PDF) ---------- */
+async function handoverPack(){
+  toast("Preparing the pack…",6000);const p=cur;
+  const [{data:ups},{data:docs},{data:sn}]=await Promise.all([sb.from("updates").select("*, author:profiles!updates_author_id_fkey(full_name), media(*)").eq("project_id",p.id).order("created_at",{ascending:true}),
+    sb.from("documents").select("name,category,created_at").eq("project_id",p.id),sb.from("snags").select("item,status,fixed_at").eq("project_id",p.id)]);
+  const url=await signed((ups||[]).flatMap(u=>(u.media||[]).filter(m=>m.type==="image").map(m=>m.path)));
+  $("#print").innerHTML=`<div style="display:flex;gap:14px;align-items:center"><img src="/logo.png" style="width:70px"><div><h1>${esc(p.title)}</h1><div>${esc(p.location||"")} · Client: ${esc(p.client?p.client.full_name:"")}</div><div>KPATEI Concept &amp; Build · Handover pack · ${esc(fmtDate(new Date()))}</div></div></div>
+    <p>Stage: ${esc(p.stage)} · ${p.progress}% · Started ${esc(fmtDate(p.start_date))}</p>
+    <h2>Documents</h2><ul>${(docs||[]).map(d=>`<li>${esc(d.name)} (${esc(d.category)}, ${esc(fmtDate(d.created_at))})</li>`).join("")||"<li>None</li>"}</ul>
+    <h2>Snag list</h2><ul>${(sn||[]).map(s=>`<li>${s.status==="fixed"?"✔":"✗"} ${esc(s.item)}</li>`).join("")||"<li>None</li>"}</ul>
+    <h2>Project history</h2>${(ups||[]).map(u=>`<div class="pu"><b>${esc(fmtDate(u.created_at))} · ${esc(u.title||(KIND[u.kind]||KIND.update)[0])}</b>${u.stage?" · "+esc(u.stage):""}<div style="white-space:pre-wrap">${esc(u.body||"")}</div>
+      ${u.youtube_url?`<div>Video: ${esc(u.youtube_url)}</div>`:""}<div class="pimg">${(u.media||[]).filter(m=>m.type==="image").map(m=>`<img src="${esc(url(m.path))}">`).join("")}</div></div>`).join("")}`;
+  const imgs=[...$("#print").querySelectorAll("img")];await Promise.all(imgs.map(i=>i.complete?0:new Promise(r=>{i.onload=i.onerror=r})));
+  $("#toast").hidden=true;window.print();
+}
+
+/* ---------- live refresh ---------- */
+function subscribe(pid){
+  if(channel){sb.removeChannel(channel);channel=null}
+  channel=sb.channel("p-"+pid)
+    .on("postgres_changes",{event:"INSERT",schema:"public",table:"messages",filter:"project_id=eq."+pid},async pl=>{
+      if(tab!=="chat"||!cur||cur.id!==pid)return;const {data}=await sb.from("messages").select("*, sender:profiles!messages_sender_id_fkey(full_name,role)").eq("id",pl.new.id).single();
+      const ch=$("#chat");if(!ch||!data)return;$("#chatEmpty")?.remove();ch.insertAdjacentHTML("beforeend",bubble(data));window.scrollTo(0,document.body.scrollHeight)})
+    .on("postgres_changes",{event:"INSERT",schema:"public",table:"updates",filter:"project_id=eq."+pid},pl=>{if(pl.new.author_id!==me.id)toast("New update posted");if(tab==="updates"&&pl.new.author_id!==me.id)setTimeout(renderTab,1500)})
+    .on("postgres_changes",{event:"UPDATE",schema:"public",table:"projects",filter:"id=eq."+pid},pl=>{const was=liveNow(cur);Object.assign(cur,pl.new);if(liveNow(cur)!==was){if(liveNow(cur))toast("Live video started");renderProject()}})
+    .subscribe();
+}
+
+/* ---------- routing ---------- */
+async function route(){
+  closeSheet();$("#viewer").hidden=true;window.scrollTo(0,0);
+  if(!me)return;
+  const h=location.hash;
+  try{
+    if(h.startsWith("#p/")){if(!projects.length)await loadProjects();await openProject(h.slice(3))}
+    else if(h==="#people")await viewPeople();
+    else{if(channel){sb.removeChannel(channel);channel=null}cur=null;await viewProjects()}
+  }catch(err){app.innerHTML=`<div class="card empty"><b>Something went wrong</b>${esc(err.message||"Check your internet connection and try again.")}<br><br><button class="btn" onclick="location.reload()">Try again</button></div>`}
+}
+window.addEventListener("hashchange",route);
+
+async function boot(){
+  const {data:{session}}=await sb.auth.getSession();
+  if(!session){me=null;return viewSignIn()}
+  user=session.user;
+  if(hashType==="recovery"||hashType==="invite"){if(!boot.done){boot.done=true;return viewSetPassword(hashType==="invite"?"first":"reset")}}
+  if(user.user_metadata&&user.user_metadata.must_change_password)return viewSetPassword("first");
+  const {data,error}=await sb.from("profiles").select("*").eq("id",user.id).maybeSingle();
+  if(error||!data){await sb.auth.signOut();return viewSignIn({text:"This account isn't set up yet. Please contact KPATEI."})}
+  me=data;
+  if(/^#(access_token|error)/.test(location.hash))history.replaceState(null,"",location.pathname);
+  route();
+}
+sb.auth.onAuthStateChange((ev)=>{if(ev==="PASSWORD_RECOVERY"){viewSetPassword("reset")}if(ev==="SIGNED_OUT"){me=null}});
+boot();
+})();
+</script>
+</body>
+</html>

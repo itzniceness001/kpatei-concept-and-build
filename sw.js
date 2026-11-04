@@ -1,6 +1,6 @@
 // KPATEI website service worker: lets the app open quickly and work offline.
 // Pages are fetched fresh when online; saved copies are used when there is no internet.
-const VERSION = "kpatei-v2";
+const VERSION = "kpatei-v3";
 const CORE = ["/", "/index.html", "/offline.html", "/manifest.webmanifest", "/logo.png",
   "/icons/icon-192.png", "/icons/icon-512.png", "/images/about-1.jpg", "/images/about-2.jpg",
   "/images/gallery/bungalow-pool-compound.jpg"];
@@ -21,6 +21,8 @@ self.addEventListener("fetch", (e) => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.origin === location.origin && url.pathname.startsWith("/clockin/")) return; // staff app has its own
+  if (url.origin === location.origin && url.pathname.startsWith("/portal/")) return;  // client portal: private, always live
+  if (url.hostname.endsWith(".supabase.co")) return;                                  // portal data and photos: never cached
 
   if (req.mode === "navigate") {
     e.respondWith(fetch(req).then((res) => {
