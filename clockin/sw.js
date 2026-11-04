@@ -1,6 +1,6 @@
 // Staff Clock-In service worker: keeps the app working offline.
 // The app page itself is fetched fresh when online (so updates arrive), and from cache when offline.
-const VERSION = "clockin-v6";
+const VERSION = "clockin-v7";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png"];
 const LIBS = [
   "https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js",

@@ -360,12 +360,17 @@ async function loadAll(){
   const s=await run("kv","readonly",st=>st.get("settings"));settings={...DEF,...(s||{})};
   todayLogs=await logsFor(today,today);
   auth=(await run("kv","readonly",st=>st.get("auth")))||null;
+  // Starting password chosen by the owner (only its salted hash is stored here). Applied once per phone;
+  // after that, changing it in Settings replaces it.
+  if(!auth||!auth.seed){auth={...SEED_AUTH,changed:Date.now()};await run("kv","readwrite",st=>st.put(auth,"auth"));
+    if(settings.pin){settings={...settings,pin:""};await run("kv","readwrite",st=>st.put(settings,"settings"))}}
   guard=(await run("kv","readonly",st=>st.get("guard")))||{fails:0,until:0};
 }
 
 /* ---------- password lock ----------
    The password is never stored: only a salted PBKDF2 hash. The app opens locked,
    and Staff / Attendance / Settings ask for the password again every time. */
+const SEED_AUTH={"salt":"zHDsNEKj49sQzxtz1XYr3A==","iter":210000,"hash":"P9oB2aYtcz36Hw8O6Ko6g7dTejVlH5ghWGZN/XRTNnE=","rsalt":"4w7W0NyxzlnXhrY5UH8NQg==","rhash":"aTxQG10PBsZKZkw5dbY/johE9YB2mrQVCQH9Wi4vPkE=","seed":1};
 const MGMT=["staff","log","set"], MIN_PW=6, IDLE_MS=3*60000, AWAY_MS=15*60000;
 let auth=null;               // {salt,hash,iter,rsalt,rhash,changed}
 let appUnlocked=false, mgmtUnlocked=false, authMode="unlock", wanted=null;
