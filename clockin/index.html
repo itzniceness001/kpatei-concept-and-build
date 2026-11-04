@@ -158,13 +158,17 @@ select{font:inherit;font-size:16px;color:var(--ink);background:var(--surface);bo
 .rowc .meta{grid-column:1/-1;font-family:var(--mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;display:flex;gap:14px;flex-wrap:wrap}
 .rowc .st{display:flex;gap:4px;justify-content:flex-end;flex-wrap:wrap}
 
-/* PIN */
-.pinwrap{max-width:320px;margin:30px auto;text-align:center;display:flex;flex-direction:column;gap:14px}
-.dots{display:flex;justify-content:center;gap:12px;height:18px}
-.dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--muted)}
-.dots i.on{background:var(--ink);border-color:var(--ink)}
-.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.pad button{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 0;font-family:var(--mono);font-size:22px;font-weight:700;color:var(--ink)}
+/* PASSWORD LOCK */
+.authwrap{max-width:380px;margin:18px auto;display:flex;flex-direction:column;gap:14px}
+.authwrap .head{text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px}
+.authicon{width:56px;height:56px;border-radius:16px;background:var(--accent-soft);color:var(--ink);display:flex;align-items:center;justify-content:center}
+.authicon svg{width:28px;height:28px}
+.pw{display:flex;gap:6px}
+.pw input{flex:1}
+.pw button{flex:none;border:1px solid var(--line);background:var(--surface);color:var(--muted);border-radius:10px;padding:0 12px;font-size:13px;font-weight:600}
+.linkbtn{background:none;border:none;color:var(--muted);font-size:14px;text-decoration:underline;padding:8px;align-self:center;cursor:pointer}
+.codebox{font-family:var(--mono);font-size:26px;font-weight:700;letter-spacing:.08em;text-align:center;background:var(--accent-soft);border:2px dashed var(--accent);border-radius:12px;padding:16px 8px;user-select:all;color:var(--ink)}
+body.locked nav.tabs{display:none}
 </style>
 </head>
 <body>
@@ -199,14 +203,35 @@ select{font:inherit;font-size:16px;color:var(--ink);background:var(--surface);bo
     <div class="recent"><h3>Today</h3><ol id="recent"></ol></div>
   </section>
 
-  <!-- PIN -->
-  <section class="view" id="v-pin" hidden>
-    <div class="pinwrap">
-      <h2 style="margin:0">Manager PIN</h2>
-      <p class="hint">Enter the PIN to open staff, attendance and settings.</p>
-      <div class="dots" id="dots"><i></i><i></i><i></i><i></i></div>
-      <p class="msg" id="pinMsg" style="color:var(--late)"></p>
-      <div class="pad" id="pad"></div>
+  <!-- PASSWORD -->
+  <section class="view" id="v-auth" hidden>
+    <div class="authwrap">
+      <div class="head">
+        <div class="authicon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/><circle cx="12" cy="15.5" r="1.4"/></svg></div>
+        <h2 style="margin:0" id="auTitle">Locked</h2>
+        <p class="hint" id="auHint"></p>
+      </div>
+      <form class="panel" id="auForm" autocomplete="off" novalidate>
+        <div class="field" id="auOldWrap" hidden><label class="label" for="auOld">Old 4-digit PIN</label><input id="auOld" type="password" inputmode="numeric" maxlength="4"></div>
+        <div class="field" id="auCodeWrap" hidden><label class="label" for="auCode">Recovery code</label><input id="auCode" autocapitalize="characters" autocomplete="off" spellcheck="false" placeholder="XXXX-XXXX-XXXX"></div>
+        <div class="field"><label class="label" for="auPw" id="auPwLabel">Password</label>
+          <div class="pw"><input id="auPw" type="password" autocomplete="off" spellcheck="false"><button type="button" data-eye="auPw">Show</button></div></div>
+        <div class="field" id="auPw2Wrap" hidden><label class="label" for="auPw2">Type the new password again</label>
+          <div class="pw"><input id="auPw2" type="password" autocomplete="off" spellcheck="false"><button type="button" data-eye="auPw2">Show</button></div></div>
+        <button class="btn primary" type="submit" id="auGo">Unlock</button>
+        <p class="msg" id="auMsg" style="color:var(--late)"></p>
+      </form>
+      <button type="button" class="linkbtn" id="auForgot">Forgot the password? Use the recovery code</button>
+      <button type="button" class="linkbtn" id="auBack" hidden>Back</button>
+    </div>
+    <div class="authwrap" id="auShowCode" hidden>
+      <div class="head">
+        <h2 style="margin:0">Your recovery code</h2>
+        <p class="hint">If the password is ever forgotten, this code lets the owner set a new one. Write it down and keep it somewhere only you can reach, <b>not</b> on this phone and not with the person in charge.</p>
+      </div>
+      <div class="codebox" id="auCodeOut"></div>
+      <p class="hint" style="text-align:center">This code will not be shown again. Each code works once.</p>
+      <button class="btn primary" type="button" id="auCodeDone">I've written it down</button>
     </div>
   </section>
 
@@ -249,13 +274,29 @@ select{font:inherit;font-size:16px;color:var(--ink);background:var(--surface);bo
         <div class="field"><label class="label" for="sPre">Staff no. prefix</label><input id="sPre" placeholder="KCB" autocapitalize="characters"></div>
         <div class="field"><label class="label" for="sLate">Late after</label><input id="sLate" type="time" value="08:30"></div>
       </div>
-      <div class="field"><label class="label" for="sPin">Manager PIN (4 digits)</label><input id="sPin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" placeholder="Leave empty for no PIN"></div>
       <label class="check" for="sSelfie"><input type="checkbox" id="sSelfie"> <span><b>Take a photo at each scan</b><br><span class="hint">Uses the front camera so you can see who signed in. Tell your staff photos are taken.</span></span></label>
       <div class="field"><label class="label" for="sKeep">Keep photos for</label>
         <select id="sKeep"><option value="30">30 days</option><option value="60">60 days</option><option value="90">90 days</option><option value="180">6 months</option><option value="365">1 year</option></select></div>
       <button class="btn primary" type="submit">Save settings</button>
       <p class="msg" id="setMsg"></p>
     </form>
+    <h2>Password</h2>
+    <form class="panel" id="pwForm" autocomplete="off" novalidate>
+      <p class="hint">The password opens this app and is asked again for Staff, Attendance and Settings. Change it any time, for example if you think someone else has seen it.</p>
+      <div class="field"><label class="label" for="pwOld">Current password</label><div class="pw"><input id="pwOld" type="password" autocomplete="off"><button type="button" data-eye="pwOld">Show</button></div></div>
+      <div class="field"><label class="label" for="pwNew">New password</label><div class="pw"><input id="pwNew" type="password" autocomplete="off"><button type="button" data-eye="pwNew">Show</button></div></div>
+      <div class="field"><label class="label" for="pwNew2">New password again</label><div class="pw"><input id="pwNew2" type="password" autocomplete="off"><button type="button" data-eye="pwNew2">Show</button></div></div>
+      <button class="btn primary" type="submit">Change password</button>
+      <p class="msg" id="pwMsg"></p>
+    </form>
+    <div class="panel">
+      <p class="hint">Lost the recovery code, or think someone has seen it? Make a new one. The old code stops working.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" type="button" id="newCodeBtn">Make a new recovery code</button>
+        <button class="btn" type="button" id="lockAppBtn">Lock the app now</button>
+      </div>
+      <p class="msg" id="codeMsg"></p>
+    </div>
     <h2>Backup</h2>
     <div class="panel">
       <p class="hint">All staff and attendance are stored on this phone. Back up regularly and keep the file safe, for example on WhatsApp or Google Drive.</p>
@@ -287,7 +328,7 @@ select{font:inherit;font-size:16px;color:var(--ink);background:var(--surface);bo
 "use strict";
 const $=s=>document.querySelector(s);
 const QR_PREFIX="STAFF:";
-const DEF={company:"",prefix:"KCB",lateAfter:"08:30",pin:"",selfie:true,keepDays:90};
+const DEF={company:"",prefix:"KCB",lateAfter:"08:30",pin:"",/* pin: old 4-digit PIN, only kept until a password is set */selfie:true,keepDays:90};
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
 /* ---------- helpers ---------- */
@@ -318,31 +359,137 @@ async function loadAll(){
   staff=new Map((await getAll("staff")).map(s=>[s.staffNo,s]));
   const s=await run("kv","readonly",st=>st.get("settings"));settings={...DEF,...(s||{})};
   todayLogs=await logsFor(today,today);
+  auth=(await run("kv","readonly",st=>st.get("auth")))||null;
+  guard=(await run("kv","readonly",st=>st.get("guard")))||{fails:0,until:0};
 }
 
-/* ---------- navigation + PIN ---------- */
-let current="scan", unlocked=false, wanted=null;
-function show(v){
-  if(v!=="scan" && v!=="pin" && settings.pin && !unlocked){wanted=v;v="pin";pinBuf="";drawDots();$("#pinMsg").textContent=""}
+/* ---------- password lock ----------
+   The password is never stored: only a salted PBKDF2 hash. The app opens locked,
+   and Staff / Attendance / Settings ask for the password again every time. */
+const MGMT=["staff","log","set"], MIN_PW=6, IDLE_MS=3*60000, AWAY_MS=15*60000;
+let auth=null;               // {salt,hash,iter,rsalt,rhash,changed}
+let appUnlocked=false, mgmtUnlocked=false, authMode="unlock", wanted=null;
+const enc=new TextEncoder();
+const b64=buf=>btoa(String.fromCharCode(...new Uint8Array(buf)));
+const unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function derive(secret,salt,iter){
+  const key=await crypto.subtle.importKey("raw",enc.encode(secret),"PBKDF2",false,["deriveBits"]);
+  return b64(await crypto.subtle.deriveBits({name:"PBKDF2",hash:"SHA-256",salt,iterations:iter},key,256));
+}
+function same(a,b){if(a.length!==b.length)return false;let d=0;for(let i=0;i<a.length;i++)d|=a.charCodeAt(i)^b.charCodeAt(i);return d===0}
+const normCode=c=>String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+function newCode(){const A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",r=crypto.getRandomValues(new Uint8Array(12));let s="";r.forEach((n,i)=>{s+=A[n%A.length];if(i===3||i===7)s+="-"});return s}
+async function hashPw(pw){const salt=crypto.getRandomValues(new Uint8Array(16)),iter=210000;return {salt:b64(salt),iter,hash:await derive(pw,salt,iter)}}
+async function checkPw(pw){return !!auth&&same(await derive(pw,unb64(auth.salt),auth.iter),auth.hash)}
+async function checkCode(c){return !!auth&&!!auth.rhash&&same(await derive(normCode(c),unb64(auth.rsalt),auth.iter),auth.rhash)}
+async function setPassword(pw,withNewCode){
+  const h=await hashPw(pw);let code=null;
+  const next={...(auth||{}),...h,changed:Date.now()};
+  if(withNewCode||!next.rhash){code=newCode();const rs=crypto.getRandomValues(new Uint8Array(16));next.rsalt=b64(rs);next.rhash=await derive(normCode(code),rs,h.iter)}
+  await run("kv","readwrite",st=>st.put(next,"auth"));auth=next;return code;
+}
+async function makeNewCode(){const code=newCode(),rs=crypto.getRandomValues(new Uint8Array(16));
+  const next={...auth,rsalt:b64(rs),rhash:await derive(normCode(code),rs,auth.iter)};
+  await run("kv","readwrite",st=>st.put(next,"auth"));auth=next;return code}
+function pwProblem(pw,pw2){
+  if(pw.length<MIN_PW)return "Use at least "+MIN_PW+" characters. Mixing letters and numbers is stronger.";
+  if(/^(\d)\1+$/.test(pw)||/^(123456|1234567|12345678|password|qwerty)/i.test(pw))return "That password is too easy to guess. Choose another.";
+  if(pw!==pw2)return "The two passwords don't match.";
+  return "";
+}
+/* slow down guessing: after 5 wrong tries, wait 30 s, doubling each time (max 15 min) */
+let guard={fails:0,until:0};
+async function saveGuard(){try{await run("kv","readwrite",st=>st.put(guard,"guard"))}catch(e){}}
+function waitLeft(){return Math.max(0,guard.until-Date.now())}
+async function noteFail(){guard.fails++;if(guard.fails>=5)guard.until=Date.now()+Math.min(15*60000,30000*2**(guard.fails-5));await saveGuard()}
+async function noteOk(){if(guard.fails||guard.until){guard={fails:0,until:0};await saveGuard()}}
+
+function setAuthMode(m){
+  authMode=m;const f=(id,on)=>{$(id).hidden=!on};
+  $("#auForm").reset();$("#auMsg").textContent="";$("#auShowCode").hidden=true;$("#auForm").parentElement.hidden=false;
+  document.querySelectorAll("#v-auth [data-eye]").forEach(b=>{$("#"+b.dataset.eye).type="password";b.textContent="Show"});
+  const legacy=m==="setup"&&!!settings.pin;
+  f("#auOldWrap",legacy);f("#auCodeWrap",m==="recover");f("#auPw2Wrap",m==="setup"||m==="recover");
+  f("#auForgot",m==="unlock"||m==="unlock-mgmt");f("#auBack",m==="recover"||m==="unlock-mgmt");
+  $("#auBack").textContent=m==="unlock-mgmt"?"Back to scanner":"Back";
+  $("#auPwLabel").textContent=m==="unlock"||m==="unlock-mgmt"?"Password":"New password";
+  const T={setup:["Set a password",legacy?"For safety, the old 4-digit PIN is being replaced by a password. Enter the old PIN, then choose a new password. Only show it to the person in charge.":"Choose a password for this clock-in app. Only show it to the person you put in charge.","Save password"],
+    unlock:["Clock-In is locked","Enter the password to start the scanner.","Unlock"],
+    "unlock-mgmt":["Password needed","Enter the password to open "+({staff:"Staff",log:"Attendance",set:"Settings"}[wanted]||"this page")+".","Open"],
+    recover:["Set a new password","Enter the recovery code you wrote down, then choose a new password.","Save new password"]}[m];
+  $("#auTitle").textContent=T[0];$("#auHint").textContent=T[1];$("#auGo").textContent=T[2];
+}
+function showCode(code,then){
+  $("#auForm").parentElement.hidden=true;$("#auShowCode").hidden=false;$("#auCodeOut").textContent=code;
+  $("#auCodeDone").onclick=then;showView("auth");
+}
+
+let current="scan";
+function showView(v){
   current=v;
-  for(const id of ["scan","pin","staff","log","set"]) $("#v-"+id).hidden=id!==v;
-  document.querySelectorAll("nav.tabs button").forEach(b=>{if(b.dataset.v===v||(v==="pin"&&b.dataset.v===wanted))b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
-  $("#lockBtn").hidden=!(settings.pin&&unlocked);
+  for(const id of ["scan","auth","staff","log","set"]) $("#v-"+id).hidden=id!==v;
+  document.body.classList.toggle("locked",!appUnlocked);
+  document.querySelectorAll("nav.tabs button").forEach(b=>{if(b.dataset.v===v||(v==="auth"&&b.dataset.v===wanted))b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  const lb=$("#lockBtn");lb.hidden=!appUnlocked||v==="auth";lb.textContent=v==="scan"?"Lock":"Done";
   $("#main").scrollTop=0;
-  if(v==="scan"){unlocked=false;$("#lockBtn").hidden=true;if(camWanted())startCam()}
-  else stopCam();
+  if(v==="scan"&&appUnlocked){if(camWanted())startCam()}else stopCam();
+}
+function show(v){
+  if(!auth){setAuthMode("setup");return showView("auth")}
+  if(!appUnlocked){setAuthMode("unlock");return showView("auth")}
+  if(MGMT.includes(v)&&!mgmtUnlocked){wanted=v;setAuthMode("unlock-mgmt");showView("auth");setTimeout(()=>$("#auPw").focus(),50);return}
+  if(v==="scan")mgmtUnlocked=false;
+  showView(v);lastAct=Date.now();
   if(v==="staff")renderStaff();
   if(v==="log")loadDay();
   if(v==="set")fillSettings();
 }
+function lockApp(){appUnlocked=false;mgmtUnlocked=false;wanted=null;show("scan")}
 document.querySelectorAll("nav.tabs button").forEach(b=>b.addEventListener("click",()=>show(b.dataset.v)));
-$("#lockBtn").addEventListener("click",()=>show("scan"));
-let pinBuf="";
-function drawDots(){[...$("#dots").children].forEach((d,i)=>d.classList.toggle("on",i<pinBuf.length))}
-["1","2","3","4","5","6","7","8","9","Clear","0","Del"].forEach(k=>{const b=el("button",null,k);b.type="button";if(k.length>1)b.style.fontSize="15px";
-  b.onclick=()=>{if(k==="Clear")pinBuf="";else if(k==="Del")pinBuf=pinBuf.slice(0,-1);else if(pinBuf.length<4)pinBuf+=k;drawDots();
-    if(pinBuf.length===4){if(pinBuf===settings.pin){unlocked=true;show(wanted||"staff")}else{$("#pinMsg").textContent="Wrong PIN. Try again.";pinBuf="";setTimeout(drawDots,250)}}};
-  $("#pad").append(b)});
+$("#lockBtn").addEventListener("click",()=>current==="scan"?lockApp():show("scan"));
+document.addEventListener("click",e=>{const b=e.target.closest("[data-eye]");if(!b)return;const i=$("#"+b.dataset.eye);const on=i.type==="password";i.type=on?"text":"password";b.textContent=on?"Hide":"Show"});
+$("#auForgot").addEventListener("click",()=>setAuthMode("recover"));
+$("#auBack").addEventListener("click",()=>{if(authMode==="unlock-mgmt"){wanted=null;show("scan")}else setAuthMode(appUnlocked?"unlock-mgmt":"unlock")});
+$("#auForm").addEventListener("submit",async e=>{
+  e.preventDefault();const msg=$("#auMsg"),go=$("#auGo"),pw=$("#auPw").value,pw2=$("#auPw2").value;msg.textContent="";
+  if(!(window.crypto&&crypto.subtle)){msg.textContent="This browser can't lock the app safely. Open the app from its website address in Chrome.";return}
+  const wait=waitLeft();if(wait&&authMode!=="setup"){msg.textContent="Too many wrong tries. Wait "+Math.ceil(wait/1000)+" seconds.";return}
+  go.disabled=true;
+  try{
+    if(authMode==="setup"){
+      if(settings.pin&&$("#auOld").value!==settings.pin){msg.textContent="The old PIN is wrong.";return}
+      const p=pwProblem(pw,pw2);if(p){msg.textContent=p;return}
+      const code=await setPassword(pw,true);
+      if(settings.pin){settings={...settings,pin:""};await run("kv","readwrite",st=>st.put(settings,"settings"))}
+      appUnlocked=true;mgmtUnlocked=false;await noteOk();showCode(code,()=>show("scan"));
+    }else if(authMode==="recover"){
+      if(!await checkCode($("#auCode").value)){await noteFail();msg.textContent="That recovery code is wrong.";return}
+      const p=pwProblem(pw,pw2);if(p){msg.textContent=p;return}
+      const code=await setPassword(pw,true);await noteOk();
+      appUnlocked=true;mgmtUnlocked=false;showCode(code,()=>show("scan"));
+    }else{
+      if(!await checkPw(pw)){await noteFail();const w=waitLeft();msg.textContent=w?"Wrong password. Too many tries, wait "+Math.ceil(w/1000)+" seconds.":"Wrong password. Try again.";$("#auPw").value="";return}
+      await noteOk();appUnlocked=true;
+      if(authMode==="unlock-mgmt"){mgmtUnlocked=true;const w=wanted;wanted=null;show(w||"staff")}else show("scan");
+    }
+  }finally{go.disabled=false}
+});
+/* change password + recovery code (Settings) */
+$("#pwForm").addEventListener("submit",async e=>{
+  e.preventDefault();const m=$("#pwMsg");m.style.color="var(--late)";
+  if(waitLeft()){m.textContent="Too many wrong tries. Wait "+Math.ceil(waitLeft()/1000)+" seconds.";return}
+  if(!await checkPw($("#pwOld").value)){await noteFail();m.textContent="The current password is wrong.";return}
+  const p=pwProblem($("#pwNew").value,$("#pwNew2").value);if(p){m.textContent=p;return}
+  await setPassword($("#pwNew").value,false);await noteOk();$("#pwForm").reset();
+  m.style.color="var(--in)";m.textContent="Password changed. The old password no longer works.";
+});
+$("#newCodeBtn").addEventListener("click",async()=>{const code=await makeNewCode();mgmtUnlocked=false;showCode(code,()=>show("scan"))});
+$("#lockAppBtn").addEventListener("click",lockApp);
+/* lock again when left alone */
+let lastAct=Date.now(),hiddenAt=0;
+["pointerdown","keydown","input"].forEach(t=>document.addEventListener(t,()=>{lastAct=Date.now()},true));
+setInterval(()=>{if(MGMT.includes(current)&&Date.now()-lastAct>IDLE_MS)show("scan")},15000);
+document.addEventListener("visibilitychange",()=>{if(document.hidden)hiddenAt=Date.now();else if(hiddenAt&&Date.now()-hiddenAt>AWAY_MS&&appUnlocked)lockApp();else if(MGMT.includes(current)&&hiddenAt&&Date.now()-hiddenAt>IDLE_MS)show("scan")});
 
 /* ---------- clock ---------- */
 function tick(){
@@ -490,7 +637,7 @@ async function loop(){
 /* scanner guns (USB/Bluetooth) type the QR text fast and press Enter */
 let kb="",kbAt=0;
 document.addEventListener("keydown",e=>{
-  if(current!=="scan")return;const t=e.target;if(t&&/^(INPUT|TEXTAREA)$/.test(t.tagName))return;
+  if(current!=="scan"||!appUnlocked)return;const t=e.target;if(t&&/^(INPUT|TEXTAREA)$/.test(t.tagName))return;
   const n=performance.now();if(n-kbAt>60)kb="";kbAt=n;
   if(e.key==="Enter"){if(kb.length>4){const v=kb;kb="";e.preventDefault();handleScan(v)}return}
   if(e.key.length===1)kb+=e.key;
@@ -513,6 +660,7 @@ function flash(kind,word,name,sub,stamp,late,photo){
   f.onclick=close;flash.t=setTimeout(close,kind==="err"?3200:3000);
 }
 async function handleScan(raw){
+  if(!appUnlocked)return;
   raw=String(raw||"").trim();
   if(!raw.toUpperCase().startsWith(QR_PREFIX)){beep(false);flash("err","Invalid","Not a staff ID card","Scan the QR code on a staff ID card.");return}
   const no=cleanNo(raw.slice(QR_PREFIX.length));const s=staff.get(no);
@@ -658,14 +806,12 @@ $("#expBtn").addEventListener("click",async()=>{
 
 /* ---------- settings + backup ---------- */
 function applySettings(){$("#coName").textContent=settings.company||"Staff Clock-In";$("#coSub").textContent="Scan your ID card · late after "+settings.lateAfter;suggestNo()}
-function fillSettings(){$("#sCo").value=settings.company;$("#sPre").value=settings.prefix;$("#sLate").value=settings.lateAfter;$("#sPin").value=settings.pin;$("#sSelfie").checked=!!settings.selfie;$("#sKeep").value=String(settings.keepDays);$("#setMsg").textContent=""}
+function fillSettings(){$("#sCo").value=settings.company;$("#sPre").value=settings.prefix;$("#sLate").value=settings.lateAfter;$("#sSelfie").checked=!!settings.selfie;$("#sKeep").value=String(settings.keepDays);$("#setMsg").textContent=""}
 $("#setForm").addEventListener("submit",async e=>{
-  e.preventDefault();const pin=$("#sPin").value.trim();
-  if(pin&&!/^\d{4}$/.test(pin)){$("#setMsg").textContent="The PIN must be exactly 4 digits, or empty.";return}
-  settings={company:$("#sCo").value.trim(),prefix:cleanNo($("#sPre").value)||"STF",lateAfter:$("#sLate").value||"08:30",pin,selfie:$("#sSelfie").checked,keepDays:+$("#sKeep").value||90};
+  e.preventDefault();
+  settings={company:$("#sCo").value.trim(),prefix:cleanNo($("#sPre").value)||"STF",lateAfter:$("#sLate").value||"08:30",pin:"",selfie:$("#sSelfie").checked,keepDays:+$("#sKeep").value||90};
   await run("kv","readwrite",st=>st.put(settings,"settings"));applySettings();setScanStatus();prunePhotos();
-  $("#setMsg").textContent=pin?"Saved. The manager PIN is now "+pin+". Don't forget it.":"Saved.";
-  if(pin)unlocked=true;$("#lockBtn").hidden=!pin;
+  $("#setMsg").textContent="Saved.";
 });
 async function prunePhotos(){
   try{const cutoff=localDate(new Date(Date.now()-settings.keepDays*86400000));
@@ -675,7 +821,7 @@ const blobToData=b=>new Promise((ok,bad)=>{const r=new FileReader();r.onload=()=
 async function dataToBlob(u){return (await fetch(u)).blob()}
 $("#backupBtn").addEventListener("click",async()=>{
   const msg=$("#bakMsg");const withPhotos=$("#bakPhotos").checked;
-  const data={app:"staff-clockin",version:2,exported:new Date().toISOString(),settings,staff:await getAll("staff"),logs:await getAll("logs")};
+  const data={app:"staff-clockin",version:2,exported:new Date().toISOString(),settings:{...settings,pin:""},staff:await getAll("staff"),logs:await getAll("logs")};
   if(withPhotos){msg.textContent="Preparing photos…";data.photos=[];for(const p of await getAll("photos"))data.photos.push({id:p.id,date:p.date,ts:p.ts,staffNo:p.staffNo,data:await blobToData(p.blob)})}
   giveFile(new Blob([JSON.stringify(data)],{type:"application/json"}),"clockin-backup-"+today+".json",$("#bakMsg"),true);
 });
@@ -685,7 +831,7 @@ $("#restoreFile").addEventListener("change",async e=>{
   try{const d=JSON.parse(await f.text());if(d.app!=="staff-clockin")throw 0;
     await run("staff","readwrite",st=>{st.clear();for(const s of d.staff||[])st.put(s)});
     await run("logs","readwrite",st=>{st.clear();for(const l of d.logs||[])st.put(l)});
-    if(d.settings)await run("kv","readwrite",st=>st.put({...DEF,...d.settings},"settings"));
+    if(d.settings)await run("kv","readwrite",st=>st.put({...DEF,...d.settings,pin:""},"settings"));
     let np=0;
     if(Array.isArray(d.photos)){const ps=[];for(const p of d.photos){try{ps.push({id:p.id,date:p.date,ts:p.ts,staffNo:p.staffNo,blob:await dataToBlob(p.data)})}catch(err){}}
       await run("photos","readwrite",st=>{st.clear();for(const p of ps)st.put(p)});np=ps.length}
