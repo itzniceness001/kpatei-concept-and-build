@@ -1,6 +1,6 @@
 // KPATEI website service worker: lets the app open quickly and work offline.
 // Pages are fetched fresh when online; saved copies are used when there is no internet.
-const VERSION = "kpatei-v1";
+const VERSION = "kpatei-v2";
 const CORE = ["/", "/index.html", "/offline.html", "/manifest.webmanifest", "/logo.png",
   "/icons/icon-192.png", "/icons/icon-512.png", "/images/about-1.jpg", "/images/about-2.jpg",
   "/images/gallery/bungalow-pool-compound.jpg"];
