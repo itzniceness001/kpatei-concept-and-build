@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.kpateiconceptandbuild.www.twa",
+      "sha256_cert_fingerprints": [
+        "5F:67:9F:6D:79:2C:4E:F9:96:5F:50:4B:4A:78:D5:46:D4:17:92:B7:98:3F:81:FA:8B:E1:F0:3A:FA:86:6D:DF"
+      ]
+    }
+  }
+]
